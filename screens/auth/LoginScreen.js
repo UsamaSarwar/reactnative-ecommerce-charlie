@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Text, View, StatusBar } from "react-native";
+import { StyleSheet, Image, Text, View, StatusBar, KeyboardAvoidingView, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../constants";
 import CustomInput from "../../components/CustomInput";
@@ -13,12 +13,27 @@ const LoginScreen = ({ navigation }) => {
 
   const loginHandle = () => {
     console.log(email, password);
-    setError("Email Valid");
-    alert("login btn clicked");
+    if(!email.includes("@")){
+      return setError("Email is not valid")
+    }
+    if(email.length < 6){
+      return setError("Email is too short")
+    }
+    if(password.length < 8){
+      return setError("Password must be 8 characters long")
+    }
+    
+    setError("")
+    alert("Logged in successfully!!");
   };
 
+  // const keyboardVerticalOffset = Platform.OS === 'android' ? 40 : 0
+
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+    // behavior={Platform.OS === "ios" ? "padding" : "height"}
+    style={styles.container}>
+      <ScrollView>
       <StatusBar></StatusBar>
       <View style={styles.welconeContainer}>
         <View>
@@ -70,7 +85,8 @@ const LoginScreen = ({ navigation }) => {
           signup
         </Text>
       </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -92,6 +108,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     height: "30%",
+    // padding:15
   },
   formContainer: {
     flex: 3,
@@ -100,6 +117,7 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirecion: "row",
+    padding : 5
   },
   logo: {
     resizeMode: "contain",

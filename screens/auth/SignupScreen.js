@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Image, StatusBar, View } from "react-native";
+import { StyleSheet, Text, Image, StatusBar, View, KeyboardAvoidingView, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../constants";
 import CustomInput from "../../components/CustomInput";
@@ -11,14 +11,28 @@ const SignupScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
-  const [error, setError] = useState("error");
+  const [error, setError] = useState("");
 
   const signUpHandle = () => {
     console.log(email, password, name);
-    alert("signup btn clicked");
+    setError("")
+    if(!email.includes("@")){
+      return setError("Email is not valid")
+    }
+    if(email.length < 6){
+      return setError("Email is too short")
+    }
+    if(password.length < 8){
+      return setError("Password must be 8 characters long")
+    }
+    if(password != confirmPassword){
+      return setError("password does not match")
+    }
+    return alert("Signed Up Successfully!!");
   };
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}>
+      <ScrollView style={{width:"100%"}}>
       <StatusBar></StatusBar>
       <View style={styles.welconeContainer}>
         <Image style={styles.logo} source={header_logo} />
@@ -27,6 +41,7 @@ const SignupScreen = ({ navigation }) => {
         <Text style={styles.screenNameText}>Sign up</Text>
       </View>
       <View style={styles.formContainer}>
+        <CustomAlert message={error} type={"error"} />
         <CustomInput
           value={name}
           setValue={setName}
@@ -70,7 +85,8 @@ const SignupScreen = ({ navigation }) => {
           Login
         </Text>
       </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -82,7 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
+    padding: 10,
     flex: 1,
   },
   welconeContainer: {
@@ -100,6 +116,7 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirecion: "row",
+    padding:10
   },
   logo: {
     resizeMode: "contain",
