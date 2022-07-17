@@ -13,6 +13,7 @@ const LoginScreen = ({ navigation }) => {
 
   const loginHandle = () => {
     console.log(email, password);
+    setError("Email Valid");
     alert("login btn clicked");
   };
 
