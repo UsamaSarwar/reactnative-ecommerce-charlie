@@ -4,7 +4,7 @@ import { colors } from "../../constants";
 
 const CustomAlert = ({ message, type }) => {
   return (
-    <View>
+    <View style={{ width: "100%" }}>
       {message != "" ? (
         <View style={[styles.alertContainer, styles[`alertContainer_${type}`]]}>
           <Text>{message}</Text>
