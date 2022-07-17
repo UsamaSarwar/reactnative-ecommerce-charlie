@@ -1,18 +1,13 @@
-import { StyleSheet, Text, Image, StatusBar, View, KeyboardAvoidingView, ScrollView } from "react-native";
-// import {
-//   StyleSheet,
-//   Text,
-//   Image,
-//   StatusBar,
-//   TouchableOpacity,
-//   View,
-// } from "react-native";
+import { StyleSheet, Text, Image, StatusBar, View, KeyboardAvoidingView, ScrollView, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import header_logo from "../../assets/logo/logo.png";
 import CustomButton from "../../components/CustomButton";
 import { Ionicons } from "@expo/vector-icons";
+import CustomAlert from "../../components/CustomAlert/CustomAlert";
+
+
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
