@@ -6,7 +6,7 @@ import logo from "../../assets/logo/logo_white.png";
 const Splash = ({ navigation }) => {
   setTimeout(() => {
     navigation.replace("login");
-  }, 100000);
+  }, 4000);
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={logo} />
