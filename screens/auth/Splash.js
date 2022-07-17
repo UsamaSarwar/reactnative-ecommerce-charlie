@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View } from "react-native";
+import { StyleSheet, Image, View, Text } from "react-native";
 import React from "react";
 import { colors } from "../../constants";
 import logo from "../../assets/logo/logo_white.png";
@@ -6,10 +6,12 @@ import logo from "../../assets/logo/logo_white.png";
 const Splash = ({ navigation }) => {
   setTimeout(() => {
     navigation.replace("login");
-  }, 2000);
+  }, 100000);
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={logo} />
+      <Text style={{fontSize: 20,
+    fontWeight: "600", color : "white"}}>CreditBook</Text>
     </View>
   );
 };
