@@ -17,20 +17,24 @@ const SignupScreen = ({ navigation }) => {
   const [error, setError] = useState("");
 
   const signUpHandle = () => {
-    console.log(email, password, name);
-    setError("")
+    // if email does not contain @ sign
     if(!email.includes("@")){
       return setError("Email is not valid")
     }
+    // length of email must be greater than 6 characters
     if(email.length < 6){
       return setError("Email is too short")
     }
+    // length of password must be greater than 8 characters
     if(password.length < 8){
       return setError("Password must be 8 characters long")
     }
+    // if confirm password doesnot match password
     if(password != confirmPassword){
       return setError("password does not match")
     }
+    setError("")
+    // if no error occured
     return alert("Signed Up Successfully!!");
   };
   return (
