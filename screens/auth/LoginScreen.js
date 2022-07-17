@@ -25,6 +25,9 @@ const LoginScreen = ({ navigation }) => {
           <Image style={styles.logo} source={header_logo} />
         </View>
       </View>
+      <View style={styles.screenNameContainer}>
+        <Text style={styles.screenNameText}>Login</Text>
+      </View>
       <View style={styles.formContainer}>
         <CustomInput
           value={email}
@@ -52,6 +55,15 @@ const LoginScreen = ({ navigation }) => {
       </View>
       <View style={styles.buttomContainer}>
         <CustomButton text={"Login"} onPress={loginHandle} />
+      </View>
+      <View style={styles.bottomContainer}>
+        <Text>Don't have an account?</Text>
+        <Text
+          onPress={() => navigation.navigate("signup")}
+          style={styles.signupText}
+        >
+          signup
+        </Text>
       </View>
     </View>
   );
@@ -112,5 +124,29 @@ const styles = StyleSheet.create({
   },
   buttomContainer: {
     width: "100%",
+  },
+  bottomContainer: {
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
+  },
+  signupText: {
+    marginLeft: 2,
+    color: colors.primary,
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  screenNameContainer: {
+    marginTop: 10,
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  screenNameText: {
+    fontSize: 30,
+    fontWeight: "800",
+    color: colors.muted,
   },
 });
