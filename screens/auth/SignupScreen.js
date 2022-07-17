@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const SignupScreen = () => {
+const SignupScreen = ({ navigation }) => {
   return (
     <View>
-      <Text>SignupScreen</Text>
+      <Text onPress={() => navigation.replace("login")}>Login Screen</Text>
     </View>
   );
 };
