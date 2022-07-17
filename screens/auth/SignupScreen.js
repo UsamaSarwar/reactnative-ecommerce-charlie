@@ -1,10 +1,18 @@
 import { StyleSheet, Text, Image, StatusBar, View, KeyboardAvoidingView, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Image,
+  StatusBar,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import header_logo from "../../assets/logo/logo.png";
 import CustomButton from "../../components/CustomButton";
-import CustomAlert from "../../components/CustomAlert/CustomAlert";
+import { Ionicons } from "@expo/vector-icons";
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -34,6 +42,19 @@ const SignupScreen = ({ navigation }) => {
     <KeyboardAvoidingView style={styles.container}>
       <ScrollView style={{width:"100%"}}>
       <StatusBar></StatusBar>
+      <View style={styles.TopBarContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Ionicons
+            name="arrow-back-circle-outline"
+            size={30}
+            color={colors.muted}
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.welconeContainer}>
         <Image style={styles.logo} source={header_logo} />
       </View>
@@ -101,13 +122,20 @@ const styles = StyleSheet.create({
     padding: 10,
     flex: 1,
   },
+  TopBarContainer: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
   welconeContainer: {
     width: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    height: "25%",
+    height: "15%",
   },
   formContainer: {
     flex: 3,
