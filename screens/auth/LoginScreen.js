@@ -12,17 +12,18 @@ const LoginScreen = ({ navigation }) => {
   const [error, setError] = useState("");
 
   const loginHandle = () => {
-    console.log(email, password);
+    // if email does not contain @ sign
     if(!email.includes("@")){
       return setError("Email is not valid")
     }
+    // length of email must be greater than 5 characters
     if(email.length < 6){
       return setError("Email is too short")
     }
+    // length of password must be greater than 7 characters
     if(password.length < 8){
       return setError("Password must be 8 characters long")
     }
-    
     setError("")
     alert("Logged in successfully!!");
   };
