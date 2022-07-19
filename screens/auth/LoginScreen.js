@@ -19,21 +19,46 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    email: email,
+    password: password,
+  });
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
   const loginHandle = () => {
-    // if email does not contain @ sign
-    if (!email.includes("@")) {
-      return setError("Email is not valid");
-    }
-    // length of email must be greater than 5 characters
-    if (email.length < 6) {
-      return setError("Email is too short");
-    }
-    // length of password must be greater than 7 characters
-    if (password.length < 8) {
-      return setError("Password must be 8 characters long");
-    }
-    setError("");
-    alert("Logged in successfully!!");
+    // // if email does not contain @ sign
+    // if (!email.includes("@")) {
+    //   return setError("Email is not valid");
+    // }
+    // // length of email must be greater than 5 characters
+    // if (email.length < 6) {
+    //   return setError("Email is too short");
+    // }
+    // // length of password must be greater than 7 characters
+    // if (password.length < 8) {
+    //   return setError("Password must be 8 characters long");
+    // }
+    fetch("http://192.168.10.7:3000/login", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.status == 1) {
+          console.log(result);
+          navigation.navigate("signup");
+        } else {
+          setError(result.message);
+        }
+      })
+      .catch((error) => console.log("error", setError(error)));
+    // alert("Logged in successfully!!");
   };
 
   // const keyboardVerticalOffset = Platform.OS === 'android' ? 40 : 0

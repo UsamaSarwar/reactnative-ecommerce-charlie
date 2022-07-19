@@ -23,6 +23,22 @@ const SignupScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
 
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    email: email,
+    password: password,
+    name: name,
+  });
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
   const signUpHandle = () => {
     // if email does not contain @ sign
     if (!email.includes("@")) {
@@ -40,9 +56,10 @@ const SignupScreen = ({ navigation }) => {
     if (password != confirmPassword) {
       return setError("password does not match");
     }
-    setError("");
-    // if no error occured
-    return alert("Signed Up Successfully!!");
+    fetch("http://192.168.10.7:3000/register", requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", setError(error)));
   };
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -125,7 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light,
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    padding: 20,
     flex: 1,
   },
   TopBarContainer: {
@@ -144,13 +161,13 @@ const styles = StyleSheet.create({
     height: "15%",
   },
   formContainer: {
-    flex: 3,
+    flex: 2,
     justifyContent: "flex-start",
     alignItems: "center",
     display: "flex",
     width: "100%",
     flexDirecion: "row",
-    padding: 10,
+    padding: 5,
   },
   logo: {
     resizeMode: "contain",
