@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useState } from "react";
-import { colors } from "../../constants";
+import { colors, network } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import header_logo from "../../assets/logo/logo.png";
 import CustomButton from "../../components/CustomButton";
@@ -35,6 +35,8 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const loginHandle = () => {
+    console.log("button pressed");
+    setError("");
     // // if email does not contain @ sign
     // if (!email.includes("@")) {
     //   return setError("Email is not valid");
@@ -47,12 +49,14 @@ const LoginScreen = ({ navigation }) => {
     // if (password.length < 8) {
     //   return setError("Password must be 8 characters long");
     // }
-    fetch("http://192.168.10.7:3000/login", requestOptions)
+    fetch(network.serverip + ":3000/login", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.status == 1) {
-          console.log(result);
-          navigation.navigate("signup");
+          console.log(result.data);
+          let userId = result.data["_id"];
+          console.log(userId);
+          navigation.replace("userprofile", { userID: userId });
         } else {
           setError(result.message);
         }

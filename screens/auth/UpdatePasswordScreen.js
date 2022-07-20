@@ -6,19 +6,45 @@ import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 
-const UpdatePasswordScreen = ({ navigation }) => {
+const UpdatePasswordScreen = ({ navigation, route }) => {
+  const { userID } = route.params;
   const [error, setError] = useState("");
   const [currnetPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setCconfirmPassword] = useState("");
 
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    password: currnetPassword,
+    newPassword: newPassword,
+  });
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
   const updatePasswordHandle = () => {
+    console.log(userID);
     if (currnetPassword == newPassword) {
       setError("You are not allowed to set the previous used password");
     } else if (newPassword != confirmPassword) {
       setError("Password not matched");
     } else {
       setError("");
+      fetch("http://192.168.182.173:3000/reset-password", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          () => {
+            console.log(result);
+            navigation.replace("login");
+          };
+        })
+        .catch((error) => console.log("error", setError(error.message)));
       alert("update password..");
     }
   };

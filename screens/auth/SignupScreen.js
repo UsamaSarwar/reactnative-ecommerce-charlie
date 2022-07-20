@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { colors } from "../../constants";
+import { colors, network } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import header_logo from "../../assets/logo/logo.png";
 import CustomButton from "../../components/CustomButton";
@@ -56,9 +56,14 @@ const SignupScreen = ({ navigation }) => {
     if (password != confirmPassword) {
       return setError("password does not match");
     }
-    fetch("http://192.168.10.7:3000/register", requestOptions)
+    fetch(network.serverip + ":3000/register", requestOptions)
       .then((response) => response.json())
-      .then((result) => console.log(result))
+      .then((result) => {
+        console.log(result);
+        if (result.data["email"] == email) {
+          navigation.navigate("login");
+        }
+      })
       .catch((error) => console.log("error", setError(error.message)));
   };
   return (
