@@ -57,9 +57,9 @@ const SignupScreen = ({ navigation }) => {
       return setError("password does not match");
     }
     fetch("http://192.168.10.7:3000/register", requestOptions)
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((result) => console.log(result))
-      .catch((error) => console.log("error", setError(error)));
+      .catch((error) => console.log("error", setError(error.message)));
   };
   return (
     <KeyboardAvoidingView style={styles.container}>
