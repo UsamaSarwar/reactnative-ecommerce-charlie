@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { colors } from "../../constants";
+import { colors, network } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
@@ -36,16 +36,16 @@ const UpdatePasswordScreen = ({ navigation, route }) => {
       setError("Password not matched");
     } else {
       setError("");
-      fetch("http://192.168.182.173:3000/reset-password", requestOptions)
+      fetch(
+        network.serverip + ":3000/reset-password?id=" + String(userID),
+        requestOptions
+      )
         .then((response) => response.json())
         .then((result) => {
-          () => {
-            console.log(result);
-            navigation.replace("login");
-          };
+          console.log(result);
+          navigation.navigate("myaccount", { userID: userID });
         })
         .catch((error) => console.log("error", setError(error.message)));
-      alert("update password..");
     }
   };
 
