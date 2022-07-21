@@ -2,11 +2,14 @@
 
 Open-Source React Native Ecommerce Cross Platform Mobile App
 
-- [x] Splash Screen UI
-- [x] Login Screen UI
-- [x] Signup Screen UI
-- [x] Forget Screen UI
-- [x] Validations
-- [x] Database connection (MongoDB)
-- [x] Backend of the project [here](https://github.com/abidrazaa/backend-node)
-- [ ] Admin Panel
+- [x] Stack Naviagtion
+- [x] Splash Screen
+- [x] Login Screen
+- [x] Signup Screen
+- [x] Forget Screen
+- [x] User Profile Screen
+- [x] My Account Screen
+- [x] Update Password Screen
+- [ ] Admin Login
+- [ ] Admin Dashboard
+- [ ] Admin Add Product

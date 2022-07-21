@@ -1,6 +1,15 @@
-import { StyleSheet, Text, Image, StatusBar, View, KeyboardAvoidingView, ScrollView, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Image,
+  StatusBar,
+  View,
+  KeyboardAvoidingView,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
-import { colors } from "../../constants";
+import { colors, network } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import header_logo from "../../assets/logo/logo.png";
 import CustomButton from "../../components/CustomButton";
@@ -14,30 +23,47 @@ const SignupScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
 
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    email: email,
+    password: password,
+    name: name,
+  });
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
   const signUpHandle = () => {
-    // if email does not contain @ sign
-    if(!email.includes("@")){
-      return setError("Email is not valid")
+    if (!email.includes("@")) {
+      return setError("Email is not valid");
     }
-    // length of email must be greater than 5 characters
-    if(email.length < 6){
-      return setError("Email is too short")
+    if (email.length < 6) {
+      return setError("Email is too short");
     }
-    // length of password must be greater than 7 characters
-    if(password.length < 8){
-      return setError("Password must be 8 characters long")
+    if (password.length < 8) {
+      return setError("Password must be 8 characters long");
     }
-    // if confirm password doesnot match password
-    if(password != confirmPassword){
-      return setError("password does not match")
+    if (password != confirmPassword) {
+      return setError("password does not match");
     }
-    setError("")
-    // if no error occured
-    return alert("Signed Up Successfully!!");
+    fetch(network.serverip + "/register", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        if (result.data["email"] == email) {
+          navigation.navigate("login");
+        }
+      })
+      .catch((error) => console.log("error", setError(error.message)));
   };
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <ScrollView style={{width:"100%"}}>
       <StatusBar></StatusBar>
       <View style={styles.TopBarContainer}>
         <TouchableOpacity
@@ -52,45 +78,55 @@ const SignupScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.welconeContainer}>
-        <Image style={styles.logo} source={header_logo} />
-      </View>
-      <View style={styles.screenNameContainer}>
-        <Text style={styles.screenNameText}>Sign up</Text>
-      </View>
-      <View style={styles.formContainer}>
-        <CustomAlert message={error} type={"error"} />
-        <CustomInput
-          value={name}
-          setValue={setName}
-          placeholder={"Name"}
-          placeholderTextColor={colors.muted}
-          radius={5}
-        />
-        <CustomInput
-          value={email}
-          setValue={setEmail}
-          placeholder={"Email"}
-          placeholderTextColor={colors.muted}
-          radius={5}
-        />
-        <CustomInput
-          value={password}
-          setValue={setPassword}
-          secureTextEntry={true}
-          placeholder={"Password"}
-          placeholderTextColor={colors.muted}
-          radius={5}
-        />
-        <CustomInput
-          value={confirmPassword}
-          setValue={setConfirmPassword}
-          secureTextEntry={true}
-          placeholder={"Confirm Password"}
-          placeholderTextColor={colors.muted}
-          radius={5}
-        />
-      </View>
+      <ScrollView style={{ flex: 1, width: "100%" }}>
+        <View style={styles.welconeContainer}>
+          <Image style={styles.logo} source={header_logo} />
+        </View>
+        <View style={styles.screenNameContainer}>
+          <View>
+            <Text style={styles.screenNameText}>Sign up</Text>
+          </View>
+          <View>
+            <Text style={styles.screenNameParagraph}>
+              Create your account on EasyBuy to get an access to millions of
+              products
+            </Text>
+          </View>
+        </View>
+        <View style={styles.formContainer}>
+          <CustomAlert message={error} type={"error"} />
+          <CustomInput
+            value={name}
+            setValue={setName}
+            placeholder={"Name"}
+            placeholderTextColor={colors.muted}
+            radius={5}
+          />
+          <CustomInput
+            value={email}
+            setValue={setEmail}
+            placeholder={"Email"}
+            placeholderTextColor={colors.muted}
+            radius={5}
+          />
+          <CustomInput
+            value={password}
+            setValue={setPassword}
+            secureTextEntry={true}
+            placeholder={"Password"}
+            placeholderTextColor={colors.muted}
+            radius={5}
+          />
+          <CustomInput
+            value={confirmPassword}
+            setValue={setConfirmPassword}
+            secureTextEntry={true}
+            placeholder={"Confirm Password"}
+            placeholderTextColor={colors.muted}
+            radius={5}
+          />
+        </View>
+      </ScrollView>
       <View style={styles.buttomContainer}>
         <CustomButton text={"Sign up"} onPress={signUpHandle} />
       </View>
@@ -103,7 +139,6 @@ const SignupScreen = ({ navigation }) => {
           Login
         </Text>
       </View>
-      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -116,7 +151,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light,
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    padding: 20,
     flex: 1,
   },
   TopBarContainer: {
@@ -135,13 +170,13 @@ const styles = StyleSheet.create({
     height: "15%",
   },
   formContainer: {
-    flex: 3,
+    flex: 2,
     justifyContent: "flex-start",
     alignItems: "center",
     display: "flex",
     width: "100%",
     flexDirecion: "row",
-    padding:10
+    padding: 5,
   },
   logo: {
     resizeMode: "contain",
@@ -166,6 +201,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     display: "flex",
     flexDirection: "row",
+    justifyContent: "center",
   },
   signupText: {
     marginLeft: 2,
@@ -177,13 +213,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: "100%",
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   screenNameText: {
     fontSize: 30,
     fontWeight: "800",
     color: colors.muted,
+  },
+  screenNameParagraph: {
+    marginTop: 5,
+    fontSize: 15,
   },
 });

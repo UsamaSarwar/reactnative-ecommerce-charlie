@@ -36,12 +36,9 @@ export default CustomInput;
 
 const styles = StyleSheet.create({
   CustomInput: {
-
     height: 40,
     marginBottom: 10,
     marginTop: 10,
-    // marginLeft: 10,
-    // marginTop: 10,
     width: "100%",
     padding: 5,
     backgroundColor: colors.white,
