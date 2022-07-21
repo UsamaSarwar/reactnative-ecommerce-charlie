@@ -40,23 +40,19 @@ const SignupScreen = ({ navigation }) => {
   };
 
   const signUpHandle = () => {
-    // if email does not contain @ sign
     if (!email.includes("@")) {
       return setError("Email is not valid");
     }
-    // length of email must be greater than 5 characters
     if (email.length < 6) {
       return setError("Email is too short");
     }
-    // length of password must be greater than 7 characters
     if (password.length < 8) {
       return setError("Password must be 8 characters long");
     }
-    // if confirm password doesnot match password
     if (password != confirmPassword) {
       return setError("password does not match");
     }
-    fetch(network.serverip + ":3000/register", requestOptions)
+    fetch(network.serverip + "/register", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -68,21 +64,21 @@ const SignupScreen = ({ navigation }) => {
   };
   return (
     <KeyboardAvoidingView style={styles.container}>
+      <StatusBar></StatusBar>
+      <View style={styles.TopBarContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Ionicons
+            name="arrow-back-circle-outline"
+            size={30}
+            color={colors.muted}
+          />
+        </TouchableOpacity>
+      </View>
       <ScrollView style={{ flex: 1, width: "100%" }}>
-        <StatusBar></StatusBar>
-        <View style={styles.TopBarContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            <Ionicons
-              name="arrow-back-circle-outline"
-              size={30}
-              color={colors.muted}
-            />
-          </TouchableOpacity>
-        </View>
         <View style={styles.welconeContainer}>
           <Image style={styles.logo} source={header_logo} />
         </View>
@@ -122,19 +118,19 @@ const SignupScreen = ({ navigation }) => {
             radius={5}
           />
         </View>
-        <View style={styles.buttomContainer}>
-          <CustomButton text={"Sign up"} onPress={signUpHandle} />
-        </View>
-        <View style={styles.bottomContainer}>
-          <Text>Already have an account?</Text>
-          <Text
-            onPress={() => navigation.navigate("login")}
-            style={styles.signupText}
-          >
-            Login
-          </Text>
-        </View>
       </ScrollView>
+      <View style={styles.buttomContainer}>
+        <CustomButton text={"Sign up"} onPress={signUpHandle} />
+      </View>
+      <View style={styles.bottomContainer}>
+        <Text>Already have an account?</Text>
+        <Text
+          onPress={() => navigation.navigate("login")}
+          style={styles.signupText}
+        >
+          Login
+        </Text>
+      </View>
     </KeyboardAvoidingView>
   );
 };

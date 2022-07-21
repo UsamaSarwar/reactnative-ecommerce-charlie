@@ -9,19 +9,17 @@ import React from "react";
 import UserProfileCard from "../../components/UserProfileCard/UserProfileCard";
 import { Ionicons } from "@expo/vector-icons";
 import OptionList from "../../components/OptionList/OptionList";
+import { colors } from "../../constants";
 
 const UserProfileScreen = ({ navigation, route }) => {
-  const { userID } = route.params;
+  const { User } = route.params;
+  const userID = User["_id"];
   return (
     <View style={styles.container}>
       <StatusBar style="auto"></StatusBar>
       <View style={styles.TopBarContainer}>
         <TouchableOpacity>
-          <Ionicons
-            name="arrow-back-circle-outline"
-            size={30}
-            color={colors.muted}
-          />
+          <Ionicons name="menu-sharp" size={30} color={colors.primary} />
         </TouchableOpacity>
       </View>
       <View style={styles.screenNameContainer}>
@@ -30,8 +28,8 @@ const UserProfileScreen = ({ navigation, route }) => {
       <View style={styles.UserProfileCardContianer}>
         <UserProfileCard
           Icon={Ionicons}
-          name={"Bukhtyar Haider"}
-          email={"bukhtyar.haider1@gmail.com"}
+          name={User["name"]}
+          email={User["email"]}
         />
       </View>
       <View style={styles.OptionsContainer}>
@@ -40,6 +38,30 @@ const UserProfileScreen = ({ navigation, route }) => {
           Icon={Ionicons}
           iconName={"person"}
           onPress={() => navigation.navigate("myaccount", { userID: userID })}
+        />
+        <OptionList
+          text={"Notifications"}
+          Icon={Ionicons}
+          iconName={"notifications"}
+          onPress={() => console.log("working....")}
+        />
+        <OptionList
+          text={"Settings"}
+          Icon={Ionicons}
+          iconName={"settings-sharp"}
+          onPress={() => console.log("working....")}
+        />
+        <OptionList
+          text={"Help Center"}
+          Icon={Ionicons}
+          iconName={"help-circle"}
+          onPress={() => console.log("working....")}
+        />
+        <OptionList
+          text={"Logout"}
+          Icon={Ionicons}
+          iconName={"log-out"}
+          onPress={() => navigation.replace("login")}
         />
       </View>
     </View>
@@ -76,6 +98,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
+    marginBottom: 10,
   },
   screenNameText: {
     fontSize: 30,

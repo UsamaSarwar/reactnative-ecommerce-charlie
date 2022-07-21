@@ -49,14 +49,13 @@ const LoginScreen = ({ navigation }) => {
     // if (password.length < 8) {
     //   return setError("Password must be 8 characters long");
     // }
-    fetch(network.serverip + ":3000/login", requestOptions)
+    fetch(network.serverip + "/login", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.status == 1) {
-          console.log(result.data);
           let userId = result.data["_id"];
           console.log(userId);
-          navigation.replace("userprofile", { userID: userId });
+          navigation.replace("userprofile", { User: result.data });
         } else {
           setError(result.message);
         }
@@ -114,19 +113,19 @@ const LoginScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View style={styles.buttomContainer}>
-          <CustomButton text={"Login"} onPress={loginHandle} />
-        </View>
-        <View style={styles.bottomContainer}>
-          <Text>Don't have an account?</Text>
-          <Text
-            onPress={() => navigation.navigate("signup")}
-            style={styles.signupText}
-          >
-            signup
-          </Text>
-        </View>
       </ScrollView>
+      <View style={styles.buttomContainer}>
+        <CustomButton text={"Login"} onPress={loginHandle} />
+      </View>
+      <View style={styles.bottomContainer}>
+        <Text>Don't have an account?</Text>
+        <Text
+          onPress={() => navigation.navigate("signup")}
+          style={styles.signupText}
+        >
+          signup
+        </Text>
+      </View>
     </KeyboardAvoidingView>
   );
 };

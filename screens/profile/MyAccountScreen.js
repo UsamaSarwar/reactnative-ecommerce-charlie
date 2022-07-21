@@ -21,7 +21,7 @@ const MyAccountScreen = ({ navigation, route }) => {
   };
 
   const DeleteAccontHandle = (userID) => {
-    let fetchURL = network.serverip + ":3000/delete-user?id=" + String(userID);
+    let fetchURL = network.serverip + "/delete-user?id=" + String(userID);
     console.log(fetchURL);
     fetch(fetchURL, requestOptions)
       .then((response) => response.json())
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
+    marginBottom: 10,
   },
   screenNameText: {
     fontSize: 30,

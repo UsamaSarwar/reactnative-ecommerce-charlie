@@ -37,7 +37,7 @@ const UpdatePasswordScreen = ({ navigation, route }) => {
     } else {
       setError("");
       fetch(
-        network.serverip + ":3000/reset-password?id=" + String(userID),
+        network.serverip + "/reset-password?id=" + String(userID),
         requestOptions
       )
         .then((response) => response.json())
