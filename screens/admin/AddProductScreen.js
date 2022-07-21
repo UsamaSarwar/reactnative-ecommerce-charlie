@@ -11,7 +11,6 @@ import {
 import React, { useState } from "react";
 import { colors, network } from "../../constants";
 import CustomInput from "../../components/CustomInput";
-import header_logo from "../../assets/logo/logo.png";
 import CustomButton from "../../components/CustomButton";
 import { Ionicons } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
@@ -36,6 +35,18 @@ const AddProductScreen = ({ navigation }) => {
 
     if (!result.cancelled) {
       setImage(result.uri);
+    }
+  };
+
+  const addProductHandle = () => {
+    if (title == "") {
+      setError("Please enter the product title");
+    } else if (price == "") {
+      setError("Please enter the product price");
+    } else if (image == null) {
+      setError("Please upload the product image");
+    } else {
+      console.log("add product api");
     }
   };
 
@@ -66,11 +77,13 @@ const AddProductScreen = ({ navigation }) => {
       <ScrollView style={{ flex: 1, width: "100%" }}>
         <View style={styles.formContainer}>
           <View style={styles.imageContainer}>
-            {image && (
+            {image ? (
               <Image
                 source={{ uri: image }}
                 style={{ width: 200, height: 200 }}
               />
+            ) : (
+              <View style={styles.imageHolder}></View>
             )}
             <CustomButton text={"Add Image"} onPress={pickImage} />
           </View>
@@ -93,7 +106,7 @@ const AddProductScreen = ({ navigation }) => {
         </View>
       </ScrollView>
       <View style={styles.buttomContainer}>
-        <CustomButton text={"Add Product"} />
+        <CustomButton text={"Add Product"} onPress={addProductHandle} />
       </View>
     </KeyboardAvoidingView>
   );
@@ -164,5 +177,12 @@ const styles = StyleSheet.create({
     elevation: 5,
     paddingLeft: 20,
     paddingRight: 20,
+  },
+  imageHolder: {
+    height: 200,
+    width: 200,
+    backgroundColor: colors.light,
+    borderRadius: 10,
+    elevation: 5,
   },
 });
