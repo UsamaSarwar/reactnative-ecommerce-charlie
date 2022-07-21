@@ -83,7 +83,15 @@ const SignupScreen = ({ navigation }) => {
           <Image style={styles.logo} source={header_logo} />
         </View>
         <View style={styles.screenNameContainer}>
-          <Text style={styles.screenNameText}>Sign up</Text>
+          <View>
+            <Text style={styles.screenNameText}>Sign up</Text>
+          </View>
+          <View>
+            <Text style={styles.screenNameParagraph}>
+              Create your account on EasyBuy to get an access to millions of
+              products
+            </Text>
+          </View>
         </View>
         <View style={styles.formContainer}>
           <CustomAlert message={error} type={"error"} />
@@ -205,13 +213,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: "100%",
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   screenNameText: {
     fontSize: 30,
     fontWeight: "800",
     color: colors.muted,
+  },
+  screenNameParagraph: {
+    marginTop: 5,
+    fontSize: 15,
   },
 });
