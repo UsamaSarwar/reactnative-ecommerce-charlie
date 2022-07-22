@@ -8,6 +8,7 @@ import UpdatePasswordScreen from "../screens/auth/UpdatePasswordScreen";
 import UserProfileScreen from "../screens/profile/UserProfileScreen";
 import MyAccountScreen from "../screens/profile/MyAccountScreen";
 import AddProductScreen from "../screens/admin/AddProductScreen";
+import DashboardScreen from "../screens/admin/DashboardScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +16,7 @@ const Routes = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="addproduct"
+        initialRouteName="dashboard"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="splash" component={Splash} />
@@ -26,6 +27,7 @@ const Routes = () => {
         <Stack.Screen name="userprofile" component={UserProfileScreen} />
         <Stack.Screen name="myaccount" component={MyAccountScreen} />
         <Stack.Screen name="addproduct" component={AddProductScreen} />
+        <Stack.Screen name="dashboard" component={DashboardScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
