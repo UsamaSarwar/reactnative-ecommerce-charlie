@@ -10,6 +10,7 @@ Open-Source React Native Ecommerce Cross Platform Mobile App
 - [x] User Profile Screen
 - [x] My Account Screen
 - [x] Update Password Screen
-- [ ] Admin Login
-- [ ] Admin Dashboard
-- [ ] Admin Add Product
+- [x] Admin Login
+- [x] Admin Dashboard
+- [x] Admin Add Product
+- [ ] Admin View Product
