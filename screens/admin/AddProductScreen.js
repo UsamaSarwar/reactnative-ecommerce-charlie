@@ -21,6 +21,7 @@ const AddProductScreen = ({ navigation }) => {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
+  const [quanlity, setQuantity] = useState("");
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -100,6 +101,13 @@ const AddProductScreen = ({ navigation }) => {
             value={price}
             setValue={setPrice}
             placeholder={"Price"}
+            placeholderTextColor={colors.muted}
+            radius={5}
+          />
+          <CustomInput
+            value={quanlity}
+            setValue={setQuantity}
+            placeholder={"Quantity"}
             placeholderTextColor={colors.muted}
             radius={5}
           />

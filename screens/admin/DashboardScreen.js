@@ -91,7 +91,7 @@ const DashboardScreen = ({ navigation }) => {
             text={"Products"}
             Icon={Ionicons}
             iconName={"md-square"}
-            onPress={() => console.log("working....")}
+            onPress={() => navigation.navigate("viewproduct")}
             onPressSecondary={() => navigation.navigate("addproduct")}
             type="morden"
           />
