@@ -1,26 +1,33 @@
 import {
   StyleSheet,
-  StatusBar,
-  View,
-  TouchableOpacity,
-  Text,
   Image,
+  TouchableOpacity,
+  View,
+  StatusBar,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import cartIcon from "../../assets/icons/cart_beg.png";
-const HomeScreen = ({ navigation }) => {
+import { Ionicons } from "@expo/vector-icons";
+import cartIcon from "../../assets/icons/cart_beg_active.png";
+import { colors } from "../../constants";
+
+const CartScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
       <View style={styles.topBarContainer}>
-        <TouchableOpacity>
-          <Ionicons name="menu" size={30} color={colors.muted} />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Ionicons
+            name="arrow-back-circle-outline"
+            size={30}
+            color={colors.muted}
+          />
         </TouchableOpacity>
-        <View>
-          <Text style={styles.toBarText}>Home</Text>
-        </View>
-        <TouchableOpacity onPress={() => navigation.navigate("cart")}>
+        <View></View>
+        <TouchableOpacity>
           <Image source={cartIcon} />
         </TouchableOpacity>
       </View>
@@ -28,7 +35,7 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-export default HomeScreen;
+export default CartScreen;
 
 const styles = StyleSheet.create({
   container: {

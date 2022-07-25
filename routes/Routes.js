@@ -10,6 +10,7 @@ import AddProductScreen from "../screens/admin/AddProductScreen";
 import DashboardScreen from "../screens/admin/DashboardScreen";
 import ViewProductScreen from "../screens/admin/ViewProductScreen";
 import Tabs from "./tabs/Tabs";
+import CartScreen from "../screens/user/CartScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,7 @@ const Routes = () => {
         <Stack.Screen name="addproduct" component={AddProductScreen} />
         <Stack.Screen name="viewproduct" component={ViewProductScreen} />
         <Stack.Screen name="tab" component={Tabs} />
+        <Stack.Screen name="cart" component={CartScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
