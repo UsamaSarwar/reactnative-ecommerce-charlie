@@ -12,8 +12,10 @@ import OptionList from "../../components/OptionList/OptionList";
 import { colors } from "../../constants";
 
 const UserProfileScreen = ({ navigation, route }) => {
-  const { User } = route.params;
-  const userID = User["_id"];
+  // const { User } = route.params;
+  // const userID = User["_id"];
+  const User = {};
+  const userID = "65767575765";
   return (
     <View style={styles.container}>
       <StatusBar style="auto"></StatusBar>
