@@ -14,6 +14,7 @@ import { colors } from "../../constants";
 import CartProductList from "../../components/CartProductList/CartProductList";
 import imageCX from "../../assets/image/shirt1.png";
 import CustomButton from "../../components/CustomButton";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const data = [
   {
@@ -87,7 +88,13 @@ const CartScreen = ({ navigation }) => {
       </ScrollView>
       <View style={styles.cartBottomContainer}>
         <View style={styles.cartBottomLeftContainer}>
-          <Text>ICON</Text>
+          <View style={styles.IconContainer}>
+            <MaterialIcons
+              name="featured-play-list"
+              size={24}
+              color={colors.primary}
+            />
+          </View>
           <View>
             <Text style={styles.cartBottomPrimaryText}>Total</Text>
             <Text style={styles.cartBottomSecondaryText}>90$</Text>
@@ -167,5 +174,15 @@ const styles = StyleSheet.create({
   emptyView: {
     width: "100%",
     height: 20,
+  },
+  IconContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.light,
+    height: 40,
+    width: 40,
+    borderRadius: 5,
   },
 });
