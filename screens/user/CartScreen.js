@@ -58,17 +58,24 @@ const CartScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar></StatusBar>
       <View style={styles.topBarContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons
-            name="arrow-back-circle-outline"
-            size={30}
-            color={colors.muted}
-          />
-        </TouchableOpacity>
+        <View style={styles.cartInfoContainerTopBar}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <Ionicons
+              name="arrow-back-circle-outline"
+              size={30}
+              color={colors.muted}
+            />
+          </TouchableOpacity>
+          <View style={styles.cartInfoTopBar}>
+            <Text>Your Cart</Text>
+            <Text>{data.length} Items</Text>
+          </View>
+        </View>
+
         <View></View>
         <TouchableOpacity>
           <Image source={cartIcon} />
@@ -97,7 +104,7 @@ const CartScreen = ({ navigation }) => {
           </View>
           <View>
             <Text style={styles.cartBottomPrimaryText}>Total</Text>
-            <Text style={styles.cartBottomSecondaryText}>90$</Text>
+            <Text style={styles.cartBottomSecondaryText}>{30 * 6}$</Text>
           </View>
         </View>
         <View style={styles.cartBottomRightContainer}>
@@ -184,5 +191,16 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 5,
+  },
+  cartInfoContainerTopBar: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cartInfoTopBar: {
+    justifyContent: "center",
+    alignItems: "flex-start",
+    marginLeft: 5,
   },
 });

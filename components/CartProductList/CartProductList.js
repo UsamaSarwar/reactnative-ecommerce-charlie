@@ -29,17 +29,19 @@ const CartProductList = ({ image, title, price, handleDelete }) => {
   };
   return (
     <GestureHandlerRootView>
-      <Swipeable renderRightActions={rightSwipe}>
-        <View style={styles.container}>
-          <View style={styles.imageContainer}>
-            <Image source={image} style={styles.productImage} />
+      <View style={styles.containerOuter}>
+        <Swipeable renderRightActions={rightSwipe}>
+          <View style={styles.container}>
+            <View style={styles.imageContainer}>
+              <Image source={image} style={styles.productImage} />
+            </View>
+            <View style={styles.productInfoContainer}>
+              <Text style={styles.productTitle}>{title}</Text>
+              <Text style={styles.productPrice}>{price} $</Text>
+            </View>
           </View>
-          <View style={styles.productInfoContainer}>
-            <Text style={styles.productTitle}>{title}</Text>
-            <Text style={styles.productPrice}>{price} $</Text>
-          </View>
-        </View>
-      </Swipeable>
+        </Swipeable>
+      </View>
     </GestureHandlerRootView>
   );
 };
@@ -59,6 +61,13 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     elevation: 2,
+  },
+  containerOuter: {
+    backgroundColor: colors.primary_light,
+    height: 120,
+    borderRadius: 15,
+    width: "100%",
+    marginBottom: 10,
   },
   productImage: {
     width: 100,
@@ -94,6 +103,5 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 15,
     marginBottom: 10,
     width: 70,
-    elevation: 3,
   },
 });
