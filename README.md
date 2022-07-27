@@ -13,11 +13,12 @@ Open-Source React Native Ecommerce Cross Platform Mobile App
 - [x] Admin Login
 - [x] Admin Dashboard
 - [x] Admin Add Product
-- [ ] Admin View Product
+- [x] Admin View Product
+- [x] Cart Screen
+- [x] Checkout Screen
 
-
- 
 ## Thanks to all the contributors ❤️
+
 <a href = "https://github.com/UsamaSarwar/reactnative-ecommerce-charlie">
   <img src = "https://contrib.rocks/image?repo=UsamaSarwar/reactnative-ecommerce-charlie"/>
 </a>

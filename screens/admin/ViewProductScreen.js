@@ -13,8 +13,27 @@ import ProductList from "../../components/ProductList/ProductList";
 import productImage from "../../assets/image/shirt.png";
 import productImage1 from "../../assets/image/shirt1.png";
 import productImage2 from "../../assets/image/shirt2.png";
+// import {network} from "../../constants";
 
 const ViewProductScreen = ({ navigation }) => {
+
+
+  var [products, setProducts] = useState([])
+
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow'
+  };
+  
+  fetch(network.serverip+"/products", requestOptions)
+    .then((response) => response.json())
+    .then((json) => {
+      setProducts(json?.data)
+    })
+    .catch(error => console.log('error', error));
+  
+
+
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -43,22 +62,27 @@ const ViewProductScreen = ({ navigation }) => {
         style={{ flex: 1, width: "100%" }}
         showsVerticalScrollIndicator={false}
       >
-        <ProductList
-          image={productImage}
-          title={"Dry Fit Sports"}
-          category={"Shirts"}
-          price={700}
-          qantity={5}
-          onPressView={() => {
-            console.log("view is working");
-          }}
-          onPressEdit={() => {
-            console.log("edit is working");
-          }}
-          onPressDelete={() => {
-            console.log("delete is working");
-          }}
-        />
+        {
+          products.map(product => {
+            return <ProductList
+              image={productImage}
+              title={product?.title}
+              category={" Shirts"}
+              price={product?.price}
+              qantity={product?.sku}
+              onPressView={() => {
+                console.log("view is working "+ product?._id);
+              }}
+              onPressEdit={() => {
+                console.log("edit is working "+ product?._id);
+              }}
+              onPressDelete={() => {
+                console.log("delete is working "+ product?._id);
+              }}
+            />
+          })
+        
+      }
         <ProductList
           image={productImage1}
           title={"Super Fit Sports"}

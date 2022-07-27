@@ -108,7 +108,10 @@ const CartScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.cartBottomRightContainer}>
-          <CustomButton text={"Checkout"} />
+          <CustomButton
+            text={"Checkout"}
+            onPress={() => navigation.navigate("checkout")}
+          />
         </View>
       </View>
     </View>

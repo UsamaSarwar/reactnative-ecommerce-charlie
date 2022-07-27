@@ -26,15 +26,15 @@ const ProductList = ({
         <View style={styles.productInfoContainer}>
           <Text style={styles.productTitle}>{title}</Text>
           <View style={styles.productInfoItem}>
-            <Text style={styles.productInfoItemText}>Category:</Text>
+            <Text style={styles.productInfoItemText}>Category: </Text>
             <Text>{category}</Text>
           </View>
           <View style={styles.productInfoItem}>
-            <Text style={styles.productInfoItemText}>Price:</Text>
+            <Text style={styles.productInfoItemText}>Price: </Text>
             <Text>{price}</Text>
           </View>
           <View style={styles.productInfoItem}>
-            <Text style={styles.productInfoItemText}>Quantity:</Text>
+            <Text style={styles.productInfoItemText}>SKU: </Text>
             <Text>{qantity <= 0 ? "Out of Stock" : qantity}</Text>
           </View>
         </View>

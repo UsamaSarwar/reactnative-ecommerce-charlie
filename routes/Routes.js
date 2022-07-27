@@ -11,6 +11,8 @@ import DashboardScreen from "../screens/admin/DashboardScreen";
 import ViewProductScreen from "../screens/admin/ViewProductScreen";
 import Tabs from "./tabs/Tabs";
 import CartScreen from "../screens/user/CartScreen";
+import CheckoutScreen from "../screens/user/CheckoutScreen.js";
+import OrderConfirmScreen from "../screens/user/OrderConfirmScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +35,8 @@ const Routes = () => {
         <Stack.Screen name="viewproduct" component={ViewProductScreen} />
         <Stack.Screen name="tab" component={Tabs} />
         <Stack.Screen name="cart" component={CartScreen} />
+        <Stack.Screen name="checkout" component={CheckoutScreen} />
+        <Stack.Screen name="orderconfirm" component={OrderConfirmScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

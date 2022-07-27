@@ -52,10 +52,15 @@ const LoginScreen = ({ navigation }) => {
     fetch(network.serverip + "/login", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        if (result.status == 1) {
-          let userId = result.data["_id"];
-          console.log(userId);
-          navigation.replace("userprofile", { User: result.data });
+        if (result.status == 200) {
+          // let userId = result.data["_id"];
+          // console.log(result);
+          // navigation.replace("userprofile", { User: result.data });
+          if(result?.data?.userType == "ADMIN"){
+            navigation.replace("dashboard");
+          }else{
+            navigation.replace("tab");
+          }
         } else {
           setError(result.message);
         }
