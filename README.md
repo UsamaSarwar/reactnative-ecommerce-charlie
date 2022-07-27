@@ -17,6 +17,9 @@ Open-Source React Native Ecommerce Cross Platform Mobile App
 - [x] Cart Screen
 - [x] Checkout Screen
 
+v22.07.28
+The demonstration of the app can be seen from [here](https://drive.google.com/drive/folders/15slmhLrjaohXJRQqqZdA6AvCjTRwM4gG)
+
 ## Thanks to all the contributors ❤️
 
 <a href = "https://github.com/UsamaSarwar/reactnative-ecommerce-charlie">
