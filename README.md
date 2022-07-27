@@ -1,4 +1,6 @@
-# reactnative-ecommerce-charlie
+# React-Native Ecommerce App
+
+## Development Stack ==> MERN Stack
 
 Open-Source React Native Ecommerce Cross Platform Mobile App
 
