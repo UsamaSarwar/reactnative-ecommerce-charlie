@@ -45,7 +45,7 @@ const data = [
   },
 ];
 
-const CheckoutScreen = () => {
+const CheckoutScreen = ({ navigation }) => {
   const [deliveryCost, setDeliveryCost] = useState(0);
   const [totalCost, setTotalCost] = useState(180);
   const [address, setAddress] = useState(
@@ -135,7 +135,10 @@ const CheckoutScreen = () => {
           </View>
         </View>
         <View style={styles.buttomContainer}>
-          <CustomButton text={"Submit Order"} />
+          <CustomButton
+            text={"Submit Order"}
+            onPress={() => navigation.replace("orderconfirm")}
+          />
         </View>
         <View style={styles.emptyView}></View>
       </ScrollView>
