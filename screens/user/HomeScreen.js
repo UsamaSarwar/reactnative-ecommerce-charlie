@@ -16,6 +16,8 @@ import CustomInput from "../../components/CustomInput";
 import { colors } from "../../constants";
 import CustomIconButton from "../../components/CustomIconButton/CustomIconButton";
 import ProductCard from "../../components/ProductCard/ProductCard";
+import { network } from "../../constants";
+import { useEffect, useState } from "react";
 
 const handleProductPress = (product) => {
   console.log(`product:${product.id}`);
@@ -44,34 +46,63 @@ const category = [
   },
 ];
 
-const product = [
-  {
-    id: 1,
-    title: "product1",
-    price: 113,
-    image: require("../../assets/image/shirt.png"),
-  },
-  {
-    id: 2,
-    title: "product2",
-    price: 123,
-    image: require("../../assets/image/shirt1.png"),
-  },
-  {
-    id: 3,
-    title: "product3",
-    price: 233,
-    image: require("../../assets/image/shirt2.png"),
-  },
-  {
-    id: 4,
-    title: "product4",
-    price: 343,
-    image: require("../../assets/image/shirt2.png"),
-  },
-];
+// var product;
+// fetch(network.serverip+"/products", requestOptions)
+//   .then(response => response.text())
+//   .then(result => {
+//     let temp = JSON.parse(result)
+//     product = temp.data
+
+//     console.log(product[1].title)
+
+//   })
+// .catch(error => console.log('error==>', error));
+
+// const product = [
+//   {
+//     id: 1,
+//     title: "product1",
+//     price: 113,
+//     image: require("../../assets/image/shirt.png"),
+//   },
+//   {
+//     id: 2,
+//     title: "product2",
+//     price: 123,
+//     image: require("../../assets/image/shirt1.png"),
+//   },
+//   {
+//     id: 3,
+//     title: "product3",
+//     price: 233,
+//     image: require("../../assets/image/shirt2.png"),
+//   },
+//   {
+//     id: 4,
+//     title: "product4",
+//     price: 343,
+//     image: require("../../assets/image/shirt2.png"),
+//   },
+// ];
 
 const HomeScreen = ({ navigation }) => {
+  var [isLoading, setLoading] = useState(true);
+  var [product, setProduct] = useState([]);
+
+  var requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
+  useEffect(() => {
+    fetch(network.serverip + "/products", requestOptions)
+      .then((response) => response.json())
+      .then((json) => {
+        setProduct(json?.data);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -123,24 +154,24 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.emptyView}></View>
         </View>
         <View style={styles.primaryTextContainer}>
-          <Text style={styles.primaryText}>Recent</Text>
+          <Text style={styles.primaryText}>Most Viewed Products</Text>
         </View>
         <View style={styles.productCardContainer}>
           <FlatList
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             data={product}
+            keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View style={{ marginLeft: 5, marginBottom: 10, marginRight: 5 }}>
                 <ProductCard
                   name={item.title}
-                  image={item.image}
+                  image={require("../../assets/image/shirt2.png")}
                   price={item.price}
                   onPress={() => handleProductPress(item)}
                 />
               </View>
             )}
-            keyExtractor={(item) => item.id}
           />
           <View style={styles.emptyView}></View>
         </View>

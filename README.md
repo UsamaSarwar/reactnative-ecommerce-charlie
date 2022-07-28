@@ -1,4 +1,6 @@
-# reactnative-ecommerce-charlie
+# React-Native Ecommerce App
+
+## Development Stack ==> MERN Stack
 
 Open-Source React Native Ecommerce Cross Platform Mobile App
 
@@ -16,6 +18,10 @@ Open-Source React Native Ecommerce Cross Platform Mobile App
 - [x] Admin View Product
 - [x] Cart Screen
 - [x] Checkout Screen
+
+v22.07.28
+
+The demonstration of the app can be seen from [here](https://drive.google.com/drive/folders/15slmhLrjaohXJRQqqZdA6AvCjTRwM4gG)
 
 ## Thanks to all the contributors ❤️
 
