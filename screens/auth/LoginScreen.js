@@ -76,7 +76,7 @@ const LoginScreen = ({ navigation }) => {
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <ScrollView style={{ flex: 1, width: "100%" }}>
+      <View style={{ flex: 1, width: "100%" }}>
         <StatusBar></StatusBar>
         <View style={styles.welconeContainer}>
           <View>
@@ -118,7 +118,7 @@ const LoginScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-      </ScrollView>
+      </View>
       <View style={styles.buttomContainer}>
         <CustomButton text={"Login"} onPress={loginHandle} />
       </View>
