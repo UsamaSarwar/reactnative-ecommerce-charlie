@@ -17,6 +17,10 @@ import { colors } from "../../constants";
 import CustomIconButton from "../../components/CustomIconButton/CustomIconButton";
 import ProductCard from "../../components/ProductCard/ProductCard";
 
+const handleProductPress = (product) => {
+  console.log(`product:${product.id}`);
+};
+
 const category = [
   {
     id: 1,
@@ -132,6 +136,7 @@ const HomeScreen = ({ navigation }) => {
                   name={item.title}
                   image={item.image}
                   price={item.price}
+                  onPress={() => handleProductPress(item)}
                 />
               </View>
             )}
