@@ -21,7 +21,9 @@ Open-Source React Native Ecommerce Cross Platform Mobile App
 
 v22.07.28
 
-The demonstration of the app can be seen from [here](https://drive.google.com/drive/folders/15slmhLrjaohXJRQqqZdA6AvCjTRwM4gG)
+The demonstration of Signup flow and the flow of login from normal user and admin can be seen from [here](https://drive.google.com/drive/folders/1jnFENm2_fdwvpfrqEZxrqx9pOThvSMa3)
+
+The demonstration of the app can be seen from [here](https://drive.google.com/drive/folders/1PNyGSzUDNxUtrmtVk9bp8Lp82INrSct-)
 
 ## Thanks to all the contributors ❤️
 
