@@ -35,9 +35,14 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const loginHandle = () => {
-    console.log("button pressed");
     setError("");
     // if email does not contain @ sign
+    if (email == "") {
+      return setError("Please enter your email");
+    }
+    if (password == "") {
+      return setError("Please enter your password");
+    }
     if (!email.includes("@")) {
       return setError("Email is not valid");
     }
@@ -45,20 +50,19 @@ const LoginScreen = ({ navigation }) => {
     if (email.length < 6) {
       return setError("Email is too short");
     }
-    // length of password must be greater than 7 characters
-    if (password.length < 8) {
-      return setError("Password must be 8 characters long");
+    // length of password must be greater than 5 characters
+    if (password.length < 6) {
+      return setError("Password must be 6 characters long");
     }
     fetch(network.serverip + "/login", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        if (result.status == 200) {
-          // let userId = result.data["_id"];
-          // console.log(result);
-          // navigation.replace("userprofile", { User: result.data });
-          if(result?.data?.userType == "ADMIN"){
+        console.log(result);
+
+        if (result.status == 200 || result.status == 1) {
+          if (result?.data?.userType == "ADMIN") {
             navigation.replace("dashboard");
-          }else{
+          } else {
             navigation.replace("tab");
           }
         } else {

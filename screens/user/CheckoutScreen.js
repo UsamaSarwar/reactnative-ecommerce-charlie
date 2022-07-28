@@ -56,7 +56,11 @@ const CheckoutScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar></StatusBar>
       <View style={styles.topBarContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
           <Ionicons
             name="arrow-back-circle-outline"
             size={30}

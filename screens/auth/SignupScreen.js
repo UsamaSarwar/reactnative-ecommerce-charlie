@@ -40,14 +40,23 @@ const SignupScreen = ({ navigation }) => {
   };
 
   const signUpHandle = () => {
+    if (email == "") {
+      return setError("Please enter your email");
+    }
+    if (name == "") {
+      return setError("Please enter your name");
+    }
+    if (password == "") {
+      return setError("Please enter your password");
+    }
     if (!email.includes("@")) {
       return setError("Email is not valid");
     }
     if (email.length < 6) {
       return setError("Email is too short");
     }
-    if (password.length < 8) {
-      return setError("Password must be 8 characters long");
+    if (password.length < 5) {
+      return setError("Password must be 6 characters long");
     }
     if (password != confirmPassword) {
       return setError("password does not match");

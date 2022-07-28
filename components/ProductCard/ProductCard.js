@@ -1,12 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import React from "react";
 import { colors } from "../../constants";
-import imageCX from "../../assets/image/shirt1.png";
 import { Ionicons } from "@expo/vector-icons";
 
-const ProductCard = ({ name, price, image }) => {
+const ProductCard = ({ name, price, image, onPress }) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.imageContainer}>
         <Image source={image} style={styles.productImage} />
       </View>
@@ -21,7 +20,7 @@ const ProductCard = ({ name, price, image }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
