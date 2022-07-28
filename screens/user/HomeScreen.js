@@ -19,10 +19,6 @@ import ProductCard from "../../components/ProductCard/ProductCard";
 import { network } from "../../constants";
 import { useEffect, useState } from "react";
 
-const handleProductPress = (product) => {
-  console.log(`product:${product.id}`);
-};
-
 const category = [
   {
     id: 1,
@@ -58,50 +54,54 @@ const category = [
 //   })
 // .catch(error => console.log('error==>', error));
 
-// const product = [
-//   {
-//     id: 1,
-//     title: "product1",
-//     price: 113,
-//     image: require("../../assets/image/shirt.png"),
-//   },
-//   {
-//     id: 2,
-//     title: "product2",
-//     price: 123,
-//     image: require("../../assets/image/shirt1.png"),
-//   },
-//   {
-//     id: 3,
-//     title: "product3",
-//     price: 233,
-//     image: require("../../assets/image/shirt2.png"),
-//   },
-//   {
-//     id: 4,
-//     title: "product4",
-//     price: 343,
-//     image: require("../../assets/image/shirt2.png"),
-//   },
-// ];
+const product = [
+  {
+    id: 1,
+    title: "product1",
+    price: 113,
+    image: require("../../assets/image/shirt.png"),
+  },
+  {
+    id: 2,
+    title: "product2",
+    price: 123,
+    image: require("../../assets/image/shirt1.png"),
+  },
+  {
+    id: 3,
+    title: "product3",
+    price: 233,
+    image: require("../../assets/image/shirt2.png"),
+  },
+  {
+    id: 4,
+    title: "product4",
+    price: 343,
+    image: require("../../assets/image/shirt2.png"),
+  },
+];
 
 const HomeScreen = ({ navigation }) => {
-  var [isLoading, setLoading] = useState(true);
-  var [product, setProduct] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+  // var [product, setProduct] = useState([]);
 
-  var requestOptions = {
-    method: "GET",
-    redirect: "follow",
+  // var requestOptions = {
+  //   method: "GET",
+  //   redirect: "follow",
+  // };
+  // useEffect(() => {
+  //   fetch(network.serverip + "/products", requestOptions)
+  //     .then((response) => response.json())
+  //     .then((json) => {
+  //       setProduct(json?.data);
+  //     })
+  //     .catch((error) => console.error(error))
+  //     .finally(() => setLoading(false));
+  // }, []);
+  const handleProductPress = (product) => {
+    navigation.navigate("productdetail");
+    console.log(`product:${product.id}`);
   };
-  useEffect(() => {
-    fetch(network.serverip + "/products", requestOptions)
-      .then((response) => response.json())
-      .then((json) => {
-        setProduct(json?.data);
-      })
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -166,7 +166,7 @@ const HomeScreen = ({ navigation }) => {
               <View style={{ marginLeft: 5, marginBottom: 10, marginRight: 5 }}>
                 <ProductCard
                   name={item.title}
-                  image={require("../../assets/image/shirt2.png")}
+                  image={item.image}
                   price={item.price}
                   onPress={() => handleProductPress(item)}
                 />

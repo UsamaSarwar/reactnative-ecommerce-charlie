@@ -7,7 +7,7 @@ import {
   Text,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import cartIcon from "../../assets/icons/cart_beg_active.png";
 import { colors } from "../../constants";
@@ -51,11 +51,13 @@ const CartScreen = ({ navigation }) => {
   ]);
 
   const deleteItem = (id, index) => {
-    let items = data;
-    items.splice(index, 1);
-    setData(items);
-    console.log(data);
+    let item = data;
+    item.slice(index, 1);
+    setData(item);
+    console.log(id);
   };
+
+  useEffect(() => {}, [data]);
 
   return (
     <View style={styles.container}>
@@ -85,13 +87,13 @@ const CartScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.cartProductListContiainer}>
-        {data.map((product, index) => (
+        {data.map((item, index) => (
           <CartProductList
             key={index}
             image={imageCX}
-            title={product.title}
-            price={product.price}
-            handleDelete={() => deleteItem(product, index)}
+            title={item.title}
+            price={item.price}
+            handleDelete={() => deleteItem(item, index)}
           />
         ))}
         <View style={styles.emptyView}></View>

@@ -21,7 +21,7 @@ const Routes = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="productdetail"
+        initialRouteName="tab"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="splash" component={Splash} />
