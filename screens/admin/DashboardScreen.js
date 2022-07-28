@@ -50,8 +50,12 @@ const DashboardScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar></StatusBar>
       <View style={styles.topBarContainer}>
-        <TouchableOpacity>
-          <Ionicons name="menu" size={30} color={colors.muted} />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.replace("login");
+          }}
+        >
+          <Ionicons name="log-out" size={30} color={colors.muted} />
         </TouchableOpacity>
         <View>
           <Text style={styles.toBarText}>Dashboard</Text>

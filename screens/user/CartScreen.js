@@ -22,31 +22,19 @@ const CartScreen = ({ navigation }) => {
       id: 1,
       title: "product1",
       price: 30,
+      image: require("../../assets/image/shirt.png"),
     },
     {
       id: 2,
       title: "product2",
       price: 30,
+      image: require("../../assets/image/shirt1.png"),
     },
     {
       id: 3,
       title: "product3",
       price: 30,
-    },
-    {
-      id: 4,
-      title: "product4",
-      price: 30,
-    },
-    {
-      id: 5,
-      title: "product5",
-      price: 30,
-    },
-    {
-      id: 6,
-      title: "product6",
-      price: 30,
+      image: require("../../assets/image/shirt2.png"),
     },
   ]);
 
@@ -90,7 +78,7 @@ const CartScreen = ({ navigation }) => {
         {data.map((item, index) => (
           <CartProductList
             key={index}
-            image={imageCX}
+            image={item.image}
             title={item.title}
             price={item.price}
             handleDelete={() => deleteItem(item, index)}

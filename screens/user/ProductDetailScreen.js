@@ -116,7 +116,12 @@ const ProductDetailScreen = ({ navigation }) => {
               </View>
             </View>
             <View style={styles.productButtonContainer}>
-              <CustomButton text={"Add to Cart"} />
+              <CustomButton
+                text={"Add to Cart"}
+                onPress={() => {
+                  navigation.navigate("cart");
+                }}
+              />
             </View>
           </View>
         </View>
