@@ -20,7 +20,7 @@ import ProgressDialog from "react-native-progress-dialog";
 const AddProductScreen = ({ navigation }) => {
   const [isloading, setIsloading] = useState(false);
   const [title, setTitle] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState("");
   const [sku, setSku] = useState("");
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");

@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import ProductList from "../../components/ProductList/ProductList";
@@ -25,36 +25,16 @@ var requestOptions = {
   redirect: "follow",
 };
 
+var ProductListRequestOptions = {
+  method: "GET",
+  redirect: "follow",
+};
+
 const ViewProductScreen = ({ navigation }) => {
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Wait Please...");
   const [error, setError] = useState("");
-  const [products, setProducts] = useState([
-    {
-      id: "62e155bc7d6616140c1f369f",
-      title: "product1",
-      price: 113,
-      image: require("../../assets/image/shirt.png"),
-    },
-    {
-      id: "62e155cf7d6616140c1f36a2",
-      title: "product2",
-      price: 123,
-      image: require("../../assets/image/shirt1.png"),
-    },
-    {
-      id: "62e361bdd06ac512d29b4e51",
-      title: "product3",
-      price: 233,
-      image: require("../../assets/image/shirt2.png"),
-    },
-    {
-      id: "62e362cfa861f0cc7f11e783",
-      title: "product4",
-      price: 343,
-      image: require("../../assets/image/shirt2.png"),
-    },
-  ]);
+  const [products, setProducts] = useState([]);
 
   const handleDelete = (id) => {
     setIsloading(true);
@@ -76,6 +56,26 @@ const ViewProductScreen = ({ navigation }) => {
         console.log("error", error);
       });
   };
+
+  useEffect(() => {
+    setIsloading(true);
+    fetch(`${network.serverip}/products`, ProductListRequestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          console.log(result.data);
+          setProducts(result.data);
+        } else {
+          setError(result.message);
+        }
+        setIsloading(false);
+      })
+      .catch((error) => {
+        setIsloading(false);
+        setError(error.message);
+        console.log("error", error);
+      });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -107,27 +107,28 @@ const ViewProductScreen = ({ navigation }) => {
         style={{ flex: 1, width: "100%" }}
         showsVerticalScrollIndicator={false}
       >
-        {products.map((product, index) => {
-          return (
-            <ProductList
-              key={index}
-              image={product.image}
-              title={product?.title}
-              category={"Garments"}
-              price={product?.price}
-              qantity={product?.sku}
-              onPressView={() => {
-                console.log("view is working " + product.id);
-              }}
-              onPressEdit={() => {
-                console.log("edit is working " + product.id);
-              }}
-              onPressDelete={() => {
-                handleDelete(product.id);
-              }}
-            />
-          );
-        })}
+        {products &&
+          products.map((product, index) => {
+            return (
+              <ProductList
+                key={index}
+                image={require("../../assets/image/shirt2.png")}
+                title={product?.title}
+                category={"Garments"}
+                price={product?.price}
+                qantity={product?.sku}
+                onPressView={() => {
+                  console.log("view is working " + product._id);
+                }}
+                onPressEdit={() => {
+                  console.log("edit is working " + product._id);
+                }}
+                onPressDelete={() => {
+                  handleDelete(product._id);
+                }}
+              />
+            );
+          })}
       </ScrollView>
     </View>
   );
