@@ -9,6 +9,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import ProductList from "../../components/ProductList/ProductList";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
@@ -44,7 +45,7 @@ const ViewProductScreen = ({ navigation }) => {
       .then((result) => {
         if (result.success) {
           setError(result.message);
-          console.log(result);
+          // console.log(result);
         } else {
           setError(result.message);
         }
@@ -63,8 +64,9 @@ const ViewProductScreen = ({ navigation }) => {
       .then((response) => response.json())
       .then((result) => {
         if (result.success) {
-          console.log(result.data);
+          // console.log(result.data);
           setProducts(result.data);
+          setError("");
         } else {
           setError(result.message);
         }
@@ -93,6 +95,13 @@ const ViewProductScreen = ({ navigation }) => {
             color={colors.muted}
           />
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("addproduct");
+          }}
+        >
+          <AntDesign name="plussquare" size={30} color={colors.muted} />
+        </TouchableOpacity>
       </View>
       <View style={styles.screenNameContainer}>
         <View>
@@ -112,7 +121,7 @@ const ViewProductScreen = ({ navigation }) => {
             return (
               <ProductList
                 key={index}
-                image={require("../../assets/image/shirt2.png")}
+                image={require("../../assets/image/shirt1.png")}
                 title={product?.title}
                 category={"Garments"}
                 price={product?.price}
@@ -121,7 +130,7 @@ const ViewProductScreen = ({ navigation }) => {
                   console.log("view is working " + product._id);
                 }}
                 onPressEdit={() => {
-                  console.log("edit is working " + product._id);
+                  navigation.navigate("editproduct", { product: product });
                 }}
                 onPressDelete={() => {
                   handleDelete(product._id);
@@ -149,7 +158,7 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   formContainer: {

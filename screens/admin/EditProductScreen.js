@@ -8,7 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { colors, network } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
@@ -17,14 +17,26 @@ import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import * as ImagePicker from "expo-image-picker";
 import ProgressDialog from "react-native-progress-dialog";
 
-const AddProductScreen = ({ navigation }) => {
+const EditProductScreen = ({ navigation, route }) => {
+  const { product } = route.params;
+  console.log(product);
   const [isloading, setIsloading] = useState(false);
+  const [label, setLabel] = useState("Updating...");
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [sku, setSku] = useState("");
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
   const [quanlity, setQuantity] = useState("");
+
+  useEffect(() => {
+    // setPrice(product.price);
+    setImage(null);
+    setTitle(product.title);
+    setSku(product.sku);
+    setQuantity("1");
+    setPrice(product.price.toString());
+  }, []);
 
   var myHeaders = new Headers();
   myHeaders.append(
@@ -63,7 +75,7 @@ const AddProductScreen = ({ navigation }) => {
     }
   };
 
-  const addProductHandle = () => {
+  const editProductHandle = () => {
     setIsloading(true);
     if (title == "") {
       setError("Please enter the product title");
@@ -78,13 +90,21 @@ const AddProductScreen = ({ navigation }) => {
       setError("Please upload the product image");
       setIsloading(false);
     } else {
-      fetch(network.serverip + "/product", requestOptions)
+      console.log(`${network.serverip}"/update-product?id=${product._id}"`);
+      fetch(
+        `${network.serverip}/update-product?id=${product._id}`,
+        requestOptions
+      )
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
+          //   console.log(result);
           if (result.success == true) {
             setIsloading(false);
             setError(result.message);
+            setPrice("");
+            setQuantity("");
+            setSku("");
+            setTitle("");
           }
         })
         .catch((error) => {
@@ -98,7 +118,7 @@ const AddProductScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <StatusBar></StatusBar>
-      <ProgressDialog visible={isloading} label={"Adding ..."} />
+      <ProgressDialog visible={isloading} label={label} />
       <View style={styles.TopBarContainer}>
         <TouchableOpacity
           onPress={() => {
@@ -114,10 +134,10 @@ const AddProductScreen = ({ navigation }) => {
       </View>
       <View style={styles.screenNameContainer}>
         <View>
-          <Text style={styles.screenNameText}>Add Product</Text>
+          <Text style={styles.screenNameText}>Edit Product</Text>
         </View>
         <View>
-          <Text style={styles.screenNameParagraph}>Add product details</Text>
+          <Text style={styles.screenNameParagraph}>Edit product details</Text>
         </View>
       </View>
       <CustomAlert message={error} type={"error"} />
@@ -169,13 +189,13 @@ const AddProductScreen = ({ navigation }) => {
         </View>
       </ScrollView>
       <View style={styles.buttomContainer}>
-        <CustomButton text={"Add Product"} onPress={addProductHandle} />
+        <CustomButton text={"Edit Product"} onPress={editProductHandle} />
       </View>
     </KeyboardAvoidingView>
   );
 };
 
-export default AddProductScreen;
+export default EditProductScreen;
 
 const styles = StyleSheet.create({
   container: {
