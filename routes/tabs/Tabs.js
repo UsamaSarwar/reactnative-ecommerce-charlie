@@ -12,13 +12,15 @@ import userIconActive from "../../assets/icons/bar_profile_icon_active.png";
 
 const Tab = createBottomTabNavigator();
 
-const Tabs = ({ navigation }) => {
+const Tabs = ({ navigation, route }) => {
+  const { user } = route.params;
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.primary,
+
         tabBarIcon: ({ focused }) => {
           let routename = route.name;
           if (routename == "home") {
@@ -74,9 +76,21 @@ const Tabs = ({ navigation }) => {
         },
       })}
     >
-      <Tab.Screen name="home" component={HomeScreen} />
-      <Tab.Screen name="wishlist" component={HomeScreen} />
-      <Tab.Screen name="user" component={UserProfileScreen} />
+      <Tab.Screen
+        name="home"
+        component={HomeScreen}
+        initialParams={{ user: user }}
+      />
+      <Tab.Screen
+        name="wishlist"
+        component={HomeScreen}
+        initialParams={{ user: user }}
+      />
+      <Tab.Screen
+        name="user"
+        component={UserProfileScreen}
+        initialParams={{ user: user }}
+      />
     </Tab.Navigator>
   );
 };

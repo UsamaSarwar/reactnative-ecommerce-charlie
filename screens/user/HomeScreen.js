@@ -81,8 +81,10 @@ const product = [
   },
 ];
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
+  const { user } = route.params;
   const [isLoading, setLoading] = useState(true);
+  console.log(user);
   // var [product, setProduct] = useState([]);
 
   // var requestOptions = {

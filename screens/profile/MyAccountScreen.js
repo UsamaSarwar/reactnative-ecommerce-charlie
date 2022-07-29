@@ -4,6 +4,7 @@ import {
   View,
   StatusBar,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import UserProfileCard from "../../components/UserProfileCard/UserProfileCard";
@@ -13,7 +14,30 @@ import OptionList from "../../components/OptionList/OptionList";
 import { network } from "../../constants";
 
 const MyAccountScreen = ({ navigation, route }) => {
-  const { userID } = route.params;
+  const [showBox, setShowBox] = useState(true);
+  const { user } = route.params;
+  const userID = user["_id"];
+  console.log(userID);
+
+  const showConfirmDialog = (id) => {
+    return Alert.alert(
+      "Are your sure?",
+      "Are you sure you want to remove your account?",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            setShowBox(false);
+            DeleteAccontHandle(id);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]
+    );
+  };
+
   const [error, setError] = useState("");
   var requestOptions = {
     method: "GET",
@@ -26,9 +50,9 @@ const MyAccountScreen = ({ navigation, route }) => {
     fetch(fetchURL, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        if (result.status == 1) {
+        if (result.success == true) {
           console.log(result.data);
-          navigation.replace("login");
+          navigation.goBack();
         } else {
           setError(result.message);
         }
@@ -57,8 +81,8 @@ const MyAccountScreen = ({ navigation, route }) => {
       <View style={styles.UserProfileCardContianer}>
         <UserProfileCard
           Icon={Ionicons}
-          name={"Bukhtyar Haider"}
-          email={"bukhtyar.haider1@gmail.com"}
+          name={user["name"]}
+          email={user["email"]}
         />
       </View>
       <View style={styles.OptionsContainer}>
@@ -77,7 +101,8 @@ const MyAccountScreen = ({ navigation, route }) => {
           Icon={MaterialIcons}
           iconName={"delete"}
           type={"danger"}
-          onPress={() => DeleteAccontHandle(userID)}
+          // onPress={() => DeleteAccontHandle(userID)}
+          onPress={() => showConfirmDialog(userID)}
         />
       </View>
     </View>
