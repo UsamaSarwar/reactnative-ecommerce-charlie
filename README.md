@@ -3,7 +3,7 @@
 [![Up to Date](https://github.com/ikatyang/emoji-cheat-sheet/workflows/Up%20to%20Date/badge.svg)](https://github.com/UsamaSarwar/reactnative-ecommerce-charlie)
 
 
-## Development Stack ==> MERN Stack
+## `Development Stack` ➡️ `MERN Stack`
 
 Open-Source React Native Ecommerce Cross Platform Mobile App
 
