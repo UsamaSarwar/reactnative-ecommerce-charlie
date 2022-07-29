@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import cartIcon from "../../assets/icons/cart_beg_active.png";
 import { colors } from "../../constants";
 import CartProductList from "../../components/CartProductList/CartProductList";
-import imageCX from "../../assets/image/shirt1.png";
+
 import CustomButton from "../../components/CustomButton";
 import { MaterialIcons } from "@expo/vector-icons";
 

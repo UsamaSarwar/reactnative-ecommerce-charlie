@@ -43,7 +43,7 @@ const UpdatePasswordScreen = ({ navigation, route }) => {
         .then((response) => response.json())
         .then((result) => {
           console.log(result);
-          navigation.navigate("myaccount", { userID: userID });
+          navigation.goBack();
         })
         .catch((error) => console.log("error", setError(error.message)));
     }

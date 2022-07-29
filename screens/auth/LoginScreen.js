@@ -13,11 +13,13 @@ import CustomInput from "../../components/CustomInput";
 import header_logo from "../../assets/logo/logo.png";
 import CustomButton from "../../components/CustomButton";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
+import ProgressDialog from "react-native-progress-dialog";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isloading, setIsloading] = useState(false);
 
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -35,52 +37,66 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const loginHandle = () => {
+    setIsloading(true);
     setError("");
     // if email does not contain @ sign
     if (email == "") {
+      setIsloading(false);
       return setError("Please enter your email");
     }
     if (password == "") {
+      setIsloading(false);
       return setError("Please enter your password");
     }
     if (!email.includes("@")) {
+      setIsloading(false);
       return setError("Email is not valid");
     }
     // length of email must be greater than 5 characters
     if (email.length < 6) {
+      setIsloading(false);
       return setError("Email is too short");
     }
     // length of password must be greater than 5 characters
     if (password.length < 6) {
+      setIsloading(false);
       return setError("Password must be 6 characters long");
     }
+
     fetch(network.serverip + "/login", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
 
-        if (result.status == 200 || result.status == 1) {
+        if (
+          result.status == 200 ||
+          (result.status == 1 && result.success != false)
+        ) {
           if (result?.data?.userType == "ADMIN") {
-            navigation.replace("dashboard");
+            setIsloading(false);
+            navigation.replace("dashboard", { authUser: result.data });
           } else {
-            navigation.replace("tab");
+            setIsloading(false);
+            navigation.replace("tab", { user: result.data });
           }
         } else {
-          setError(result.message);
+          setIsloading(false);
+          return setError(result.message);
         }
       })
-      .catch((error) => console.log("error", setError(error)));
-    // alert("Logged in successfully!!");
+      .catch((error) => {
+        setIsloading(false);
+        console.log("error", setError(error.message));
+      });
   };
-
-  // const keyboardVerticalOffset = Platform.OS === 'android' ? 40 : 0
 
   return (
     <KeyboardAvoidingView
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <View style={{ flex: 1, width: "100%" }}>
+      <ScrollView style={{ flex: 1, width: "100%" }}>
+        <ProgressDialog visible={isloading} label={"Login ..."} />
         <StatusBar></StatusBar>
         <View style={styles.welconeContainer}>
           <View>

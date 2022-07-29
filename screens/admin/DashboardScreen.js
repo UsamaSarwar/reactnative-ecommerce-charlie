@@ -7,7 +7,7 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "../../constants";
@@ -32,7 +32,7 @@ const data = [
   {
     id: 3,
     title: "Product",
-    value: "12",
+    value: "3",
     iconName: "md-square",
     type: "warning",
   },
@@ -45,7 +45,9 @@ const data = [
   },
 ];
 
-const DashboardScreen = ({ navigation }) => {
+const DashboardScreen = ({ navigation, route }) => {
+  const { authUser } = route.params;
+
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -95,8 +97,12 @@ const DashboardScreen = ({ navigation }) => {
             text={"Products"}
             Icon={Ionicons}
             iconName={"md-square"}
-            onPress={() => navigation.navigate("viewproduct")}
-            onPressSecondary={() => navigation.navigate("addproduct")}
+            onPress={() =>
+              navigation.navigate("viewproduct", { authUser: authUser })
+            }
+            onPressSecondary={() =>
+              navigation.navigate("addproduct", { authUser: authUser })
+            }
             type="morden"
           />
           <OptionList
