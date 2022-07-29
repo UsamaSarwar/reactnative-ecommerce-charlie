@@ -1,4 +1,6 @@
-# React-Native Ecommerce App
+# React-Native Ecommerce App :bomb: 
+
+[![Up to Date]
 
 ## Development Stack ==> MERN Stack
 
