@@ -15,13 +15,37 @@ import CustomButton from "../../components/CustomButton";
 import { Ionicons } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import * as ImagePicker from "expo-image-picker";
+import ProgressDialog from "react-native-progress-dialog";
 
 const AddProductScreen = ({ navigation }) => {
+  const [isloading, setIsloading] = useState(false);
   const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(0);
+  const [sku, setSku] = useState("");
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
   const [quanlity, setQuantity] = useState("");
+
+  var myHeaders = new Headers();
+  myHeaders.append(
+    "x-auth-token",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQ5MGUzNDI4OTI1YjYxNjVmOTA2NTgiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY1OTA0MzU2NywiZXhwIjoxNjU5MDc5NTY3fQ.V0ydzJM8MJqN23Tx5trQ_gDZh5wR9KhpKakrWImb8PA"
+  );
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    title: title,
+    sku: sku,
+    price: price,
+    image: "",
+  });
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -40,14 +64,29 @@ const AddProductScreen = ({ navigation }) => {
   };
 
   const addProductHandle = () => {
+    setIsloading(true);
     if (title == "") {
       setError("Please enter the product title");
-    } else if (price == "") {
+    } else if (price == 0) {
+      setError("Please enter the product price");
+    } else if (price == 0) {
       setError("Please enter the product price");
     } else if (image == null) {
       setError("Please upload the product image");
     } else {
-      console.log("add product api");
+      fetch(network.serverip + "/product", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.success == true) {
+            setError(result.message);
+            navigation.goBack();
+          }
+          console.log(result);
+        })
+        .catch((error) => {
+          setError(error.message);
+          console.log("error", error);
+        });
     }
   };
 
@@ -75,6 +114,7 @@ const AddProductScreen = ({ navigation }) => {
           <Text style={styles.screenNameParagraph}>Add product details</Text>
         </View>
       </View>
+      <CustomAlert message={error} type={"error"} />
       <ScrollView style={{ flex: 1, width: "100%" }}>
         <View style={styles.formContainer}>
           <View style={styles.imageContainer}>
@@ -82,14 +122,23 @@ const AddProductScreen = ({ navigation }) => {
               <Image
                 source={{ uri: image }}
                 style={{ width: 200, height: 200 }}
+                onPress={pickImage}
               />
             ) : (
-              <View style={styles.imageHolder}></View>
+              <TouchableOpacity
+                style={styles.imageHolder}
+                onPress={pickImage}
+              ></TouchableOpacity>
             )}
-            <CustomButton text={"Add Image"} onPress={pickImage} />
           </View>
 
-          <CustomAlert message={error} type={"error"} />
+          <CustomInput
+            value={sku}
+            setValue={setSku}
+            placeholder={"SKU"}
+            placeholderTextColor={colors.muted}
+            radius={5}
+          />
           <CustomInput
             value={title}
             setValue={setTitle}
@@ -179,7 +228,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     width: "100%",
-    height: 300,
+    height: 250,
     backgroundColor: colors.white,
     borderRadius: 10,
     elevation: 5,
@@ -189,6 +238,9 @@ const styles = StyleSheet.create({
   imageHolder: {
     height: 200,
     width: 200,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.light,
     borderRadius: 10,
     elevation: 5,

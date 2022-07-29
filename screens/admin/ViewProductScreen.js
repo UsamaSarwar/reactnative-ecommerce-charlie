@@ -16,23 +16,20 @@ import productImage2 from "../../assets/image/shirt2.png";
 // import {network} from "../../constants";
 
 const ViewProductScreen = ({ navigation }) => {
-
-
-  var [products, setProducts] = useState([])
+  var [products, setProducts] = useState([]);
 
   var requestOptions = {
-    method: 'GET',
-    redirect: 'follow'
+    method: "GET",
+    redirect: "follow",
   };
-  
-  fetch(network.serverip+"/products", requestOptions)
+
+  fetch(network.serverip + "/products", requestOptions)
     .then((response) => response.json())
     .then((json) => {
-      setProducts(json?.data)
+      console.log(json);
+      setProducts(json?.data);
     })
-    .catch(error => console.log('error', error));
-  
-
+    .catch((error) => console.log("error", error));
 
   return (
     <View style={styles.container}>
@@ -62,27 +59,26 @@ const ViewProductScreen = ({ navigation }) => {
         style={{ flex: 1, width: "100%" }}
         showsVerticalScrollIndicator={false}
       >
-        {
-          products.map(product => {
-            return <ProductList
+        {products.map((product) => {
+          return (
+            <ProductList
               image={productImage}
               title={product?.title}
               category={" Shirts"}
               price={product?.price}
               qantity={product?.sku}
               onPressView={() => {
-                console.log("view is working "+ product?._id);
+                console.log("view is working " + product?._id);
               }}
               onPressEdit={() => {
-                console.log("edit is working "+ product?._id);
+                console.log("edit is working " + product?._id);
               }}
               onPressDelete={() => {
-                console.log("delete is working "+ product?._id);
+                console.log("delete is working " + product?._id);
               }}
             />
-          })
-        
-      }
+          );
+        })}
         <ProductList
           image={productImage1}
           title={"Super Fit Sports"}
