@@ -74,7 +74,7 @@ const LoginScreen = ({ navigation }) => {
         ) {
           if (result?.data?.userType == "ADMIN") {
             setIsloading(false);
-            navigation.replace("dashboard");
+            navigation.replace("dashboard", { authUser: result.data });
           } else {
             setIsloading(false);
             navigation.replace("tab", { user: result.data });

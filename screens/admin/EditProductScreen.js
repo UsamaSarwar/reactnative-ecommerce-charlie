@@ -18,7 +18,7 @@ import * as ImagePicker from "expo-image-picker";
 import ProgressDialog from "react-native-progress-dialog";
 
 const EditProductScreen = ({ navigation, route }) => {
-  const { product } = route.params;
+  const { product, authUser } = route.params;
   console.log(product);
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Updating...");
@@ -39,10 +39,7 @@ const EditProductScreen = ({ navigation, route }) => {
   }, []);
 
   var myHeaders = new Headers();
-  myHeaders.append(
-    "x-auth-token",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQ5MGUzNDI4OTI1YjYxNjVmOTA2NTgiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY1OTA0MzU2NywiZXhwIjoxNjU5MDc5NTY3fQ.V0ydzJM8MJqN23Tx5trQ_gDZh5wR9KhpKakrWImb8PA"
-  );
+  myHeaders.append("x-auth-token", authUser.token);
   myHeaders.append("Content-Type", "application/json");
 
   var raw = JSON.stringify({
@@ -122,7 +119,8 @@ const EditProductScreen = ({ navigation, route }) => {
       <View style={styles.TopBarContainer}>
         <TouchableOpacity
           onPress={() => {
-            navigation.replace("viewproduct");
+            // navigation.replace("viewproduct", { authUser: authUser });
+            navigation.goBack();
           }}
         >
           <Ionicons

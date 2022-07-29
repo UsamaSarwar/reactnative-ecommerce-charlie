@@ -5,6 +5,7 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
@@ -14,38 +15,44 @@ import ProductList from "../../components/ProductList/ProductList";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
 
-var myHeaders = new Headers();
-myHeaders.append(
-  "x-auth-token",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQ5MGUzNDI4OTI1YjYxNjVmOTA2NTgiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY1OTA0MzU2NywiZXhwIjoxNjU5MDc5NTY3fQ.V0ydzJM8MJqN23Tx5trQ_gDZh5wR9KhpKakrWImb8PA"
-);
-
-var requestOptions = {
-  method: "GET",
-  headers: myHeaders,
-  redirect: "follow",
-};
-
-var ProductListRequestOptions = {
-  method: "GET",
-  redirect: "follow",
-};
-
-const ViewProductScreen = ({ navigation }) => {
+const ViewProductScreen = ({ navigation, route }) => {
+  const { authUser } = route.params;
   const [isloading, setIsloading] = useState(false);
-  const [label, setLabel] = useState("Wait Please...");
+  const [refeshing, setRefreshing] = useState(false);
+
+  const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [products, setProducts] = useState([]);
 
+  var myHeaders = new Headers();
+  myHeaders.append("x-auth-token", authUser.token);
+
+  var requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  var ProductListRequestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
+
+  const handleOnRefresh = () => {
+    setRefreshing(true);
+    fetchProduct();
+    setRefreshing(false);
+  };
+
   const handleDelete = (id) => {
     setIsloading(true);
-    console.log(id);
+    console.log(`${network.serverip}/delete-product?id=${id}`);
     fetch(`${network.serverip}/delete-product?id=${id}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.success) {
           setError(result.message);
-          // console.log(result);
+          console.log(result);
         } else {
           setError(result.message);
         }
@@ -53,6 +60,23 @@ const ViewProductScreen = ({ navigation }) => {
       })
       .catch((error) => {
         setIsloading(false);
+        setError(error.message);
+        console.log("error", error);
+      });
+  };
+
+  const fetchProduct = () => {
+    fetch(`${network.serverip}/products`, ProductListRequestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          setProducts(result.data);
+          setError("");
+        } else {
+          setError(result.message);
+        }
+      })
+      .catch((error) => {
         setError(error.message);
         console.log("error", error);
       });
@@ -97,7 +121,7 @@ const ViewProductScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("addproduct");
+            navigation.navigate("addproduct", { authUser: authUser });
           }}
         >
           <AntDesign name="plussquare" size={30} color={colors.muted} />
@@ -115,6 +139,9 @@ const ViewProductScreen = ({ navigation }) => {
       <ScrollView
         style={{ flex: 1, width: "100%" }}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
+        }
       >
         {products &&
           products.map((product, index) => {
@@ -130,7 +157,10 @@ const ViewProductScreen = ({ navigation }) => {
                   console.log("view is working " + product._id);
                 }}
                 onPressEdit={() => {
-                  navigation.navigate("editproduct", { product: product });
+                  navigation.navigate("editproduct", {
+                    product: product,
+                    authUser: authUser,
+                  });
                 }}
                 onPressDelete={() => {
                   handleDelete(product._id);

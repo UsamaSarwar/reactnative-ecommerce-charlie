@@ -17,7 +17,8 @@ import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import * as ImagePicker from "expo-image-picker";
 import ProgressDialog from "react-native-progress-dialog";
 
-const AddProductScreen = ({ navigation }) => {
+const AddProductScreen = ({ navigation, route }) => {
+  const { authUser } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
@@ -27,10 +28,7 @@ const AddProductScreen = ({ navigation }) => {
   const [quanlity, setQuantity] = useState("");
 
   var myHeaders = new Headers();
-  myHeaders.append(
-    "x-auth-token",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQ5MGUzNDI4OTI1YjYxNjVmOTA2NTgiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY1OTA0MzU2NywiZXhwIjoxNjU5MDc5NTY3fQ.V0ydzJM8MJqN23Tx5trQ_gDZh5wR9KhpKakrWImb8PA"
-  );
+  myHeaders.append("x-auth-token", authUser.token);
   myHeaders.append("Content-Type", "application/json");
 
   var raw = JSON.stringify({
@@ -102,7 +100,8 @@ const AddProductScreen = ({ navigation }) => {
       <View style={styles.TopBarContainer}>
         <TouchableOpacity
           onPress={() => {
-            navigation.replace("viewproduct");
+            // navigation.replace("viewproduct", { authUser: authUser });
+            navigation.goBack();
           }}
         >
           <Ionicons
