@@ -67,23 +67,28 @@ const AddProductScreen = ({ navigation }) => {
     setIsloading(true);
     if (title == "") {
       setError("Please enter the product title");
+      setIsloading(false);
     } else if (price == 0) {
       setError("Please enter the product price");
-    } else if (price == 0) {
-      setError("Please enter the product price");
+      setIsloading(false);
+    } else if (quanlity <= 0) {
+      setError("Quantity must be greater then 1");
+      setIsloading(false);
     } else if (image == null) {
       setError("Please upload the product image");
+      setIsloading(false);
     } else {
       fetch(network.serverip + "/product", requestOptions)
         .then((response) => response.json())
         .then((result) => {
-          if (result.success == true) {
-            setError(result.message);
-            navigation.goBack();
-          }
           console.log(result);
+          if (result.success == true) {
+            setIsloading(false);
+            setError(result.message);
+          }
         })
         .catch((error) => {
+          setIsloading(false);
           setError(error.message);
           console.log("error", error);
         });
@@ -93,6 +98,7 @@ const AddProductScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <StatusBar></StatusBar>
+      <ProgressDialog visible={isloading} label={"Adding ..."} />
       <View style={styles.TopBarContainer}>
         <TouchableOpacity
           onPress={() => {

@@ -10,29 +10,76 @@ import React, { useState } from "react";
 import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import ProductList from "../../components/ProductList/ProductList";
-import productImage from "../../assets/image/shirt.png";
-import productImage1 from "../../assets/image/shirt1.png";
-import productImage2 from "../../assets/image/shirt2.png";
-// import {network} from "../../constants";
+import CustomAlert from "../../components/CustomAlert/CustomAlert";
+import ProgressDialog from "react-native-progress-dialog";
+
+var myHeaders = new Headers();
+myHeaders.append(
+  "x-auth-token",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmQ5MGUzNDI4OTI1YjYxNjVmOTA2NTgiLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY1OTA0MzU2NywiZXhwIjoxNjU5MDc5NTY3fQ.V0ydzJM8MJqN23Tx5trQ_gDZh5wR9KhpKakrWImb8PA"
+);
+
+var requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+  redirect: "follow",
+};
 
 const ViewProductScreen = ({ navigation }) => {
-  var [products, setProducts] = useState([]);
+  const [isloading, setIsloading] = useState(false);
+  const [label, setLabel] = useState("Wait Please...");
+  const [error, setError] = useState("");
+  const [products, setProducts] = useState([
+    {
+      id: "62e155bc7d6616140c1f369f",
+      title: "product1",
+      price: 113,
+      image: require("../../assets/image/shirt.png"),
+    },
+    {
+      id: "62e155cf7d6616140c1f36a2",
+      title: "product2",
+      price: 123,
+      image: require("../../assets/image/shirt1.png"),
+    },
+    {
+      id: "62e361bdd06ac512d29b4e51",
+      title: "product3",
+      price: 233,
+      image: require("../../assets/image/shirt2.png"),
+    },
+    {
+      id: "62e362cfa861f0cc7f11e783",
+      title: "product4",
+      price: 343,
+      image: require("../../assets/image/shirt2.png"),
+    },
+  ]);
 
-  var requestOptions = {
-    method: "GET",
-    redirect: "follow",
+  const handleDelete = (id) => {
+    setIsloading(true);
+    console.log(id);
+    fetch(`${network.serverip}/delete-product?id=${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          setError(result.message);
+          console.log(result);
+        } else {
+          setError(result.message);
+        }
+        setIsloading(false);
+      })
+      .catch((error) => {
+        setIsloading(false);
+        setError(error.message);
+        console.log("error", error);
+      });
   };
-
-  fetch(network.serverip + "/products", requestOptions)
-    .then((response) => response.json())
-    .then((json) => {
-      console.log(json);
-      setProducts(json?.data);
-    })
-    .catch((error) => console.log("error", error));
 
   return (
     <View style={styles.container}>
+      <ProgressDialog visible={isloading} label={label} />
       <StatusBar></StatusBar>
       <View style={styles.TopBarContainer}>
         <TouchableOpacity
@@ -55,110 +102,32 @@ const ViewProductScreen = ({ navigation }) => {
           <Text style={styles.screenNameParagraph}>View all products</Text>
         </View>
       </View>
+      <CustomAlert message={error} type={"error"} />
       <ScrollView
         style={{ flex: 1, width: "100%" }}
         showsVerticalScrollIndicator={false}
       >
-        {products.map((product) => {
+        {products.map((product, index) => {
           return (
             <ProductList
-              image={productImage}
+              key={index}
+              image={product.image}
               title={product?.title}
-              category={" Shirts"}
+              category={"Garments"}
               price={product?.price}
               qantity={product?.sku}
               onPressView={() => {
-                console.log("view is working " + product?._id);
+                console.log("view is working " + product.id);
               }}
               onPressEdit={() => {
-                console.log("edit is working " + product?._id);
+                console.log("edit is working " + product.id);
               }}
               onPressDelete={() => {
-                console.log("delete is working " + product?._id);
+                handleDelete(product.id);
               }}
             />
           );
         })}
-        <ProductList
-          image={productImage1}
-          title={"Super Fit Sports"}
-          category={"Shirts"}
-          price={700}
-          qantity={0}
-          onPressView={() => {
-            console.log("view is working");
-          }}
-          onPressEdit={() => {
-            console.log("edit is working");
-          }}
-          onPressDelete={() => {
-            console.log("delete is working");
-          }}
-        />
-        <ProductList
-          image={productImage2}
-          title={"Print T-Shirt"}
-          category={"Shirts"}
-          price={1200}
-          qantity={5}
-          onPressView={() => {
-            console.log("view is working");
-          }}
-          onPressEdit={() => {
-            console.log("edit is working");
-          }}
-          onPressDelete={() => {
-            console.log("delete is working");
-          }}
-        />
-        <ProductList
-          image={productImage}
-          title={"Dry Fit Sports"}
-          category={"Shirts"}
-          price={700}
-          qantity={15}
-          onPressView={() => {
-            console.log("view is working");
-          }}
-          onPressEdit={() => {
-            console.log("edit is working");
-          }}
-          onPressDelete={() => {
-            console.log("delete is working");
-          }}
-        />
-        <ProductList
-          image={productImage}
-          title={"Dry Fit Sports"}
-          category={"Shirts"}
-          price={800}
-          qantity={70}
-          onPressView={() => {
-            console.log("view is working");
-          }}
-          onPressEdit={() => {
-            console.log("edit is working");
-          }}
-          onPressDelete={() => {
-            console.log("delete is working");
-          }}
-        />
-        <ProductList
-          image={productImage}
-          title={"Dry Fit Sports"}
-          category={"Shirts"}
-          price={700}
-          qantity={0}
-          onPressView={() => {
-            console.log("view is working");
-          }}
-          onPressEdit={() => {
-            console.log("edit is working");
-          }}
-          onPressDelete={() => {
-            console.log("delete is working");
-          }}
-        />
       </ScrollView>
     </View>
   );

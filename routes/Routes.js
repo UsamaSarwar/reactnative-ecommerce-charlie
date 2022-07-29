@@ -29,7 +29,6 @@ const Routes = () => {
         <Stack.Screen name="signup" component={SignupScreen} />
         <Stack.Screen name="forgetpassword" component={ForgetPasswordScreen} />
         <Stack.Screen name="updatepassword" component={UpdatePasswordScreen} />
-        {/* <Stack.Screen name="userprofile" component={UserProfileScreen} /> */}
         <Stack.Screen name="myaccount" component={MyAccountScreen} />
         <Stack.Screen name="dashboard" component={DashboardScreen} />
         <Stack.Screen name="addproduct" component={AddProductScreen} />
