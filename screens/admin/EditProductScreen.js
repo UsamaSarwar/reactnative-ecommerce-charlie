@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import * as ImagePicker from "expo-image-picker";
 import ProgressDialog from "react-native-progress-dialog";
+import { AntDesign } from "@expo/vector-icons";
 
 const EditProductScreen = ({ navigation, route }) => {
   const { product, authUser } = route.params;
@@ -149,10 +150,9 @@ const EditProductScreen = ({ navigation, route }) => {
                 onPress={pickImage}
               />
             ) : (
-              <TouchableOpacity
-                style={styles.imageHolder}
-                onPress={pickImage}
-              ></TouchableOpacity>
+              <TouchableOpacity style={styles.imageHolder} onPress={pickImage}>
+                <AntDesign name="pluscircle" size={50} color={colors.muted} />
+              </TouchableOpacity>
             )}
           </View>
 

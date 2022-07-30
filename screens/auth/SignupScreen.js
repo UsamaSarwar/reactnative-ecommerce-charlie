@@ -15,6 +15,7 @@ import header_logo from "../../assets/logo/logo.png";
 import CustomButton from "../../components/CustomButton";
 import { Ionicons } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
+import InternetConnectionAlert from "react-native-internet-connection-alert";
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -72,83 +73,89 @@ const SignupScreen = ({ navigation }) => {
       .catch((error) => console.log("error", setError(error.message)));
   };
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <StatusBar></StatusBar>
-      <View style={styles.TopBarContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons
-            name="arrow-back-circle-outline"
-            size={30}
-            color={colors.muted}
-          />
-        </TouchableOpacity>
-      </View>
-      <ScrollView style={{ flex: 1, width: "100%" }}>
-        <View style={styles.welconeContainer}>
-          <Image style={styles.logo} source={header_logo} />
+    <InternetConnectionAlert
+      onChange={(connectionState) => {
+        console.log("Connection State: ", connectionState);
+      }}
+    >
+      <KeyboardAvoidingView style={styles.container}>
+        <StatusBar></StatusBar>
+        <View style={styles.TopBarContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <Ionicons
+              name="arrow-back-circle-outline"
+              size={30}
+              color={colors.muted}
+            />
+          </TouchableOpacity>
         </View>
-        <View style={styles.screenNameContainer}>
-          <View>
-            <Text style={styles.screenNameText}>Sign up</Text>
+        <ScrollView style={{ flex: 1, width: "100%" }}>
+          <View style={styles.welconeContainer}>
+            <Image style={styles.logo} source={header_logo} />
           </View>
-          <View>
-            <Text style={styles.screenNameParagraph}>
-              Create your account on EasyBuy to get an access to millions of
-              products
-            </Text>
+          <View style={styles.screenNameContainer}>
+            <View>
+              <Text style={styles.screenNameText}>Sign up</Text>
+            </View>
+            <View>
+              <Text style={styles.screenNameParagraph}>
+                Create your account on EasyBuy to get an access to millions of
+                products
+              </Text>
+            </View>
           </View>
+          <View style={styles.formContainer}>
+            <CustomAlert message={error} type={"error"} />
+            <CustomInput
+              value={name}
+              setValue={setName}
+              placeholder={"Name"}
+              placeholderTextColor={colors.muted}
+              radius={5}
+            />
+            <CustomInput
+              value={email}
+              setValue={setEmail}
+              placeholder={"Email"}
+              placeholderTextColor={colors.muted}
+              radius={5}
+            />
+            <CustomInput
+              value={password}
+              setValue={setPassword}
+              secureTextEntry={true}
+              placeholder={"Password"}
+              placeholderTextColor={colors.muted}
+              radius={5}
+            />
+            <CustomInput
+              value={confirmPassword}
+              setValue={setConfirmPassword}
+              secureTextEntry={true}
+              placeholder={"Confirm Password"}
+              placeholderTextColor={colors.muted}
+              radius={5}
+            />
+          </View>
+        </ScrollView>
+        <View style={styles.buttomContainer}>
+          <CustomButton text={"Sign up"} onPress={signUpHandle} />
         </View>
-        <View style={styles.formContainer}>
-          <CustomAlert message={error} type={"error"} />
-          <CustomInput
-            value={name}
-            setValue={setName}
-            placeholder={"Name"}
-            placeholderTextColor={colors.muted}
-            radius={5}
-          />
-          <CustomInput
-            value={email}
-            setValue={setEmail}
-            placeholder={"Email"}
-            placeholderTextColor={colors.muted}
-            radius={5}
-          />
-          <CustomInput
-            value={password}
-            setValue={setPassword}
-            secureTextEntry={true}
-            placeholder={"Password"}
-            placeholderTextColor={colors.muted}
-            radius={5}
-          />
-          <CustomInput
-            value={confirmPassword}
-            setValue={setConfirmPassword}
-            secureTextEntry={true}
-            placeholder={"Confirm Password"}
-            placeholderTextColor={colors.muted}
-            radius={5}
-          />
+        <View style={styles.bottomContainer}>
+          <Text>Already have an account?</Text>
+          <Text
+            onPress={() => navigation.navigate("login")}
+            style={styles.signupText}
+          >
+            Login
+          </Text>
         </View>
-      </ScrollView>
-      <View style={styles.buttomContainer}>
-        <CustomButton text={"Sign up"} onPress={signUpHandle} />
-      </View>
-      <View style={styles.bottomContainer}>
-        <Text>Already have an account?</Text>
-        <Text
-          onPress={() => navigation.navigate("login")}
-          style={styles.signupText}
-        >
-          Login
-        </Text>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </InternetConnectionAlert>
   );
 };
 

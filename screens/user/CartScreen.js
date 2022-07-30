@@ -12,11 +12,12 @@ import { Ionicons } from "@expo/vector-icons";
 import cartIcon from "../../assets/icons/cart_beg_active.png";
 import { colors } from "../../constants";
 import CartProductList from "../../components/CartProductList/CartProductList";
-
+import CartEmpty from "../../assets/image/empty_cart.png";
 import CustomButton from "../../components/CustomButton";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const CartScreen = ({ navigation }) => {
+  const [totalPrice, setTotalPrice] = useState(0);
   const [data, setData] = useState([
     {
       id: 1,
@@ -39,13 +40,16 @@ const CartScreen = ({ navigation }) => {
   ]);
 
   const deleteItem = (id, index) => {
-    let item = data;
-    item.slice(index, 1);
-    setData(item);
-    console.log(id);
+    setData((data) => data.filter((_, i) => i !== index));
   };
 
-  useEffect(() => {}, [data]);
+  useEffect(() => {
+    setTotalPrice(
+      data.reduce((accumulator, object) => {
+        return accumulator + object.price;
+      }, 0)
+    );
+  }, [data]);
 
   return (
     <View style={styles.container}>
@@ -74,18 +78,29 @@ const CartScreen = ({ navigation }) => {
           <Image source={cartIcon} />
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.cartProductListContiainer}>
-        {data.map((item, index) => (
-          <CartProductList
-            key={index}
-            image={item.image}
-            title={item.title}
-            price={item.price}
-            handleDelete={() => deleteItem(item, index)}
-          />
-        ))}
-        <View style={styles.emptyView}></View>
-      </ScrollView>
+      {data.length === 0 ? (
+        <View style={styles.cartProductListContiainerEmpty}>
+          {/* <Image
+            source={CartEmpty}
+            style={{ height: 400, resizeMode: "contain" }}
+          /> */}
+          <Text style={styles.secondaryTextSmItalic}>"Cart is empty"</Text>
+        </View>
+      ) : (
+        <ScrollView style={styles.cartProductListContiainer}>
+          {data.map((item, index) => (
+            <CartProductList
+              key={index}
+              index={index}
+              image={item.image}
+              title={item.title}
+              price={item.price}
+              handleDelete={() => deleteItem(item, index)}
+            />
+          ))}
+          <View style={styles.emptyView}></View>
+        </ScrollView>
+      )}
       <View style={styles.cartBottomContainer}>
         <View style={styles.cartBottomLeftContainer}>
           <View style={styles.IconContainer}>
@@ -97,7 +112,7 @@ const CartScreen = ({ navigation }) => {
           </View>
           <View>
             <Text style={styles.cartBottomPrimaryText}>Total</Text>
-            <Text style={styles.cartBottomSecondaryText}>{30 * 6}$</Text>
+            <Text style={styles.cartBottomSecondaryText}>{totalPrice}$</Text>
           </View>
         </View>
         <View style={styles.cartBottomRightContainer}>
@@ -136,6 +151,18 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   cartProductListContiainer: { width: "100%", padding: 20 },
+  cartProductListContiainerEmpty: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  secondaryTextSmItalic: {
+    fontStyle: "italic",
+    fontSize: 15,
+    color: colors.muted,
+  },
   cartBottomContainer: {
     width: "100%",
     height: 120,
