@@ -158,8 +158,11 @@ const HomeScreen = ({ navigation, route }) => {
             style={styles.flatListContainer}
             horizontal={true}
             data={category}
-            renderItem={({ item }) => (
-              <View style={{ marginLeft: 5, marginBottom: 10, marginRight: 5 }}>
+            renderItem={({ item, index }) => (
+              <View
+                style={{ marginLeft: 5, marginBottom: 10, marginRight: 5 }}
+                key={index}
+              >
                 <CustomIconButton text={item.title} image={item.image} />
               </View>
             )}

@@ -116,10 +116,18 @@ const CartScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.cartBottomRightContainer}>
-          <CustomButton
-            text={"Checkout"}
-            onPress={() => navigation.navigate("checkout")}
-          />
+          {data.length > 0 ? (
+            <CustomButton
+              text={"Checkout"}
+              onPress={() => navigation.navigate("checkout")}
+            />
+          ) : (
+            <CustomButton
+              text={"Checkout"}
+              disabled={true}
+              onPress={() => navigation.navigate("checkout")}
+            />
+          )}
         </View>
       </View>
     </View>
