@@ -14,6 +14,7 @@ import { colors } from "../../constants";
 import CustomCard from "../../components/CustomCard/CustomCard";
 import OptionList from "../../components/OptionList/OptionList";
 import InternetConnectionAlert from "react-native-internet-connection-alert";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const data = [
   {
@@ -50,16 +51,13 @@ const DashboardScreen = ({ navigation, route }) => {
   const { authUser } = route.params;
 
   return (
-    <InternetConnectionAlert
-      onChange={(connectionState) => {
-        console.log("Connection State: ", connectionState);
-      }}
-    >
+    <InternetConnectionAlert onChange={(connectionState) => {}}>
       <View style={styles.container}>
         <StatusBar></StatusBar>
         <View style={styles.topBarContainer}>
           <TouchableOpacity
-            onPress={() => {
+            onPress={async () => {
+              await AsyncStorage.removeItem("authUser");
               navigation.replace("login");
             }}
           >

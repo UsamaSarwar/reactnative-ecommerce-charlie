@@ -192,10 +192,11 @@ const HomeScreen = ({ navigation, route }) => {
               keyExtractor={(item) => item.id}
               renderItem={({ item, index }) => (
                 <View
+                  key={index}
                   style={{ marginLeft: 5, marginBottom: 10, marginRight: 5 }}
                 >
                   <ProductCard
-                    key={index}
+                    key={item._id}
                     name={item.title}
                     image={require("../../assets/image/shirt1.png")}
                     price={item.price}

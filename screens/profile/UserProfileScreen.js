@@ -10,10 +10,11 @@ import UserProfileCard from "../../components/UserProfileCard/UserProfileCard";
 import { Ionicons } from "@expo/vector-icons";
 import OptionList from "../../components/OptionList/OptionList";
 import { colors } from "../../constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UserProfileScreen = ({ navigation, route }) => {
   const { user } = route.params;
-  console.log("userprofile:", user);
+  // console.log("userprofile:", user);
   // const userID = User["_id"];
   const userID = "62e2ff5999b929330f7300c5";
   return (
@@ -63,7 +64,10 @@ const UserProfileScreen = ({ navigation, route }) => {
           text={"Logout"}
           Icon={Ionicons}
           iconName={"log-out"}
-          onPress={() => navigation.replace("login")}
+          onPress={async () => {
+            await AsyncStorage.removeItem("authUser");
+            navigation.replace("login");
+          }}
         />
       </View>
     </View>
