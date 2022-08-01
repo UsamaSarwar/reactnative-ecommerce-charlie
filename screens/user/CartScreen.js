@@ -15,8 +15,18 @@ import CartProductList from "../../components/CartProductList/CartProductList";
 import CartEmpty from "../../assets/image/empty_cart.png";
 import CustomButton from "../../components/CustomButton";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useSelector, useDispatch } from "react-redux";
+import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
+import { bindActionCreators } from "redux";
 
 const CartScreen = ({ navigation }) => {
+  const cartproduct = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+
+  const { addCartItem, removeCartItem } = bindActionCreators(
+    actionCreaters,
+    dispatch
+  );
   const [totalPrice, setTotalPrice] = useState(0);
   const [data, setData] = useState([
     {
@@ -39,17 +49,17 @@ const CartScreen = ({ navigation }) => {
     },
   ]);
 
-  const deleteItem = (id, index) => {
-    setData((data) => data.filter((_, i) => i !== index));
+  const deleteItem = (id) => {
+    removeCartItem(id);
   };
 
   useEffect(() => {
     setTotalPrice(
-      data.reduce((accumulator, object) => {
+      cartproduct.reduce((accumulator, object) => {
         return accumulator + object.price;
       }, 0)
     );
-  }, [data]);
+  }, [cartproduct]);
 
   return (
     <View style={styles.container}>
@@ -69,7 +79,7 @@ const CartScreen = ({ navigation }) => {
           </TouchableOpacity>
           <View style={styles.cartInfoTopBar}>
             <Text>Your Cart</Text>
-            <Text>{data.length} Items</Text>
+            <Text>{cartproduct.length} Items</Text>
           </View>
         </View>
 
@@ -88,14 +98,16 @@ const CartScreen = ({ navigation }) => {
         </View>
       ) : (
         <ScrollView style={styles.cartProductListContiainer}>
-          {data.map((item, index) => (
+          {cartproduct.map((item, index) => (
             <CartProductList
               key={index}
               index={index}
-              image={item.image}
+              image={require("../../assets/image/shirt1.png")}
               title={item.title}
               price={item.price}
-              handleDelete={() => deleteItem(item, index)}
+              handleDelete={() => {
+                deleteItem(item._id);
+              }}
             />
           ))}
           <View style={styles.emptyView}></View>
@@ -116,7 +128,7 @@ const CartScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.cartBottomRightContainer}>
-          {data.length > 0 ? (
+          {cartproduct.length > 0 ? (
             <CustomButton
               text={"Checkout"}
               onPress={() => navigation.navigate("checkout")}

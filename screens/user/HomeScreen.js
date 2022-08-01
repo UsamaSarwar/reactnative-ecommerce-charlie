@@ -18,25 +18,28 @@ import { colors } from "../../constants";
 import CustomIconButton from "../../components/CustomIconButton/CustomIconButton";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { network } from "../../constants";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
 
 const category = [
   {
-    id: 1,
+    id: "1",
     title: "Garments",
     image: require("../../assets/icons/garments.png"),
   },
   {
-    id: 2,
+    id: "2",
     title: "Electornics",
     image: require("../../assets/icons/electronics.png"),
   },
   {
-    id: 3,
+    id: "3",
     title: "Cosmentics",
     image: require("../../assets/icons/cosmetics.png"),
   },
   {
-    id: 4,
+    id: "4",
     title: "Groceries",
     image: require("../../assets/icons/grocery.png"),
   },
@@ -70,19 +73,30 @@ const category = [
 // ];
 
 const HomeScreen = ({ navigation, route }) => {
+  const cartproduct = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+
+  const { addCartItem, removeCartItem } = bindActionCreators(
+    actionCreaters,
+    dispatch
+  );
+
   const { user } = route.params;
   const [isLoading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
-
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
 
-  console.log(user);
+  // console.log(user);
 
   const handleProductPress = (product) => {
     navigation.navigate("productdetail");
     console.log(`product:${product.id}`);
+  };
+
+  const handleAddToCat = (product) => {
+    addCartItem(product);
   };
 
   var headerOptions = {
@@ -115,6 +129,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     fetchProduct();
+    console.log("cart", cartproduct);
   }, []);
 
   return (
@@ -127,7 +142,17 @@ const HomeScreen = ({ navigation, route }) => {
         <View>
           <Text style={styles.toBarText}>Home</Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate("cart")}>
+        <TouchableOpacity
+          style={styles.cartIconContainer}
+          onPress={() => navigation.navigate("cart")}
+        >
+          {cartproduct.length > 0 ? (
+            <View style={styles.cartItemCountContainer}>
+              <Text style={styles.cartItemCountText}>{cartproduct.length}</Text>
+            </View>
+          ) : (
+            <></>
+          )}
           <Image source={cartIcon} />
         </TouchableOpacity>
       </View>
@@ -158,15 +183,19 @@ const HomeScreen = ({ navigation, route }) => {
             style={styles.flatListContainer}
             horizontal={true}
             data={category}
+            keyExtractor={(item) => item.id}
             renderItem={({ item, index }) => (
               <View
                 style={{ marginLeft: 5, marginBottom: 10, marginRight: 5 }}
                 key={index}
               >
-                <CustomIconButton text={item.title} image={item.image} />
+                <CustomIconButton
+                  key={index}
+                  text={item.title}
+                  image={item.image}
+                />
               </View>
             )}
-            keyExtractor={(item) => item.id}
           />
           <View style={styles.emptyView}></View>
         </View>
@@ -189,18 +218,18 @@ const HomeScreen = ({ navigation, route }) => {
               showsHorizontalScrollIndicator={false}
               horizontal={true}
               data={products}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item._id}
               renderItem={({ item, index }) => (
                 <View
-                  key={index}
+                  key={item._id}
                   style={{ marginLeft: 5, marginBottom: 10, marginRight: 5 }}
                 >
                   <ProductCard
-                    key={item._id}
                     name={item.title}
                     image={require("../../assets/image/shirt1.png")}
                     price={item.price}
                     onPress={() => handleProductPress(item)}
+                    onPressSecondary={() => handleAddToCat(item)}
                   />
                 </View>
               )}
@@ -352,5 +381,28 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     color: colors.muted,
     fontWeight: "600",
+  },
+  cartIconContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cartItemCountContainer: {
+    position: "absolute",
+    zIndex: 10,
+    top: -10,
+    left: 10,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 22,
+    width: 22,
+    backgroundColor: colors.danger,
+    borderRadius: 11,
+  },
+  cartItemCountText: {
+    color: colors.white,
+    fontWeight: "bold",
+    fontSize: 10,
   },
 });
