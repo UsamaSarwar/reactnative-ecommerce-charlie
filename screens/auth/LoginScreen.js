@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from "react-native";
+
 import React, { useState } from "react";
 import { colors, network } from "../../constants";
 import CustomInput from "../../components/CustomInput";
@@ -14,12 +15,23 @@ import header_logo from "../../assets/logo/logo.png";
 import CustomButton from "../../components/CustomButton";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
+import InternetConnectionAlert from "react-native-internet-connection-alert";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isloading, setIsloading] = useState(false);
+
+  _storeData = async (user) => {
+    try {
+      AsyncStorage.setItem("authUser", JSON.stringify(user));
+    } catch (error) {
+      console.log(error);
+      setError(error);
+    }
+  };
 
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -66,16 +78,16 @@ const LoginScreen = ({ navigation }) => {
     fetch(network.serverip + "/login", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
-
         if (
           result.status == 200 ||
           (result.status == 1 && result.success != false)
         ) {
           if (result?.data?.userType == "ADMIN") {
+            _storeData(result.data);
             setIsloading(false);
             navigation.replace("dashboard", { authUser: result.data });
           } else {
+            _storeData(result.data);
             setIsloading(false);
             navigation.replace("tab", { user: result.data });
           }
@@ -91,67 +103,73 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      // behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
+    <InternetConnectionAlert
+      onChange={(connectionState) => {
+        // console.log("Connection State: ", connectionState);
+      }}
     >
-      <ScrollView style={{ flex: 1, width: "100%" }}>
-        <ProgressDialog visible={isloading} label={"Login ..."} />
-        <StatusBar></StatusBar>
-        <View style={styles.welconeContainer}>
-          <View>
-            <Text style={styles.welcomeText}>Welcome to EasyBuy</Text>
-            <Text style={styles.welcomeParagraph}>
-              make your ecommerce easy
-            </Text>
+      <KeyboardAvoidingView
+        // behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <ScrollView style={{ flex: 1, width: "100%" }}>
+          <ProgressDialog visible={isloading} label={"Login ..."} />
+          <StatusBar></StatusBar>
+          <View style={styles.welconeContainer}>
+            <View>
+              <Text style={styles.welcomeText}>Welcome to EasyBuy</Text>
+              <Text style={styles.welcomeParagraph}>
+                make your ecommerce easy
+              </Text>
+            </View>
+            <View>
+              <Image style={styles.logo} source={header_logo} />
+            </View>
           </View>
-          <View>
-            <Image style={styles.logo} source={header_logo} />
+          <View style={styles.screenNameContainer}>
+            <Text style={styles.screenNameText}>Login</Text>
           </View>
-        </View>
-        <View style={styles.screenNameContainer}>
-          <Text style={styles.screenNameText}>Login</Text>
-        </View>
-        <View style={styles.formContainer}>
-          <CustomAlert message={error} type={"error"} />
-          <CustomInput
-            value={email}
-            setValue={setEmail}
-            placeholder={"Username"}
-            placeholderTextColor={colors.muted}
-            radius={5}
-          />
-          <CustomInput
-            value={password}
-            setValue={setPassword}
-            secureTextEntry={true}
-            placeholder={"Password"}
-            placeholderTextColor={colors.muted}
-            radius={5}
-          />
-          <View style={styles.forgetPasswordContainer}>
-            <Text
-              onPress={() => navigation.navigate("forgetpassword")}
-              style={styles.ForgetText}
-            >
-              Forget Password?
-            </Text>
+          <View style={styles.formContainer}>
+            <CustomAlert message={error} type={"error"} />
+            <CustomInput
+              value={email}
+              setValue={setEmail}
+              placeholder={"Username"}
+              placeholderTextColor={colors.muted}
+              radius={5}
+            />
+            <CustomInput
+              value={password}
+              setValue={setPassword}
+              secureTextEntry={true}
+              placeholder={"Password"}
+              placeholderTextColor={colors.muted}
+              radius={5}
+            />
+            <View style={styles.forgetPasswordContainer}>
+              <Text
+                onPress={() => navigation.navigate("forgetpassword")}
+                style={styles.ForgetText}
+              >
+                Forget Password?
+              </Text>
+            </View>
           </View>
+        </ScrollView>
+        <View style={styles.buttomContainer}>
+          <CustomButton text={"Login"} onPress={loginHandle} />
         </View>
-      </ScrollView>
-      <View style={styles.buttomContainer}>
-        <CustomButton text={"Login"} onPress={loginHandle} />
-      </View>
-      <View style={styles.bottomContainer}>
-        <Text>Don't have an account?</Text>
-        <Text
-          onPress={() => navigation.navigate("signup")}
-          style={styles.signupText}
-        >
-          signup
-        </Text>
-      </View>
-    </KeyboardAvoidingView>
+        <View style={styles.bottomContainer}>
+          <Text>Don't have an account?</Text>
+          <Text
+            onPress={() => navigation.navigate("signup")}
+            style={styles.signupText}
+          >
+            signup
+          </Text>
+        </View>
+      </KeyboardAvoidingView>
+    </InternetConnectionAlert>
   );
 };
 

@@ -12,11 +12,22 @@ import { Ionicons } from "@expo/vector-icons";
 import cartIcon from "../../assets/icons/cart_beg_active.png";
 import { colors } from "../../constants";
 import CartProductList from "../../components/CartProductList/CartProductList";
-
+import CartEmpty from "../../assets/image/empty_cart.png";
 import CustomButton from "../../components/CustomButton";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useSelector, useDispatch } from "react-redux";
+import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
+import { bindActionCreators } from "redux";
 
 const CartScreen = ({ navigation }) => {
+  const cartproduct = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+
+  const { addCartItem, removeCartItem } = bindActionCreators(
+    actionCreaters,
+    dispatch
+  );
+  const [totalPrice, setTotalPrice] = useState(0);
   const [data, setData] = useState([
     {
       id: 1,
@@ -38,14 +49,17 @@ const CartScreen = ({ navigation }) => {
     },
   ]);
 
-  const deleteItem = (id, index) => {
-    let item = data;
-    item.slice(index, 1);
-    setData(item);
-    console.log(id);
+  const deleteItem = (id) => {
+    removeCartItem(id);
   };
 
-  useEffect(() => {}, [data]);
+  useEffect(() => {
+    setTotalPrice(
+      cartproduct.reduce((accumulator, object) => {
+        return accumulator + object.price;
+      }, 0)
+    );
+  }, [cartproduct]);
 
   return (
     <View style={styles.container}>
@@ -65,7 +79,7 @@ const CartScreen = ({ navigation }) => {
           </TouchableOpacity>
           <View style={styles.cartInfoTopBar}>
             <Text>Your Cart</Text>
-            <Text>{data.length} Items</Text>
+            <Text>{cartproduct.length} Items</Text>
           </View>
         </View>
 
@@ -74,18 +88,31 @@ const CartScreen = ({ navigation }) => {
           <Image source={cartIcon} />
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.cartProductListContiainer}>
-        {data.map((item, index) => (
-          <CartProductList
-            key={index}
-            image={item.image}
-            title={item.title}
-            price={item.price}
-            handleDelete={() => deleteItem(item, index)}
-          />
-        ))}
-        <View style={styles.emptyView}></View>
-      </ScrollView>
+      {data.length === 0 ? (
+        <View style={styles.cartProductListContiainerEmpty}>
+          {/* <Image
+            source={CartEmpty}
+            style={{ height: 400, resizeMode: "contain" }}
+          /> */}
+          <Text style={styles.secondaryTextSmItalic}>"Cart is empty"</Text>
+        </View>
+      ) : (
+        <ScrollView style={styles.cartProductListContiainer}>
+          {cartproduct.map((item, index) => (
+            <CartProductList
+              key={index}
+              index={index}
+              image={require("../../assets/image/shirt1.png")}
+              title={item.title}
+              price={item.price}
+              handleDelete={() => {
+                deleteItem(item._id);
+              }}
+            />
+          ))}
+          <View style={styles.emptyView}></View>
+        </ScrollView>
+      )}
       <View style={styles.cartBottomContainer}>
         <View style={styles.cartBottomLeftContainer}>
           <View style={styles.IconContainer}>
@@ -97,14 +124,22 @@ const CartScreen = ({ navigation }) => {
           </View>
           <View>
             <Text style={styles.cartBottomPrimaryText}>Total</Text>
-            <Text style={styles.cartBottomSecondaryText}>{30 * 6}$</Text>
+            <Text style={styles.cartBottomSecondaryText}>{totalPrice}$</Text>
           </View>
         </View>
         <View style={styles.cartBottomRightContainer}>
-          <CustomButton
-            text={"Checkout"}
-            onPress={() => navigation.navigate("checkout")}
-          />
+          {cartproduct.length > 0 ? (
+            <CustomButton
+              text={"Checkout"}
+              onPress={() => navigation.navigate("checkout")}
+            />
+          ) : (
+            <CustomButton
+              text={"Checkout"}
+              disabled={true}
+              onPress={() => navigation.navigate("checkout")}
+            />
+          )}
         </View>
       </View>
     </View>
@@ -136,6 +171,18 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   cartProductListContiainer: { width: "100%", padding: 20 },
+  cartProductListContiainerEmpty: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  secondaryTextSmItalic: {
+    fontStyle: "italic",
+    fontSize: 15,
+    color: colors.muted,
+  },
   cartBottomContainer: {
     width: "100%",
     height: 120,

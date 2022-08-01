@@ -3,7 +3,7 @@ import React from "react";
 import { colors } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 
-const ProductCard = ({ name, price, image, onPress }) => {
+const ProductCard = ({ name, price, image, onPress, onPressSecondary }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.imageContainer}>
@@ -15,7 +15,10 @@ const ProductCard = ({ name, price, image, onPress }) => {
           <Text style={styles.primaryTextSm}>{price}$</Text>
         </View>
         <View>
-          <TouchableOpacity style={styles.iconContainer}>
+          <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={onPressSecondary}
+          >
             <Ionicons name="cart" size={20} color="white" />
           </TouchableOpacity>
         </View>
