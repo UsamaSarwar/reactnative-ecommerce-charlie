@@ -88,7 +88,7 @@ const CartScreen = ({ navigation }) => {
           <Image source={cartIcon} />
         </TouchableOpacity>
       </View>
-      {data.length === 0 ? (
+      {cartproduct.length === 0 ? (
         <View style={styles.cartProductListContiainerEmpty}>
           {/* <Image
             source={CartEmpty}
