@@ -91,8 +91,7 @@ const HomeScreen = ({ navigation, route }) => {
   // console.log(user);
 
   const handleProductPress = (product) => {
-    navigation.navigate("productdetail");
-    console.log(`product:${product.id}`);
+    navigation.navigate("productdetail", { product: product });
   };
 
   const handleAddToCat = (product) => {
@@ -129,7 +128,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     fetchProduct();
-    console.log("cart", cartproduct);
+    // console.log("cart", cartproduct);
   }, []);
 
   return (
@@ -228,6 +227,7 @@ const HomeScreen = ({ navigation, route }) => {
                     name={item.title}
                     image={require("../../assets/image/shirt1.png")}
                     price={item.price}
+                    quantity={item.quantity}
                     onPress={() => handleProductPress(item)}
                     onPressSecondary={() => handleAddToCat(item)}
                   />

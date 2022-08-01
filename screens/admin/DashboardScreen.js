@@ -49,6 +49,7 @@ const data = [
 
 const DashboardScreen = ({ navigation, route }) => {
   const { authUser } = route.params;
+  console.log(authUser);
 
   return (
     <InternetConnectionAlert onChange={(connectionState) => {}}>

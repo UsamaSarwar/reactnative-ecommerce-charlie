@@ -26,17 +26,32 @@ const AddProductScreen = ({ navigation, route }) => {
   const [sku, setSku] = useState("");
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
-  const [quanlity, setQuantity] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("garments");
 
   var myHeaders = new Headers();
   myHeaders.append("x-auth-token", authUser.token);
   myHeaders.append("Content-Type", "application/json");
 
+  // var raw = JSON.stringify({
+  //   title: title,
+  //   sku: sku,
+  //   price: price,
+  //   image: null,
+  //   description: description,
+  //   category: category,
+  //   quantity: quantity,
+  // });
+
   var raw = JSON.stringify({
     title: title,
     sku: sku,
     price: price,
-    image: "",
+    image: "null",
+    description: description,
+    category: category,
+    quantity: quantity,
   });
 
   var requestOptions = {
@@ -70,7 +85,7 @@ const AddProductScreen = ({ navigation, route }) => {
     } else if (price == 0) {
       setError("Please enter the product price");
       setIsloading(false);
-    } else if (quanlity <= 0) {
+    } else if (quantity <= 0) {
       setError("Quantity must be greater then 1");
       setIsloading(false);
     } else if (image == null) {
@@ -121,7 +136,10 @@ const AddProductScreen = ({ navigation, route }) => {
         </View>
       </View>
       <CustomAlert message={error} type={"error"} />
-      <ScrollView style={{ flex: 1, width: "100%" }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1, width: "100%" }}
+      >
         <View style={styles.formContainer}>
           <View style={styles.imageContainer}>
             {image ? (
@@ -159,9 +177,16 @@ const AddProductScreen = ({ navigation, route }) => {
             radius={5}
           />
           <CustomInput
-            value={quanlity}
+            value={quantity}
             setValue={setQuantity}
             placeholder={"Quantity"}
+            placeholderTextColor={colors.muted}
+            radius={5}
+          />
+          <CustomInput
+            value={description}
+            setValue={setDescription}
+            placeholder={"Description"}
             placeholderTextColor={colors.muted}
             radius={5}
           />
