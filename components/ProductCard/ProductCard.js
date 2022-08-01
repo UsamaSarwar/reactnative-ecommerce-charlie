@@ -3,7 +3,14 @@ import React from "react";
 import { colors } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 
-const ProductCard = ({ name, price, image, onPress, onPressSecondary }) => {
+const ProductCard = ({
+  name,
+  price,
+  image,
+  quantity,
+  onPress,
+  onPressSecondary,
+}) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.imageContainer}>
@@ -11,16 +18,25 @@ const ProductCard = ({ name, price, image, onPress, onPressSecondary }) => {
       </View>
       <View style={styles.infoContainer}>
         <View>
-          <Text style={styles.secondaryTextSm}>{name}</Text>
+          <Text style={styles.secondaryTextSm}>{`${name.substring(
+            0,
+            10
+          )}..`}</Text>
           <Text style={styles.primaryTextSm}>{price}$</Text>
         </View>
         <View>
-          <TouchableOpacity
-            style={styles.iconContainer}
-            onPress={onPressSecondary}
-          >
-            <Ionicons name="cart" size={20} color="white" />
-          </TouchableOpacity>
+          {quantity > 0 ? (
+            <TouchableOpacity
+              style={styles.iconContainer}
+              onPress={onPressSecondary}
+            >
+              <Ionicons name="cart" size={20} color="white" />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.iconContainerDisable} disabled>
+              <Ionicons name="cart" size={20} color="white" />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </TouchableOpacity>
@@ -77,6 +93,16 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     backgroundColor: colors.primary,
+    width: 30,
+    height: 30,
+    borderRadius: 5,
+    display: "flex",
+
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  iconContainerDisable: {
+    backgroundColor: colors.muted,
     width: 30,
     height: 30,
     borderRadius: 5,
