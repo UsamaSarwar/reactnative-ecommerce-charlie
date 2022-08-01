@@ -138,7 +138,7 @@ const LoginScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-      </View>
+      </ScrollView>
       <View style={styles.buttomContainer}>
         <CustomButton text={"Login"} onPress={loginHandle} />
       </View>
