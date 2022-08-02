@@ -9,7 +9,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import BasicProductList from "../../components/BasicProductList/BasicProductList";
-import { colors } from "../../constants";
+import { colors, network } from "../../constants";
 import CustomButton from "../../components/CustomButton";
 import { useSelector, useDispatch } from "react-redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
@@ -55,6 +55,51 @@ const CheckoutScreen = ({ navigation }) => {
     actionCreaters,
     dispatch
   );
+
+
+  const handleCheckout = () => {
+    confirmCheckout()
+  }
+  
+  const confirmCheckout = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("x-auth-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmUyODlkODE5ZGQzODQ1MzZiYTBhN2MiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTY1OTQ0MjUxMSwiZXhwIjoxNjU5NDc4NTExfQ.IIFbBEh7BqiD44PbbWCNjDUBp1-zIqFM3Wo63kut2uM");
+    myHeaders.append("Content-Type", "application/json");
+  
+    var payload = []
+    var amount = 0
+    cartproduct.forEach(product => {
+      let obj = {
+        "productId" : product?._id,
+        "price" : product?.price,
+        "quantity" : product?.quantity
+      }
+      amount+=parseInt(product.price)*parseInt(product.quantity)
+      payload.push(obj)
+    });
+    var raw = JSON.stringify({
+      "items": payload,
+      "amount": amount,
+      "discount": 20,
+      "payment_type": "cod"
+    });
+  
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+  
+    fetch(network.serverip+"/checkout", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
+
+
+
+
 
   const [deliveryCost, setDeliveryCost] = useState(0);
   const [totalCost, setTotalCost] = useState(180);
@@ -159,7 +204,8 @@ const CheckoutScreen = ({ navigation }) => {
         <View style={styles.buttomContainer}>
           <CustomButton
             text={"Submit Order"}
-            onPress={() => navigation.replace("orderconfirm")}
+            // onPress={() => navigation.replace("orderconfirm")}
+            onPress={handleCheckout}
           />
         </View>
         <View style={styles.emptyView}></View>
