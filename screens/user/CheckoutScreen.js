@@ -15,46 +15,9 @@ import { useSelector, useDispatch } from "react-redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
 import { bindActionCreators } from "redux";
 
-const data = [
-  {
-    id: 1,
-    title: "product1",
-    price: 30,
-  },
-  {
-    id: 2,
-    title: "product2",
-    price: 30,
-  },
-  {
-    id: 3,
-    title: "product3",
-    price: 30,
-  },
-  {
-    id: 4,
-    title: "product4",
-    price: 30,
-  },
-  {
-    id: 5,
-    title: "product5",
-    price: 30,
-  },
-  {
-    id: 6,
-    title: "product6",
-    price: 30,
-  },
-];
-
-const CheckoutScreen = ({ navigation }) => {
+const CheckoutScreen = ({ navigation, route }) => {
   const cartproduct = useSelector((state) => state.product);
   const dispatch = useDispatch();
-  const { addCartItem, removeCartItem } = bindActionCreators(
-    actionCreaters,
-    dispatch
-  );
 
 
   const handleCheckout = () => {
@@ -110,10 +73,10 @@ const CheckoutScreen = ({ navigation }) => {
   useEffect(() => {
     setTotalCost(
       cartproduct.reduce((accumulator, object) => {
-        return accumulator + object.price;
+        return (accumulator + object.price) * object.quantity;
       }, 0)
     );
-  }, [cartproduct]);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -144,6 +107,7 @@ const CheckoutScreen = ({ navigation }) => {
               key={index}
               title={product.title}
               price={product.price}
+              quantity={product.quantity}
             />
           ))}
         </ScrollView>

@@ -21,45 +21,40 @@ import { bindActionCreators } from "redux";
 
 const CartScreen = ({ navigation }) => {
   const cartproduct = useSelector((state) => state.product);
+  console.log("cart:", cartproduct);
   const dispatch = useDispatch();
 
-  const { addCartItem, removeCartItem } = bindActionCreators(
-    actionCreaters,
-    dispatch
-  );
+  const { removeCartItem, increaseCartItemQuantity, decreaseCartItemQuantity } =
+    bindActionCreators(actionCreaters, dispatch);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [data, setData] = useState([
-    {
-      id: 1,
-      title: "product1",
-      price: 30,
-      image: require("../../assets/image/shirt.png"),
-    },
-    {
-      id: 2,
-      title: "product2",
-      price: 30,
-      image: require("../../assets/image/shirt1.png"),
-    },
-    {
-      id: 3,
-      title: "product3",
-      price: 30,
-      image: require("../../assets/image/shirt2.png"),
-    },
-  ]);
+  const [refresh, setRefresh] = useState(false);
 
   const deleteItem = (id) => {
     removeCartItem(id);
   };
 
+  const increaseQuantity = (id, quantity, avaiableQuantity) => {
+    if (avaiableQuantity > quantity) {
+      increaseCartItemQuantity({ id: id, type: "increase" });
+      setRefresh(!refresh);
+    }
+  };
+
+  const decreaseQuantity = (id, quantity) => {
+    if (quantity > 1) {
+      decreaseCartItemQuantity({ id: id, type: "decrease" });
+      setRefresh(!refresh);
+    }
+  };
+
   useEffect(() => {
+    console.log("R");
     setTotalPrice(
       cartproduct.reduce((accumulator, object) => {
-        return accumulator + object.price;
+        return (accumulator + object.price) * object.quantity;
       }, 0)
     );
-  }, [cartproduct]);
+  }, [cartproduct, refresh]);
 
   return (
     <View style={styles.container}>
@@ -105,6 +100,17 @@ const CartScreen = ({ navigation }) => {
               image={require("../../assets/image/shirt1.png")}
               title={item.title}
               price={item.price}
+              quantity={item.quantity}
+              onPressIncrement={() => {
+                increaseQuantity(
+                  item._id,
+                  item.quantity,
+                  item.avaiableQuantity
+                );
+              }}
+              onPressDecrement={() => {
+                decreaseQuantity(item._id, item.quantity);
+              }}
               handleDelete={() => {
                 deleteItem(item._id);
               }}

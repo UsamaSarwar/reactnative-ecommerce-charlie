@@ -15,17 +15,14 @@ import ProductImage from "../../assets/image/shirt1.png";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
+// import { _success, _info, _warning, _error } from "react-color-log";
 
 const ProductDetailScreen = ({ navigation, route }) => {
   const { product } = route.params;
-  console.log(product);
   const cartproduct = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
-  const { addCartItem, removeCartItem } = bindActionCreators(
-    actionCreaters,
-    dispatch
-  );
+  const { addCartItem } = bindActionCreators(actionCreaters, dispatch);
 
   const handleAddToCat = (item) => {
     addCartItem(item);
