@@ -7,10 +7,13 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BasicProductList from "../../components/BasicProductList/BasicProductList";
 import { colors } from "../../constants";
 import CustomButton from "../../components/CustomButton";
+import { useSelector, useDispatch } from "react-redux";
+import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
+import { bindActionCreators } from "redux";
 
 const data = [
   {
@@ -46,11 +49,26 @@ const data = [
 ];
 
 const CheckoutScreen = ({ navigation }) => {
+  const cartproduct = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+  const { addCartItem, removeCartItem } = bindActionCreators(
+    actionCreaters,
+    dispatch
+  );
+
   const [deliveryCost, setDeliveryCost] = useState(0);
   const [totalCost, setTotalCost] = useState(180);
   const [address, setAddress] = useState(
     "House No.363, Street No, Lalazar Coloney, Jhang"
   );
+
+  useEffect(() => {
+    setTotalCost(
+      cartproduct.reduce((accumulator, object) => {
+        return accumulator + object.price;
+      }, 0)
+    );
+  }, [cartproduct]);
 
   return (
     <View style={styles.container}>
@@ -76,7 +94,7 @@ const CheckoutScreen = ({ navigation }) => {
           style={styles.orderSummaryContainer}
           nestedScrollEnabled={true}
         >
-          {data.map((product, index) => (
+          {cartproduct.map((product, index) => (
             <BasicProductList
               key={index}
               title={product.title}
@@ -183,7 +201,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 10,
     padding: 10,
-    height: 220,
+    maxHeight: 220,
   },
   totalOrderInfoContainer: {
     borderRadius: 10,

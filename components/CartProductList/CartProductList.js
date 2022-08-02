@@ -14,14 +14,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const CartProductList = ({ index, image, title, price, handleDelete }) => {
-  let row = [];
-  let PerviousOpenRow;
-  const closeRow = (index) => {
-    if (PerviousOpenRow !== row[index]) {
-      PerviousOpenRow.close();
-    }
-    PerviousOpenRow = index;
-  };
   const rightSwipe = () => {
     return (
       <View style={styles.deleteButtonContainer}>
@@ -40,7 +32,7 @@ const CartProductList = ({ index, image, title, price, handleDelete }) => {
       <View style={styles.containerOuter}>
         <Swipeable
           renderRightActions={rightSwipe}
-          onSwipeableOpen={() => closeRow(index)}
+          onSwipeableOpen={() => console.log("")}
         >
           <View style={styles.container}>
             <View style={styles.imageContainer}>
