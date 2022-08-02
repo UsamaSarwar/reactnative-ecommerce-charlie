@@ -3,7 +3,7 @@ import React from "react";
 import { colors } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 
-const BasicProductList = ({ title, price, size }) => {
+const BasicProductList = ({ title, price, quantity }) => {
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -12,11 +12,11 @@ const BasicProductList = ({ title, price, size }) => {
         </View>
         <View style={styles.productInfoContainer}>
           <Text style={styles.secondaryText}>{title}</Text>
-          <Text>{size}</Text>
+          <Text>{quantity}</Text>
         </View>
       </View>
       <View>
-        <Text style={styles.primaryText}>{price}$</Text>
+        <Text style={styles.primaryText}>{quantity * price}$</Text>
       </View>
     </View>
   );
