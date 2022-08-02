@@ -73,6 +73,7 @@ const DashboardScreen = ({ navigation, route }) => {
               color={colors.muted}
             />
           </TouchableOpacity>
+          
         </View>
         <View style={styles.headingContainer}>
           <MaterialCommunityIcons name="menu-right" size={30} color="black" />
@@ -89,7 +90,7 @@ const DashboardScreen = ({ navigation, route }) => {
                 type={data.type}
               />
             ))}
-          </ScrollView>
+        </ScrollView>
         </View>
         <View style={styles.headingContainer}>
           <MaterialCommunityIcons name="menu-right" size={30} color="black" />
