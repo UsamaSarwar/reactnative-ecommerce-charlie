@@ -16,63 +16,59 @@ import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
 import { bindActionCreators } from "redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 const CheckoutScreen = ({ navigation, route }) => {
   const cartproduct = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
-  
-
   const handleCheckout = () => {
-    confirmCheckout()
-  }
-  
+    confirmCheckout();
+  };
+
   const confirmCheckout = async () => {
     var myHeaders = new Headers();
     const value = await AsyncStorage.getItem("authUser");
-    let e = JSON.parse(value)
-    console.log(e)  
+    let e = JSON.parse(value);
+    console.log(e);
 
-    myHeaders.append("x-auth-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmUyODlkODE5ZGQzODQ1MzZiYTBhN2MiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTY1OTQ0MjUxMSwiZXhwIjoxNjU5NDc4NTExfQ.IIFbBEh7BqiD44PbbWCNjDUBp1-zIqFM3Wo63kut2uM");
+    myHeaders.append(
+      "x-auth-token",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmUyODlkODE5ZGQzODQ1MzZiYTBhN2MiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTY1OTQ0MjUxMSwiZXhwIjoxNjU5NDc4NTExfQ.IIFbBEh7BqiD44PbbWCNjDUBp1-zIqFM3Wo63kut2uM"
+    );
     // myHeaders.append("x-auth-token", e.token);
     myHeaders.append("Content-Type", "application/json");
-  
-    var payload = []
-    var amount = 0
-    cartproduct.forEach(product => {
+
+    var payload = [];
+    var amount = 0;
+    cartproduct.forEach((product) => {
       let obj = {
-        "productId" : product?._id,
-        "price" : product?.price,
-        "quantity" : product?.quantity
-      }
-      amount+=parseInt(product.price)*parseInt(product.quantity)
-      payload.push(obj)
+        productId: product?._id,
+        price: product?.price,
+        quantity: product?.quantity,
+      };
+      amount += parseInt(product.price) * parseInt(product.quantity);
+      payload.push(obj);
     });
     // console.log(payload)
 
     var raw = JSON.stringify({
-      "items": payload,
-      "amount": amount,
-      "discount": 20,
-      "payment_type": "cod"
+      items: payload,
+      amount: amount,
+      discount: 0,
+      payment_type: "cod",
     });
-  
+
     var requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: myHeaders,
       body: raw,
-      redirect: 'follow'
+      redirect: "follow",
     };
-  
-    fetch(network.serverip+"/checkout", requestOptions)
-      .then(response => response.json())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
-  }
 
-
-
-
+    fetch(network.serverip + "/checkout", requestOptions)
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
 
   const [deliveryCost, setDeliveryCost] = useState(0);
   const [totalCost, setTotalCost] = useState(180);
