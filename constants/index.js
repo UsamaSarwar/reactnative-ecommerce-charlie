@@ -1,2 +1,2 @@
-export { default as colors } from "./Colors";
+export { default as colors } from "./colors";
 export { default as network } from "./network";
