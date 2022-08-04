@@ -9,9 +9,9 @@ import {
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import cartIcon from "../../assets/icons/cart_beg.png";
-import { colors } from "../../constants";
+import { colors, network } from "../../constants";
 import CustomButton from "../../components/CustomButton";
-import ProductImage from "../../assets/image/shirt1.png";
+// import ProductImage from "../../assets/image/shirt1.png";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
@@ -34,6 +34,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
   const [productName, setProductName] = useState("");
   const [productPrice, setProductPrice] = useState(10);
   const [productDescription, setProductDescirption] = useState("");
+  const [productImage, SetProductImage] = useState("");
 
   const handleIncreaseButton = (quantity) => {
     if (avaiableQuantity > quantity) {
@@ -48,12 +49,11 @@ const ProductDetailScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     setProductName(product.title);
-    setProductDescirption(
-      "Wear the look you love up top with the Nike Dri-FIT Swoosh Air Force 1 Sports shirt.It captures all your favourite sneaker element."
-    );
+    setProductDescirption(product.description);
     setProductPrice(product.price);
     setQuantity(0);
     setAvaiableQuantity(product.quantity);
+    SetProductImage(product.image);
   }, []);
   return (
     <View style={styles.container}>
@@ -88,7 +88,10 @@ const ProductDetailScreen = ({ navigation, route }) => {
       </View>
       <View style={styles.bodyContainer}>
         <View style={styles.productImageContainer}>
-          <Image source={ProductImage} style={styles.productImage} />
+          <Image
+            source={{ uri: `${network.serverip}/uploads/${productImage}` }}
+            style={styles.productImage}
+          />
         </View>
         <View style={styles.productInfoContainer}>
           <View style={styles.productInfoTopContainer}>

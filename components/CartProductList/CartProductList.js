@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import { colors } from "../../constants";
+import { colors, network } from "../../constants";
 
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -15,6 +15,7 @@ const CartProductList = ({
   onPressDecrement,
   onPressIncrement,
 }) => {
+  console.log(`${network.serverip}/uploads/${image}`);
   const rightSwipe = () => {
     return (
       <View style={styles.deleteButtonContainer}>
@@ -34,7 +35,10 @@ const CartProductList = ({
         <Swipeable renderRightActions={rightSwipe}>
           <View style={styles.container}>
             <View style={styles.imageContainer}>
-              <Image source={image} style={styles.productImage} />
+              <Image
+                source={{ uri: `${network.serverip}/uploads/${image}` }}
+                style={styles.productImage}
+              />
             </View>
             <View style={styles.productInfoContainer}>
               <Text style={styles.productTitle}>{title}</Text>

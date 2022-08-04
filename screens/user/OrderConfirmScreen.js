@@ -1,8 +1,21 @@
 import { StyleSheet, Image, Text, View, StatusBar } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SuccessImage from "../../assets/image/success.png";
 import CustomButton from "../../components/CustomButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const OrderConfirmScreen = ({ navigation }) => {
+  const [user, setUser] = useState({});
+
+  const getUserData = async () => {
+    const value = await AsyncStorage.getItem("authUser");
+    setUser(JSON.parse(value));
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
   //   setTimeout(() => {
   //     navigation.replace("tab");
   //   }, 4000);
@@ -17,7 +30,7 @@ const OrderConfirmScreen = ({ navigation }) => {
       <View>
         <CustomButton
           text={"Back to Home"}
-          onPress={() => navigation.replace("tab")}
+          onPress={() => navigation.replace("tab", { user: user })}
         />
       </View>
     </View>

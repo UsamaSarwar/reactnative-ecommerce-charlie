@@ -25,7 +25,7 @@ const Tabs = ({ navigation, route }) => {
           let routename = route.name;
           if (routename == "home") {
             return (
-              <TouchableOpacity>
+              <TouchableOpacity disabled>
                 {focused == true ? (
                   <Image
                     source={HomeIconActive}
@@ -38,7 +38,7 @@ const Tabs = ({ navigation, route }) => {
             );
           } else if (routename == "wishlist") {
             return (
-              <TouchableOpacity>
+              <TouchableOpacity disabled>
                 {focused == true ? (
                   <Ionicons
                     name="heart-outline"
@@ -56,7 +56,7 @@ const Tabs = ({ navigation, route }) => {
             );
           } else if (routename == "user") {
             return (
-              <TouchableOpacity>
+              <TouchableOpacity disabled>
                 {focused == true ? (
                   <Image
                     source={userIconActive}
@@ -81,11 +81,14 @@ const Tabs = ({ navigation, route }) => {
         component={HomeScreen}
         initialParams={{ user: user }}
       />
-      <Tab.Screen
+      {
+        // Wishlist is ready yet!
+        /* <Tab.Screen
         name="wishlist"
         component={HomeScreen}
         initialParams={{ user: user }}
-      />
+      /> */
+      }
       <Tab.Screen
         name="user"
         component={UserProfileScreen}

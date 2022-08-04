@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import cartIcon from "../../assets/icons/cart_beg_active.png";
-import { colors } from "../../constants";
+import { colors, network } from "../../constants";
 import CartProductList from "../../components/CartProductList/CartProductList";
 import CartEmpty from "../../assets/image/empty_cart.png";
 import CustomButton from "../../components/CustomButton";
@@ -21,7 +21,6 @@ import { bindActionCreators } from "redux";
 
 const CartScreen = ({ navigation }) => {
   const cartproduct = useSelector((state) => state.product);
-  console.log("cart:", cartproduct);
   const dispatch = useDispatch();
 
   const { removeCartItem, increaseCartItemQuantity, decreaseCartItemQuantity } =
@@ -48,7 +47,6 @@ const CartScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    console.log("R");
     setTotalPrice(
       cartproduct.reduce((accumulator, object) => {
         return (accumulator + object.price) * object.quantity;
@@ -97,7 +95,7 @@ const CartScreen = ({ navigation }) => {
             <CartProductList
               key={index}
               index={index}
-              image={require("../../assets/image/shirt1.png")}
+              image={item.image}
               title={item.title}
               price={item.price}
               quantity={item.quantity}
