@@ -31,4 +31,7 @@ const styles = StyleSheet.create({
   alertContainer_error: {
     backgroundColor: colors.danger,
   },
+  alertContainer_success: {
+    backgroundColor: colors.success,
+  },
 });
