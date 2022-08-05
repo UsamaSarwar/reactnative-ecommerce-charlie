@@ -225,7 +225,7 @@ const HomeScreen = ({ navigation, route }) => {
                 >
                   <ProductCard
                     name={item.title}
-                    image={require("../../assets/image/shirt1.png")}
+                    image={item.image}
                     price={item.price}
                     quantity={item.quantity}
                     onPress={() => handleProductPress(item)}

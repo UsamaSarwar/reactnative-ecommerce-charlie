@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import React from "react";
-import { colors } from "../../constants";
+import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 
 const ProductCard = ({
@@ -14,7 +14,10 @@ const ProductCard = ({
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.imageContainer}>
-        <Image source={image} style={styles.productImage} />
+        <Image
+          source={{ uri: `${network.serverip}/uploads/${image}` }}
+          style={styles.productImage}
+        />
       </View>
       <View style={styles.infoContainer}>
         <View>
