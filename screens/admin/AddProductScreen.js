@@ -61,6 +61,7 @@ const AddProductScreen = ({ navigation, route }) => {
     redirect: "follow",
   };
 
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -75,6 +76,24 @@ const AddProductScreen = ({ navigation, route }) => {
     if (!result.cancelled) {
       setImage(result.uri);
     }
+
+
+    var formdata = new FormData();
+    formdata.append("photos", image, "shirt_piece.jpeg");
+
+    var requestOptions = {
+      method: 'POST',
+      body: formdata,
+      redirect: 'follow'
+    };
+
+    fetch("https://api-easybuy.herokuapp.com/photos/upload", requestOptions)
+      .then((response) => response.json())
+      .then((response) => {
+        console.log('response', response);
+      })
+      .catch(error => console.log('error', error));
+
   };
 
   const addProductHandle = () => {
