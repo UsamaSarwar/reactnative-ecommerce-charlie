@@ -90,24 +90,6 @@ const AddProductScreen = ({ navigation, route }) => {
       setImage(result.uri);
       upload();
     }
-
-
-    var formdata = new FormData();
-    formdata.append("photos", image, "shirt_piece.jpeg");
-
-    var requestOptions = {
-      method: 'POST',
-      body: formdata,
-      redirect: 'follow'
-    };
-
-    fetch("https://api-easybuy.herokuapp.com/photos/upload", requestOptions)
-      .then((response) => response.json())
-      .then((response) => {
-        console.log('response', response);
-      })
-      .catch(error => console.log('error', error));
-
   };
 
   const addProductHandle = () => {
