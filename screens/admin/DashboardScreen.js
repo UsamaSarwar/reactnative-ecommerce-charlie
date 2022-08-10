@@ -49,7 +49,7 @@ const data = [
 
 const DashboardScreen = ({ navigation, route }) => {
   const { authUser } = route.params;
-  console.log(authUser);
+  const [user, setUser] = useState(authUser);
 
   return (
     <InternetConnectionAlert onChange={(connectionState) => {}}>
@@ -74,7 +74,6 @@ const DashboardScreen = ({ navigation, route }) => {
               color={colors.muted}
             />
           </TouchableOpacity>
-          
         </View>
         <View style={styles.headingContainer}>
           <MaterialCommunityIcons name="menu-right" size={30} color="black" />
@@ -91,7 +90,7 @@ const DashboardScreen = ({ navigation, route }) => {
                 type={data.type}
               />
             ))}
-        </ScrollView>
+          </ScrollView>
         </View>
         <View style={styles.headingContainer}>
           <MaterialCommunityIcons name="menu-right" size={30} color="black" />
@@ -104,21 +103,34 @@ const DashboardScreen = ({ navigation, route }) => {
               Icon={Ionicons}
               iconName={"md-square"}
               onPress={() =>
-                navigation.navigate("viewproduct", { authUser: authUser })
+                navigation.navigate("viewproduct", { authUser: user })
               }
               onPressSecondary={() =>
-                navigation.navigate("addproduct", { authUser: authUser })
+                navigation.navigate("addproduct", { authUser: user })
               }
               type="morden"
             />
             <OptionList
+              text={"Orders"}
+              Icon={Ionicons}
+              iconName={"md-square"}
+              onPress={() =>
+                navigation.navigate("vieworder", { authUser: user })
+              }
+              onPressSecondary={
+                () => console.log("vieworder")
+                // navigation.navigate("vieworder", { authUser: authUser })
+              }
+              type="morden"
+            />
+            {/* <OptionList
               text={"Categories"}
               Icon={Ionicons}
               iconName={"md-logo-dropbox"}
               onPress={() => console.log("working....")}
               onPressSecondary={() => console.log("working2....")}
               type="morden"
-            />
+            /> */}
             <View style={{ height: 20 }}></View>
           </ScrollView>
         </View>

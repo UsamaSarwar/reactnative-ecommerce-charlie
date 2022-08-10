@@ -23,3 +23,9 @@ export const decreaseCartItemQuantity = (id) => {
     dispatch({ type: actions.DECREASE_CART_ITEM_QUANTITY, payload: id });
   };
 };
+
+export const emptyCart = (type) => {
+  return (dispatch) => {
+    dispatch({ type: actions.EMPTY_CART, payload: type });
+  };
+};
