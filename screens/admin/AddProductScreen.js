@@ -75,6 +75,7 @@ const AddProductScreen = ({ navigation, route }) => {
     redirect: "follow",
   };
 
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({

@@ -14,7 +14,7 @@ import ProgressDialog from "react-native-progress-dialog";
 import BasicProductList from "../../components/BasicProductList/BasicProductList";
 import CustomButton from "../../components/CustomButton";
 
-const ViewOrderDetailScreen = () => {
+const ViewOrderDetailScreen = ({ navigation }) => {
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Loading..");
   const [error, setError] = useState("");
