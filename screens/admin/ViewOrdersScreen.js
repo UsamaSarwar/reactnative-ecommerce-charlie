@@ -11,37 +11,36 @@ import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import ProductList from "../../components/ProductList/ProductList";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
+import OrderList from "../../components/OrderList/OrderList";
 
-const ViewProductScreen = ({ navigation, route }) => {
+const ViewOrdersScreen = ({ navigation, route }) => {
   const { authUser } = route.params;
+  const [user, setUser] = useState({});
+
+  const convertToJson = (obj) => {
+    try {
+      setUser(JSON.parse(obj));
+    } catch (e) {
+      console.log("converttoJSON:", e);
+      setUser(obj);
+      return obj.token;
+    }
+    return JSON.parse(obj).token;
+  };
+
   const [isloading, setIsloading] = useState(false);
   const [refeshing, setRefreshing] = useState(false);
   const [alertType, setAlertType] = useState("error");
 
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
-  const [products, setProducts] = useState([]);
-
-  var myHeaders = new Headers();
-  myHeaders.append("x-auth-token", authUser.token);
-
-  var requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow",
-  };
-
-  var ProductListRequestOptions = {
-    method: "GET",
-    redirect: "follow",
-  };
+  const [orders, setOrders] = useState([]);
 
   const handleOnRefresh = () => {
     setRefreshing(true);
-    fetchProduct();
+    fetchOrders();
     setRefreshing(false);
   };
 
@@ -69,41 +68,37 @@ const ViewProductScreen = ({ navigation, route }) => {
       });
   };
 
-  const fetchProduct = () => {
-    fetch(`${network.serverip}/products`, ProductListRequestOptions)
+  const fetchOrders = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("x-auth-token", convertToJson(authUser));
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    setIsloading(true);
+    fetch(`${network.serverip}/admin/orders`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.success) {
-          setProducts(result.data);
+          setOrders(result.data);
           setError("");
         } else {
           setError(result.message);
         }
+        setIsloading(false);
       })
       .catch((error) => {
+        setIsloading(false);
         setError(error.message);
         console.log("error", error);
       });
   };
 
   useEffect(() => {
-    setIsloading(true);
-    fetch(`${network.serverip}/products`, ProductListRequestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success) {
-          // console.log(result.data);
-          setProducts(result.data);
-        } else {
-          setError(result.message);
-        }
-        setIsloading(false);
-      })
-      .catch((error) => {
-        setIsloading(false);
-        setError(error.message);
-        console.log("error", error);
-      });
+    fetchOrders();
+    console.log(orders[0]);
   }, []);
 
   return (
@@ -122,61 +117,33 @@ const ViewProductScreen = ({ navigation, route }) => {
             color={colors.muted}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("addproduct", { authUser: authUser });
-          }}
-        >
-          <AntDesign name="plussquare" size={30} color={colors.muted} />
-        </TouchableOpacity>
       </View>
       <View style={styles.screenNameContainer}>
         <View>
-          <Text style={styles.screenNameText}>View Product</Text>
+          <Text style={styles.screenNameText}>View Order</Text>
         </View>
         <View>
-          <Text style={styles.screenNameParagraph}>View all products</Text>
+          <Text style={styles.screenNameParagraph}>View all orders</Text>
         </View>
       </View>
       <CustomAlert message={error} type={alertType} />
       <ScrollView
-        style={{ flex: 1, width: "100%" }}
+        style={{ flex: 1, width: "100%", padding: 2 }}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
         }
       >
-        {products &&
-          products.map((product, index) => {
-            return (
-              <ProductList
-                key={index}
-                image={require("../../assets/image/shirt1.png")}
-                title={product?.title}
-                category={"Garments"}
-                price={product?.price}
-                qantity={product?.sku}
-                onPressView={() => {
-                  console.log("view is working " + product._id);
-                }}
-                onPressEdit={() => {
-                  navigation.navigate("editproduct", {
-                    product: product,
-                    authUser: authUser,
-                  });
-                }}
-                onPressDelete={() => {
-                  handleDelete(product._id);
-                }}
-              />
-            );
+        {orders &&
+          orders.map((order, index) => {
+            return <OrderList item={order} key={index} />;
           })}
       </ScrollView>
     </View>
   );
 };
 
-export default ViewProductScreen;
+export default ViewOrdersScreen;
 
 const styles = StyleSheet.create({
   container: {

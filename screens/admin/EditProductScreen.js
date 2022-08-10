@@ -20,23 +20,27 @@ import { AntDesign } from "@expo/vector-icons";
 
 const EditProductScreen = ({ navigation, route }) => {
   const { product, authUser } = route.params;
-  console.log(product);
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Updating...");
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [sku, setSku] = useState("");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("");
   const [error, setError] = useState("");
-  const [quanlity, setQuantity] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("garments");
+  const [alertType, setAlertType] = useState("error");
 
   useEffect(() => {
+    console.log(product.quantity);
     // setPrice(product.price);
-    setImage(null);
+    setImage(product.image);
     setTitle(product.title);
     setSku(product.sku);
-    setQuantity("1");
+    setQuantity(product.quantity.toString());
     setPrice(product.price.toString());
+    setDescription(product.description);
   }, []);
 
   var myHeaders = new Headers();
@@ -47,7 +51,10 @@ const EditProductScreen = ({ navigation, route }) => {
     title: title,
     sku: sku,
     price: price,
-    image: "",
+    image: image,
+    description: description,
+    category: category,
+    quantity: quantity,
   });
 
   var requestOptions = {
@@ -81,7 +88,7 @@ const EditProductScreen = ({ navigation, route }) => {
     } else if (price == 0) {
       setError("Please enter the product price");
       setIsloading(false);
-    } else if (quanlity <= 0) {
+    } else if (quantity <= 0) {
       setError("Quantity must be greater then 1");
       setIsloading(false);
     } else if (image == null) {
@@ -144,18 +151,18 @@ const EditProductScreen = ({ navigation, route }) => {
         <View style={styles.formContainer}>
           <View style={styles.imageContainer}>
             {image ? (
-              <Image
-                source={{ uri: image }}
-                style={{ width: 200, height: 200 }}
-                onPress={pickImage}
-              />
+              <TouchableOpacity style={styles.imageHolder} onPress={pickImage}>
+                <Image
+                  source={{ uri: image }}
+                  style={{ width: 200, height: 200 }}
+                />
+              </TouchableOpacity>
             ) : (
               <TouchableOpacity style={styles.imageHolder} onPress={pickImage}>
                 <AntDesign name="pluscircle" size={50} color={colors.muted} />
               </TouchableOpacity>
             )}
           </View>
-
           <CustomInput
             value={sku}
             setValue={setSku}
@@ -174,13 +181,22 @@ const EditProductScreen = ({ navigation, route }) => {
             value={price}
             setValue={setPrice}
             placeholder={"Price"}
+            keyboardType={"number-pad"}
             placeholderTextColor={colors.muted}
             radius={5}
           />
           <CustomInput
-            value={quanlity}
+            value={quantity}
             setValue={setQuantity}
             placeholder={"Quantity"}
+            keyboardType={"number-pad"}
+            placeholderTextColor={colors.muted}
+            radius={5}
+          />
+          <CustomInput
+            value={description}
+            setValue={setDescription}
+            placeholder={"Description"}
             placeholderTextColor={colors.muted}
             radius={5}
           />

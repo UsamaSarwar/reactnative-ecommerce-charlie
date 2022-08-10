@@ -15,6 +15,7 @@ import CheckoutScreen from "../screens/user/CheckoutScreen.js";
 import OrderConfirmScreen from "../screens/user/OrderConfirmScreen";
 import ProductDetailScreen from "../screens/user/ProductDetailScreen";
 import EditProductScreen from "../screens/admin/EditProductScreen";
+import ViewOrdersScreen from "../screens/admin/ViewOrdersScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ const Routes = () => {
         <Stack.Screen name="checkout" component={CheckoutScreen} />
         <Stack.Screen name="orderconfirm" component={OrderConfirmScreen} />
         <Stack.Screen name="productdetail" component={ProductDetailScreen} />
+        <Stack.Screen name="vieworder" component={ViewOrdersScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
