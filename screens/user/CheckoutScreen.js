@@ -70,7 +70,7 @@ const CheckoutScreen = ({ navigation, route }) => {
   };
 
   const [deliveryCost, setDeliveryCost] = useState(0);
-  const [totalCost, setTotalCost] = useState(180);
+  const [totalCost, setTotalCost] = useState(0);
   const [address, setAddress] = useState(
     "House No.363, Street No, Lalazar Coloney, Jhang"
   );

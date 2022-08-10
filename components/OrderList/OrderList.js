@@ -4,13 +4,13 @@ import { colors } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 
-const OrderList = ({ item }) => {
+const OrderList = ({ item, onPress }) => {
   const totalOrdrItems = item.items.reduce(
     (a, obj) => a + Object.keys(obj).length,
     0
   );
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.orderlistInfoList}>
         <Text style={styles.primaryTextSm}>Order : {item?._id}</Text>
       </View>

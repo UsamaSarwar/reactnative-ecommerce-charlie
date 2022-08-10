@@ -19,7 +19,7 @@ const ViewOrdersScreen = ({ navigation, route }) => {
   const { authUser } = route.params;
   const [user, setUser] = useState({});
 
-  const convertToJson = (obj) => {
+  const getToken = (obj) => {
     try {
       setUser(JSON.parse(obj));
     } catch (e) {
@@ -44,33 +44,13 @@ const ViewOrdersScreen = ({ navigation, route }) => {
     setRefreshing(false);
   };
 
-  const handleDelete = (id) => {
-    setIsloading(true);
-    console.log(`${network.serverip}/delete-product?id=${id}`);
-    fetch(`${network.serverip}/delete-product?id=${id}`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success) {
-          fetchProduct();
-          console.log(result);
-          setError(result.message);
-          setAlertType("success");
-        } else {
-          setError(result.message);
-          setAlertType("error");
-        }
-        setIsloading(false);
-      })
-      .catch((error) => {
-        setIsloading(false);
-        setError(error.message);
-        console.log("error", error);
-      });
+  const handleOrderDetail = () => {
+    navigation.navigate("vieworderdetails");
   };
 
   const fetchOrders = () => {
     var myHeaders = new Headers();
-    myHeaders.append("x-auth-token", convertToJson(authUser));
+    myHeaders.append("x-auth-token", getToken(authUser));
 
     var requestOptions = {
       method: "GET",
@@ -136,7 +116,9 @@ const ViewOrdersScreen = ({ navigation, route }) => {
       >
         {orders &&
           orders.map((order, index) => {
-            return <OrderList item={order} key={index} />;
+            return (
+              <OrderList item={order} key={index} onPress={handleOrderDetail} />
+            );
           })}
       </ScrollView>
     </View>

@@ -16,6 +16,7 @@ import OrderConfirmScreen from "../screens/user/OrderConfirmScreen";
 import ProductDetailScreen from "../screens/user/ProductDetailScreen";
 import EditProductScreen from "../screens/admin/EditProductScreen";
 import ViewOrdersScreen from "../screens/admin/ViewOrdersScreen";
+import ViewOrderDetailScreen from "../screens/admin/ViewOrderDetailScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,7 @@ const Routes = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="splash"
+        initialRouteName="vieworderdetails"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="splash" component={Splash} />
@@ -42,6 +43,10 @@ const Routes = () => {
         <Stack.Screen name="orderconfirm" component={OrderConfirmScreen} />
         <Stack.Screen name="productdetail" component={ProductDetailScreen} />
         <Stack.Screen name="vieworder" component={ViewOrdersScreen} />
+        <Stack.Screen
+          name="vieworderdetails"
+          component={ViewOrderDetailScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
