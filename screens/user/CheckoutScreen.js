@@ -33,12 +33,10 @@ const CheckoutScreen = ({ navigation, route }) => {
   const [deliveryCost, setDeliveryCost] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
   const [address, setAddress] = useState("");
-  const [country, setCountry] = useState("Pakistan");
-  const [city, setCity] = useState("Jhang");
-  const [streetAddress, setStreetAddress] = useState(
-    "House No.363, Street No, Lalazar Coloney"
-  );
-  const [zipcode, setZipcode] = useState("35200");
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [zipcode, setZipcode] = useState("");
 
   const confirmCheckout = async () => {
     setIsloading(true);
@@ -96,7 +94,11 @@ const CheckoutScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    setAddress(`${streetAddress}, ${city},${country}`);
+    if (streetAddress && city && country != "") {
+      setAddress(`${streetAddress}, ${city},${country}`);
+    } else {
+      setAddress("");
+    }
     setTotalCost(
       cartproduct.reduce((accumulator, object) => {
         return (accumulator + object.price) * object.quantity;
@@ -176,15 +178,19 @@ const CheckoutScreen = ({ navigation, route }) => {
           >
             <Text style={styles.secondaryTextSm}>Address</Text>
             <View>
-              <Text
-                style={styles.secondaryTextSm}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {address.length < 25
-                  ? `${address}`
-                  : `${address.substring(0, 25)}...`}
-              </Text>
+              {country || city || streetAddress != "" ? (
+                <Text
+                  style={styles.secondaryTextSm}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {address.length < 25
+                    ? `${address}`
+                    : `${address.substring(0, 25)}...`}
+                </Text>
+              ) : (
+                <Text style={styles.primaryTextSm}>Add</Text>
+              )}
             </View>
           </TouchableOpacity>
         </View>
@@ -195,15 +201,20 @@ const CheckoutScreen = ({ navigation, route }) => {
             <Text style={styles.primaryTextSm}>Cash On Delivery</Text>
           </View>
         </View>
-        <View style={styles.buttomContainer}>
+
+        <View style={styles.emptyView}></View>
+      </ScrollView>
+      <View style={styles.buttomContainer}>
+        {country && city && streetAddress != "" ? (
           <CustomButton
             text={"Submit Order"}
             // onPress={() => navigation.replace("orderconfirm")}
             onPress={handleCheckout}
           />
-        </View>
-        <View style={styles.emptyView}></View>
-      </ScrollView>
+        ) : (
+          <CustomButton text={"Submit Order"} disabled />
+        )}
+      </View>
       <Modal
         animationType="slide"
         transparent={true}
@@ -233,14 +244,24 @@ const CheckoutScreen = ({ navigation, route }) => {
               value={zipcode}
               setValue={setZipcode}
               placeholder={"Enter ZipCode"}
+              keyboardType={"number-pad"}
             />
-            <CustomButton
-              onPress={() => {
-                setModalVisible(!modalVisible);
-                setAddress(`${streetAddress}, ${city},${country}`);
-              }}
-              text={"save"}
-            />
+            {streetAddress || city || country != "" ? (
+              <CustomButton
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  setAddress(`${streetAddress}, ${city},${country}`);
+                }}
+                text={"save"}
+              />
+            ) : (
+              <CustomButton
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}
+                text={"close"}
+              />
+            )}
           </View>
         </View>
       </Modal>
@@ -321,7 +342,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   buttomContainer: {
+    width: "100%",
     padding: 20,
+    paddingLeft: 30,
+    paddingRight: 30,
   },
   emptyView: {
     width: "100%",
