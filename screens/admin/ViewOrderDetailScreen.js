@@ -14,37 +14,25 @@ import ProgressDialog from "react-native-progress-dialog";
 import BasicProductList from "../../components/BasicProductList/BasicProductList";
 import CustomButton from "../../components/CustomButton";
 
-const ViewOrderDetailScreen = ({ navigation }) => {
+const ViewOrderDetailScreen = ({ navigation, route }) => {
+  const { orderDetail } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Loading..");
   const [error, setError] = useState("");
   const [alertType, setAlertType] = useState("error");
-  const [totalCost, setTotalCost] = useState(180);
-  const [orderItems, setOrderItems] = useState([
-    {
-      quantity: 1,
-      price: 100,
-      productId: "product1",
-    },
-    {
-      quantity: 2,
-      price: 150,
-      productId: "product2",
-    },
-    {
-      quantity: 3,
-      price: 100,
-      productId: "product3",
-    },
-    {
-      quantity: 3,
-      price: 20,
-      productId: "product4",
-    },
-  ]);
+  const [totalCost, setTotalCost] = useState(0);
+  const [address, setAddress] = useState("");
+
   useEffect(() => {
+    setAddress(
+      orderDetail?.country +
+        ", " +
+        orderDetail?.city +
+        ", " +
+        orderDetail?.shippingAddress
+    );
     setTotalCost(
-      orderItems.reduce((accumulator, object) => {
+      orderDetail?.items.reduce((accumulator, object) => {
         return (accumulator + object.price) * object.quantity;
       }, 0)
     );
@@ -87,24 +75,24 @@ const ViewOrderDetailScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.ShipingInfoContainer}>
-          <Text style={styles.secondarytextMedian}>Bukhtyar Haider</Text>
           <Text style={styles.secondarytextMedian}>
-            bukhtyar.haider1@gmail.com
+            {orderDetail?.user?.name}
           </Text>
-          <Text style={styles.secondarytextSm}>
-            punjab, Jhang, Satellite town , House no.363, street no.1, lalazar
-            coloney phase no.1
+          <Text style={styles.secondarytextMedian}>
+            {orderDetail?.user?.email}
           </Text>
+          <Text style={styles.secondarytextSm}>{address}</Text>
+          <Text style={styles.secondarytextSm}>{orderDetail?.zipcode}</Text>
         </View>
         <View>
           <Text style={styles.containerNameText}>Order Info</Text>
         </View>
         <View style={styles.orderInfoContainer}>
           <Text style={styles.secondarytextMedian}>
-            Order # {"3ui4yiwu2ih3"}
+            Order # {orderDetail?._id}
           </Text>
           <Text style={styles.secondarytextSm}>
-            Order on : {"02, Aug, 2019"}
+            Order on : {orderDetail?.updatedAt}
           </Text>
         </View>
         <View style={styles.containerNameContainer}>
@@ -115,18 +103,18 @@ const ViewOrderDetailScreen = ({ navigation }) => {
         <View style={styles.orderItemsContainer}>
           <View style={styles.orderItemContainer}>
             <Text style={styles.orderItemText}>Package</Text>
-            <Text>Delivered</Text>
+            <Text>{orderDetail?.status}</Text>
           </View>
           <View style={styles.orderItemContainer}>
             <Text style={styles.orderItemText}>
-              Order on : {"02, Aug, 2019"}
+              Order on : {orderDetail?.updatedAt}
             </Text>
           </View>
           <ScrollView
             style={styles.orderSummaryContainer}
             nestedScrollEnabled={true}
           >
-            {orderItems.map((product, index) => (
+            {orderDetail?.items.map((product, index) => (
               <View key={index}>
                 <BasicProductList
                   title={product?.productId}
@@ -141,6 +129,7 @@ const ViewOrderDetailScreen = ({ navigation }) => {
             <Text>{totalCost}$</Text>
           </View>
         </View>
+        <View style={styles.emptyView}></View>
       </ScrollView>
       <View style={styles.bottomContainer}>
         <View>
@@ -268,6 +257,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     position: "absolute",
+    bottom: 1,
     zIndex: 2,
   },
   orderInfoContainer: {
@@ -293,5 +283,8 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontSize: 15,
     fontWeight: "bold",
+  },
+  emptyView: {
+    height: 80,
   },
 });

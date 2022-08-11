@@ -44,8 +44,8 @@ const ViewOrdersScreen = ({ navigation, route }) => {
     setRefreshing(false);
   };
 
-  const handleOrderDetail = () => {
-    navigation.navigate("vieworderdetails");
+  const handleOrderDetail = (item) => {
+    navigation.navigate("vieworderdetails", { orderDetail: item });
   };
 
   const fetchOrders = () => {
@@ -117,7 +117,11 @@ const ViewOrdersScreen = ({ navigation, route }) => {
         {orders &&
           orders.map((order, index) => {
             return (
-              <OrderList item={order} key={index} onPress={handleOrderDetail} />
+              <OrderList
+                item={order}
+                key={index}
+                onPress={() => handleOrderDetail(order)}
+              />
             );
           })}
       </ScrollView>
