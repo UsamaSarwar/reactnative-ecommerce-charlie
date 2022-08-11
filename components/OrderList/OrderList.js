@@ -29,7 +29,21 @@ const OrderList = ({ item, onPress }) => {
       </View>
       <View style={styles.orderlistInfoList}>
         <View>
-          <Text>Status : {item?.status}</Text>
+          {item?.status == "pending" ? (
+            <View style={styles.pendingStatus}>
+              <Text style={styles.statusText}>{item?.status}</Text>
+            </View>
+          ) : item?.status == "shipped" ? (
+            <View style={styles.shippedStatus}>
+              <Text style={styles.statusText}>{item?.status}</Text>
+            </View>
+          ) : item?.status == "delivered" ? (
+            <View style={styles.deliveredStatus}>
+              <Text style={styles.deliveredStatusText}>{item?.status}</Text>
+            </View>
+          ) : (
+            <></>
+          )}
         </View>
         <Text style={styles.primaryTextSm}>Total Price : {item?.amount}$</Text>
       </View>
@@ -64,5 +78,46 @@ const styles = StyleSheet.create({
   },
   primaryTextSm: {
     fontWeight: "600",
+  },
+  pendingStatus: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "auto",
+    padding: 5,
+    backgroundColor: colors.warning,
+    height: "auto",
+    borderRadius: 5,
+  },
+
+  statusText: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: colors.muted,
+  },
+  deliveredStatusText: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: colors.white,
+  },
+  shippedStatus: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "auto",
+    padding: 5,
+    backgroundColor: colors.success,
+    height: "auto",
+    borderRadius: 5,
+  },
+  deliveredStatus: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "auto",
+    padding: 5,
+    backgroundColor: colors.primary,
+    height: "auto",
+    borderRadius: 5,
   },
 });

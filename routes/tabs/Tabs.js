@@ -9,6 +9,7 @@ import HomeIconActive from "../../assets/icons/bar_home_icon_active.png";
 import HomeIcon from "../../assets/icons/bar_home_icon.png";
 import userIcon from "../../assets/icons/bar_profile_icon.png";
 import userIconActive from "../../assets/icons/bar_profile_icon_active.png";
+import MyOrderScreen from "../../screens/user/MyOrderScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,18 +37,18 @@ const Tabs = ({ navigation, route }) => {
                 )}
               </TouchableOpacity>
             );
-          } else if (routename == "wishlist") {
+          } else if (routename == "myorder") {
             return (
               <TouchableOpacity disabled>
                 {focused == true ? (
                   <Ionicons
-                    name="heart-outline"
+                    name="cart-outline"
                     size={29}
                     color={colors.primary}
                   />
                 ) : (
                   <Ionicons
-                    name="heart-outline"
+                    name="cart-outline"
                     size={29}
                     color={colors.muted}
                   />
@@ -83,11 +84,11 @@ const Tabs = ({ navigation, route }) => {
       />
       {
         // Wishlist is ready yet!
-        /* <Tab.Screen
-        name="wishlist"
-        component={HomeScreen}
-        initialParams={{ user: user }}
-      /> */
+        <Tab.Screen
+          name="myorder"
+          component={MyOrderScreen}
+          initialParams={{ user: user }}
+        />
       }
       <Tab.Screen
         name="user"

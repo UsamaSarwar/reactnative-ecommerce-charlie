@@ -87,6 +87,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [refeshing, setRefreshing] = useState(false);
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
+  const [UserInfo, setUserInfo] = useState({});
 
   // console.log(user);
 
@@ -135,7 +136,7 @@ const HomeScreen = ({ navigation, route }) => {
     <View style={styles.container}>
       <StatusBar></StatusBar>
       <View style={styles.topBarContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity disabled>
           <Ionicons name="menu" size={30} color={colors.muted} />
         </TouchableOpacity>
         <View>
