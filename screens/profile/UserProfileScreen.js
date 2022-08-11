@@ -5,7 +5,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UserProfileCard from "../../components/UserProfileCard/UserProfileCard";
 import { Ionicons } from "@expo/vector-icons";
 import OptionList from "../../components/OptionList/OptionList";
@@ -13,10 +13,20 @@ import { colors } from "../../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UserProfileScreen = ({ navigation, route }) => {
+  const [userInfo, setUserInfo] = useState({});
   const { user } = route.params;
-  // console.log("userprofile:", user);
-  // const userID = User["_id"];
-  const userID = "62e2ff5999b929330f7300c5";
+
+  const convertToJSON = (obj) => {
+    try {
+      setUserInfo(JSON.parse(obj));
+    } catch (e) {
+      setUserInfo(obj);
+    }
+  };
+
+  useEffect(() => {
+    convertToJSON(user);
+  }, []);
   return (
     <View style={styles.container}>
       <StatusBar style="auto"></StatusBar>
@@ -31,8 +41,8 @@ const UserProfileScreen = ({ navigation, route }) => {
       <View style={styles.UserProfileCardContianer}>
         <UserProfileCard
           Icon={Ionicons}
-          name={user["name"]}
-          email={user["email"]}
+          name={userInfo?.name}
+          email={userInfo?.email}
         />
       </View>
       <View style={styles.OptionsContainer}>
@@ -40,7 +50,7 @@ const UserProfileScreen = ({ navigation, route }) => {
           text={"My Account"}
           Icon={Ionicons}
           iconName={"person"}
-          onPress={() => navigation.navigate("myaccount", { user: user })}
+          onPress={() => navigation.navigate("myaccount", { user: userInfo })}
         />
         <OptionList
           text={"Notifications"}

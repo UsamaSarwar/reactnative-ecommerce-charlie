@@ -87,9 +87,16 @@ const HomeScreen = ({ navigation, route }) => {
   const [refeshing, setRefreshing] = useState(false);
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
-  const [UserInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState({});
 
-  // console.log(user);
+  const convertToJSON = (obj) => {
+    try {
+      setUserInfo(JSON.parse(obj));
+    } catch (e) {
+      console.log("converttoJSON:", e);
+      setUserInfo(obj);
+    }
+  };
 
   const handleProductPress = (product) => {
     navigation.navigate("productdetail", { product: product });
@@ -128,6 +135,7 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
+    convertToJSON(user);
     fetchProduct();
     // console.log("cart", cartproduct);
   }, []);

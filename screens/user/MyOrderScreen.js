@@ -29,6 +29,8 @@ const MyOrderScreen = ({ navigation, route }) => {
     try {
     } catch (e) {
       console.log("converttoJSON:", e);
+      console.log(obj);
+
       return obj.token;
     }
     return JSON.parse(obj).token;
@@ -103,15 +105,24 @@ const MyOrderScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <CustomAlert message={error} type={alertType} />
-      <ScrollView
-        style={{ flex: 1, width: "100%", padding: 20 }}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
-        }
-      >
-        {orders &&
-          orders.map((order, index) => {
+      {orders.length == 0 ? (
+        <View style={styles.ListContiainerEmpty}>
+          <Text style={styles.secondaryTextSmItalic}>
+            "There are no orders placed yet."
+          </Text>
+        </View>
+      ) : (
+        <ScrollView
+          style={{ flex: 1, width: "100%", padding: 20 }}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refeshing}
+              onRefresh={handleOnRefresh}
+            />
+          }
+        >
+          {orders.map((order, index) => {
             return (
               <OrderList
                 item={order}
@@ -120,8 +131,9 @@ const MyOrderScreen = ({ navigation, route }) => {
               />
             );
           })}
-        <View style={styles.emptyView}></View>
-      </ScrollView>
+          <View style={styles.emptyView}></View>
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -159,5 +171,17 @@ const styles = StyleSheet.create({
   },
   emptyView: {
     height: 20,
+  },
+  ListContiainerEmpty: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  secondaryTextSmItalic: {
+    fontStyle: "italic",
+    fontSize: 15,
+    color: colors.muted,
   },
 });

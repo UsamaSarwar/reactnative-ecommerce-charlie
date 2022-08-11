@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 12,
     fontWeight: "bold",
-    color: colors.muted,
+    color: colors.dark,
   },
   deliveredStatusText: {
     fontSize: 12,
