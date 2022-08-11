@@ -6,7 +6,6 @@ import {
   Text,
   ScrollView,
   Modal,
-  Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
@@ -25,6 +24,7 @@ const CheckoutScreen = ({ navigation, route }) => {
   const [isloading, setIsloading] = useState(false);
   const cartproduct = useSelector((state) => state.product);
   const dispatch = useDispatch();
+  const { emptyCart } = bindActionCreators(actionCreaters, dispatch);
 
   const handleCheckout = () => {
     confirmCheckout();
@@ -84,6 +84,7 @@ const CheckoutScreen = ({ navigation, route }) => {
       .then((result) => {
         if (result.success == true) {
           setIsloading(false);
+          emptyCart("empty");
           navigation.navigate("orderconfirm");
         }
       })

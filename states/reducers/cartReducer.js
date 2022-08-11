@@ -57,9 +57,7 @@ const reducer = (state = [], action) => {
       }
     case actions.EMPTY_CART:
       if (action.payload === "empty") {
-        console.log("Redux-B:", state);
         state.splice(0, state.length);
-        console.log("Redux-A:", state);
         return state;
       }
 
