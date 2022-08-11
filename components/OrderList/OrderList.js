@@ -5,10 +5,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 
 const OrderList = ({ item, onPress }) => {
-  const totalOrdrItems = item.items.reduce(
-    (a, obj) => a + Object.keys(obj).length,
-    0
-  );
+  let totalItem = 0;
+  item.items.forEach((element) => {
+    ++totalItem;
+  });
+  const totalOrdrItems = totalItem;
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.orderlistInfoList}>

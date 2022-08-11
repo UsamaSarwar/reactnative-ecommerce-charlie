@@ -45,7 +45,10 @@ const ViewOrdersScreen = ({ navigation, route }) => {
   };
 
   const handleOrderDetail = (item) => {
-    navigation.navigate("vieworderdetails", { orderDetail: item });
+    navigation.navigate("vieworderdetails", {
+      orderDetail: item,
+      Token: getToken(authUser),
+    });
   };
 
   const fetchOrders = () => {
@@ -78,7 +81,7 @@ const ViewOrdersScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     fetchOrders();
-    console.log(orders[0]);
+    console.log(orders);
   }, []);
 
   return (

@@ -13,17 +13,70 @@ import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
 import BasicProductList from "../../components/BasicProductList/BasicProductList";
 import CustomButton from "../../components/CustomButton";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const ViewOrderDetailScreen = ({ navigation, route }) => {
-  const { orderDetail } = route.params;
+  const { orderDetail, Token } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Loading..");
   const [error, setError] = useState("");
   const [alertType, setAlertType] = useState("error");
   const [totalCost, setTotalCost] = useState(0);
   const [address, setAddress] = useState("");
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [statusDisable, setStatusDisable] = useState(false);
+  const [items, setItems] = useState([
+    { label: "Pending", value: "pending" },
+    { label: "Shipped", value: "shipped" },
+    { label: "Delivered", value: "delivered" },
+  ]);
+
+  const handleUpdateStatus = (id) => {
+    setIsloading(true);
+    setError("");
+    setAlertType("error");
+    var myHeaders = new Headers();
+    myHeaders.append("x-auth-token", Token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    console.log(
+      `Link:${network.serverip}/admin/order-status?orderId=${id}&status=${value}`
+    );
+
+    fetch(
+      `${network.serverip}/admin/order-status?orderId=${id}&status=${value}`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success == true) {
+          setError(`Order status is successfully updated to ${value}`);
+          setAlertType("success");
+          setIsloading(false);
+        }
+      })
+      .catch((error) => {
+        setAlertType("error");
+        setError(error);
+        console.log("error", error);
+        setIsloading(false);
+      });
+  };
 
   useEffect(() => {
+    setError("");
+    setAlertType("error");
+    if (orderDetail?.status == "delivered") {
+      setStatusDisable(true);
+    } else {
+      setStatusDisable(false);
+    }
+    setValue(orderDetail?.status);
     setAddress(
       orderDetail?.country +
         ", " +
@@ -66,7 +119,7 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
       </View>
       <CustomAlert message={error} type={alertType} />
       <ScrollView
-        style={{ flex: 1, width: "100%", padding: 5 }}
+        style={styles.bodyContainer}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.containerNameContainer}>
@@ -103,7 +156,7 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
         <View style={styles.orderItemsContainer}>
           <View style={styles.orderItemContainer}>
             <Text style={styles.orderItemText}>Package</Text>
-            <Text>{orderDetail?.status}</Text>
+            <Text>{value}</Text>
           </View>
           <View style={styles.orderItemContainer}>
             <Text style={styles.orderItemText}>
@@ -133,10 +186,31 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
       </ScrollView>
       <View style={styles.bottomContainer}>
         <View>
-          <Text>Status: Delivered</Text>
+          <DropDownPicker
+            style={{ width: 200 }}
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            disabled={statusDisable}
+            disabledStyle={{
+              backgroundColor: colors.light,
+              borderColor: colors.white,
+            }}
+            labelStyle={{ color: colors.muted }}
+          />
         </View>
         <View>
-          <CustomButton text={"Update"} />
+          {statusDisable == false ? (
+            <CustomButton
+              text={"Update"}
+              onPress={() => handleUpdateStatus(orderDetail?._id)}
+            />
+          ) : (
+            <CustomButton text={"Update"} disabled />
+          )}
         </View>
       </View>
     </View>
@@ -170,6 +244,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    marginBottom: 5,
   },
   screenNameText: {
     fontSize: 30,
@@ -177,9 +252,10 @@ const styles = StyleSheet.create({
     color: colors.muted,
   },
   screenNameParagraph: {
-    marginTop: 5,
+    marginTop: 10,
     fontSize: 15,
   },
+  bodyContainer: { flex: 1, width: "100%", padding: 5 },
   ShipingInfoContainer: {
     marginTop: 5,
     display: "flex",
@@ -244,7 +320,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     backgroundColor: colors.white,
-    width: "100%",
+    width: "110%",
     height: 70,
     borderTopLeftRadius: 10,
     borderTopEndRadius: 10,
@@ -253,12 +329,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 5,
+
     paddingLeft: 10,
     paddingRight: 10,
-    position: "absolute",
-    bottom: 1,
-    zIndex: 2,
   },
   orderInfoContainer: {
     marginTop: 5,

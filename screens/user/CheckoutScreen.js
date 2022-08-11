@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   Text,
   ScrollView,
+  Modal,
+  Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
@@ -15,8 +17,12 @@ import { useSelector, useDispatch } from "react-redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
 import { bindActionCreators } from "redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomInput from "../../components/CustomInput";
+import ProgressDialog from "react-native-progress-dialog";
 
 const CheckoutScreen = ({ navigation, route }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isloading, setIsloading] = useState(false);
   const cartproduct = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
@@ -24,7 +30,18 @@ const CheckoutScreen = ({ navigation, route }) => {
     confirmCheckout();
   };
 
+  const [deliveryCost, setDeliveryCost] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
+  const [address, setAddress] = useState("");
+  const [country, setCountry] = useState("Pakistan");
+  const [city, setCity] = useState("Jhang");
+  const [streetAddress, setStreetAddress] = useState(
+    "House No.363, Street No, Lalazar Coloney"
+  );
+  const [zipcode, setZipcode] = useState("35200");
+
   const confirmCheckout = async () => {
+    setIsloading(true);
     var myHeaders = new Headers();
     const value = await AsyncStorage.getItem("authUser");
     let user = JSON.parse(value);
@@ -34,22 +51,27 @@ const CheckoutScreen = ({ navigation, route }) => {
     myHeaders.append("Content-Type", "application/json");
 
     var payload = [];
-    var amount = 0;
+    var totalamount = 0;
     cartproduct.forEach((product) => {
       let obj = {
         productId: product._id,
         price: product.price,
         quantity: product.quantity,
       };
-      amount += parseInt(product.price) * parseInt(product.quantity);
+      totalamount += parseInt(product.price) * parseInt(product.quantity);
       payload.push(obj);
     });
 
     var raw = JSON.stringify({
       items: payload,
-      amount: amount,
+      amount: totalamount,
       discount: 0,
       payment_type: "cod",
+      country: country,
+      status: "pending",
+      city: city,
+      zipcode: zipcode,
+      shippingAddress: streetAddress,
     });
 
     var requestOptions = {
@@ -63,19 +85,18 @@ const CheckoutScreen = ({ navigation, route }) => {
       .then((response) => response.json())
       .then((result) => {
         if (result.success == true) {
+          setIsloading(false);
           navigation.navigate("orderconfirm");
         }
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => {
+        setIsloading(false);
+        console.log("error", error);
+      });
   };
 
-  const [deliveryCost, setDeliveryCost] = useState(0);
-  const [totalCost, setTotalCost] = useState(0);
-  const [address, setAddress] = useState(
-    "House No.363, Street No, Lalazar Coloney, Jhang"
-  );
-
   useEffect(() => {
+    setAddress(`${streetAddress}, ${city},${country}`);
     setTotalCost(
       cartproduct.reduce((accumulator, object) => {
         return (accumulator + object.price) * object.quantity;
@@ -86,6 +107,7 @@ const CheckoutScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
+      <ProgressDialog visible={isloading} label={"Placing Order..."} />
       <View style={styles.topBarContainer}>
         <TouchableOpacity
           onPress={() => {
@@ -148,7 +170,10 @@ const CheckoutScreen = ({ navigation, route }) => {
         </View>
         <Text style={styles.primaryText}>Address</Text>
         <View style={styles.listContainer}>
-          <View style={styles.list}>
+          <TouchableOpacity
+            style={styles.list}
+            onPress={() => setModalVisible(true)}
+          >
             <Text style={styles.secondaryTextSm}>Address</Text>
             <View>
               <Text
@@ -161,7 +186,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                   : `${address.substring(0, 25)}...`}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
         <Text style={styles.primaryText}>Payment</Text>
         <View style={styles.listContainer}>
@@ -179,6 +204,46 @@ const CheckoutScreen = ({ navigation, route }) => {
         </View>
         <View style={styles.emptyView}></View>
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modelBody}>
+          <View style={styles.modelAddressContainer}>
+            <CustomInput
+              value={country}
+              setValue={setCountry}
+              placeholder={"Enter Country"}
+            />
+            <CustomInput
+              value={city}
+              setValue={setCity}
+              placeholder={"Enter City"}
+            />
+            <CustomInput
+              value={streetAddress}
+              setValue={setStreetAddress}
+              placeholder={"Enter Street Address"}
+            />
+            <CustomInput
+              value={zipcode}
+              setValue={setZipcode}
+              placeholder={"Enter ZipCode"}
+            />
+            <CustomButton
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                setAddress(`${streetAddress}, ${city},${country}`);
+              }}
+              text={"save"}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -261,5 +326,24 @@ const styles = StyleSheet.create({
   emptyView: {
     width: "100%",
     height: 20,
+  },
+  modelBody: {
+    flex: 1,
+    display: "flex",
+    flexL: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modelAddressContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    width: 320,
+    height: 400,
+    backgroundColor: colors.white,
+    borderRadius: 20,
+    elevation: 3,
   },
 });

@@ -21,6 +21,7 @@
     "react-color-log": "^1.0.12",
     "react-dom": "17.0.2",
     "react-native": "0.68.2",
+    "react-native-dropdown-picker": "^5.4.2",
     "react-native-gesture-handler": "~2.2.1",
     "react-native-image-picker": "^4.8.5",
     "react-native-internet-connection-alert": "^0.1.9",

@@ -4,7 +4,7 @@ export default colors = {
   primary_shadow: "#FB6A04",
   secondary: "#31C4FB",
   tertiary: "#AEE8FD",
-  success: "#DC3444",
+  success: "#90ee90",
   danger: "#FF4848",
   shadow: "#E7E8EA",
   warning: "#FBD431",
