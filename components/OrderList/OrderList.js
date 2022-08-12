@@ -2,7 +2,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
-import { ScrollView } from "react-native-gesture-handler";
 
 const OrderList = ({ item, onPress }) => {
   let totalItem = 0;

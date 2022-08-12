@@ -25,15 +25,12 @@ const MyOrderScreen = ({ navigation, route }) => {
   const [orders, setOrders] = useState([]);
   const [UserInfo, setUserInfo] = useState({});
 
-  const getToken = (obj) => {
+  const convertToJSON = (obj) => {
     try {
+      setUserInfo(JSON.parse(obj));
     } catch (e) {
-      console.log("converttoJSON:", e);
-      console.log(obj);
-
-      return obj.token;
+      setUserInfo(obj);
     }
-    return JSON.parse(obj).token;
   };
 
   const handleOnRefresh = () => {
@@ -45,13 +42,15 @@ const MyOrderScreen = ({ navigation, route }) => {
   const handleOrderDetail = (item) => {
     navigation.navigate("vieworderdetails", {
       orderDetail: item,
-      Token: getToken(authUser),
+      Token: UserInfo.token,
     });
   };
 
   const fetchOrders = () => {
     var myHeaders = new Headers();
-    myHeaders.append("x-auth-token", getToken(user));
+    let token = user.token;
+    console.log("token-", token);
+    myHeaders.append("x-auth-token", token);
 
     var requestOptions = {
       method: "GET",
@@ -65,8 +64,6 @@ const MyOrderScreen = ({ navigation, route }) => {
         if (result.success) {
           setOrders(result.data);
           setError("");
-        } else {
-          setError(result.message);
         }
         setIsloading(false);
       })
@@ -78,9 +75,8 @@ const MyOrderScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    console.log(user?.token);
+    convertToJSON(user);
     fetchOrders();
-    console.log(orders);
   }, []);
 
   return (
