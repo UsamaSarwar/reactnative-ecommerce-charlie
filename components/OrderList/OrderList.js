@@ -4,8 +4,38 @@ import { colors } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 
 const OrderList = ({ item, onPress }) => {
+  function tConvert(time) {
+    // Check correct time format and split into components
+    time = time
+      .toString()
+      .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+    if (time.length > 1) {
+      // If time format correct
+      time = time.slice(1); // Remove full string match value
+      time[5] = +time[0] < 12 ? "AM" : "PM"; // Set AM/PM
+      time[0] = +time[0] % 12 || 12; // Adjust hours
+    }
+    return time.join(""); // return adjusted time or original string
+  }
+
+  const dateFormat = (datex) => {
+    console.log("d:", datex);
+    let t = new Date(datex);
+    const date = ("0" + t.getDate()).slice(-2);
+    const month = ("0" + (t.getMonth() + 1)).slice(-2);
+    const year = t.getFullYear();
+    const hours = ("0" + t.getHours()).slice(-2);
+    const minutes = ("0" + t.getMinutes()).slice(-2);
+    const seconds = ("0" + t.getSeconds()).slice(-2);
+    const time = tConvert(`${hours}:${minutes}:${seconds}`);
+    const newDate = `${date}-${month}-${year}, ${time}`;
+
+    return newDate;
+  };
+
   let totalItem = 0;
-  item.items.forEach((element) => {
+  item.items.forEach(() => {
     ++totalItem;
   });
   const totalOrdrItems = totalItem;
@@ -15,7 +45,9 @@ const OrderList = ({ item, onPress }) => {
         <Text style={styles.primaryTextSm}>Order : {item?._id}</Text>
       </View>
       <View style={styles.orderlistInfoList}>
-        <Text style={styles.primaryTextSm}>Placed on : {item?.createdAt}</Text>
+        <Text style={styles.primaryTextSm}>
+          Placed on : {dateFormat(item?.createdAt.toString())}
+        </Text>
       </View>
       <View style={styles.orderlistInfoList}>
         <Text style={styles.primaryTextSm}>{item?.user?.name}</Text>

@@ -12,11 +12,11 @@ import { Ionicons } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
 import BasicProductList from "../../components/BasicProductList/BasicProductList";
-import CustomButton from "../../components/CustomButton";
-import DropDownPicker from "react-native-dropdown-picker";
+import StepIndicator from "react-native-step-indicator";
 
-const ViewOrderDetailScreen = ({ navigation, route }) => {
-  const { orderDetail, Token } = route.params;
+const MyOrderDetailScreen = ({ navigation, route }) => {
+  const { orderDetail } = route.params;
+  console.log(orderDetail);
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Loading..");
   const [error, setError] = useState("");
@@ -26,11 +26,31 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [statusDisable, setStatusDisable] = useState(false);
-  const [items, setItems] = useState([
-    { label: "Pending", value: "pending" },
-    { label: "Shipped", value: "shipped" },
-    { label: "Delivered", value: "delivered" },
-  ]);
+  const labels = ["Processing", "Shipping", "Delivery"];
+  const [trackingState, setTrackingState] = useState(1);
+  const customStyles = {
+    stepIndicatorSize: 25,
+    currentStepIndicatorSize: 30,
+    separatorStrokeWidth: 2,
+    currentStepStrokeWidth: 3,
+    stepStrokeCurrentColor: colors.primary,
+    stepStrokeWidth: 3,
+    stepStrokeFinishedColor: colors.primary,
+    stepStrokeUnFinishedColor: "#aaaaaa",
+    separatorFinishedColor: "#fe7013",
+    separatorUnFinishedColor: "#aaaaaa",
+    stepIndicatorFinishedColor: "#fe7013",
+    stepIndicatorUnFinishedColor: "#ffffff",
+    stepIndicatorCurrentColor: colors.white,
+    stepIndicatorLabelFontSize: 13,
+    currentStepIndicatorLabelFontSize: 13,
+    stepIndicatorLabelCurrentColor: "#fe7013",
+    stepIndicatorLabelFinishedColor: "#ffffff",
+    stepIndicatorLabelUnFinishedColor: "#aaaaaa",
+    labelColor: "#999999",
+    labelSize: 13,
+    currentStepLabelColor: "#fe7013",
+  };
 
   function tConvert(time) {
     time = time
@@ -58,42 +78,6 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
     return newDate;
   };
 
-  const handleUpdateStatus = (id) => {
-    setIsloading(true);
-    setError("");
-    setAlertType("error");
-    var myHeaders = new Headers();
-    myHeaders.append("x-auth-token", Token);
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    };
-    console.log(
-      `Link:${network.serverip}/admin/order-status?orderId=${id}&status=${value}`
-    );
-
-    fetch(
-      `${network.serverip}/admin/order-status?orderId=${id}&status=${value}`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success == true) {
-          setError(`Order status is successfully updated to ${value}`);
-          setAlertType("success");
-          setIsloading(false);
-        }
-      })
-      .catch((error) => {
-        setAlertType("error");
-        setError(error);
-        console.log("error", error);
-        setIsloading(false);
-      });
-  };
-
   useEffect(() => {
     setError("");
     setAlertType("error");
@@ -115,6 +99,13 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
         return (accumulator + object.price) * object.quantity;
       }, 0)
     );
+    if (orderDetail?.status === "pending") {
+      setTrackingState(1);
+    } else if (orderDetail?.status === "shipped") {
+      setTrackingState(2);
+    } else {
+      setTrackingState(3);
+    }
   }, []);
   return (
     <View style={styles.container}>
@@ -150,16 +141,10 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
       >
         <View style={styles.containerNameContainer}>
           <View>
-            <Text style={styles.containerNameText}>Ship & Bill to</Text>
+            <Text style={styles.containerNameText}>Shipping Address</Text>
           </View>
         </View>
         <View style={styles.ShipingInfoContainer}>
-          <Text style={styles.secondarytextMedian}>
-            {orderDetail?.user?.name}
-          </Text>
-          <Text style={styles.secondarytextMedian}>
-            {orderDetail?.user?.email}
-          </Text>
           <Text style={styles.secondarytextSm}>{address}</Text>
           <Text style={styles.secondarytextSm}>{orderDetail?.zipcode}</Text>
         </View>
@@ -173,7 +158,16 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
           <Text style={styles.secondarytextSm}>
             Order on {dateFormat(orderDetail?.updatedAt)}
           </Text>
+          <View style={{ marginTop: 15, width: "100%" }}>
+            <StepIndicator
+              customStyles={customStyles}
+              currentPosition={trackingState}
+              stepCount={3}
+              labels={labels}
+            />
+          </View>
         </View>
+
         <View style={styles.containerNameContainer}>
           <View>
             <Text style={styles.containerNameText}>Package Details</Text>
@@ -196,7 +190,7 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
             {orderDetail?.items.map((product, index) => (
               <View key={index}>
                 <BasicProductList
-                  title={product?.productId?.title}
+                  title={product?.productId}
                   price={product?.price}
                   quantity={product?.quantity}
                 />
@@ -210,40 +204,11 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
         </View>
         <View style={styles.emptyView}></View>
       </ScrollView>
-      <View style={styles.bottomContainer}>
-        <View>
-          <DropDownPicker
-            style={{ width: 200 }}
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
-            disabled={statusDisable}
-            disabledStyle={{
-              backgroundColor: colors.light,
-              borderColor: colors.white,
-            }}
-            labelStyle={{ color: colors.muted }}
-          />
-        </View>
-        <View>
-          {statusDisable == false ? (
-            <CustomButton
-              text={"Update"}
-              onPress={() => handleUpdateStatus(orderDetail?._id)}
-            />
-          ) : (
-            <CustomButton text={"Update"} disabled />
-          )}
-        </View>
-      </View>
     </View>
   );
 };
 
-export default ViewOrderDetailScreen;
+export default MyOrderDetailScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -12,7 +12,7 @@ const BasicProductList = ({ title, price, quantity }) => {
         </View>
         <View style={styles.productInfoContainer}>
           <Text style={styles.secondaryText}>{title}</Text>
-          <Text>{quantity}</Text>
+          <Text>x{quantity}</Text>
         </View>
       </View>
       <View>

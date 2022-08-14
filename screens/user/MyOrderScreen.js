@@ -33,6 +33,16 @@ const MyOrderScreen = ({ navigation, route }) => {
     }
   };
 
+  const getToken = (obj) => {
+    try {
+      setUserInfo(JSON.parse(obj));
+    } catch (e) {
+      setUserInfo(obj);
+      return user.token;
+    }
+    return UserInfo.token;
+  };
+
   const handleOnRefresh = () => {
     setRefreshing(true);
     fetchOrders();
@@ -40,7 +50,7 @@ const MyOrderScreen = ({ navigation, route }) => {
   };
 
   const handleOrderDetail = (item) => {
-    navigation.navigate("vieworderdetails", {
+    navigation.navigate("myorderdetail", {
       orderDetail: item,
       Token: UserInfo.token,
     });
@@ -48,7 +58,7 @@ const MyOrderScreen = ({ navigation, route }) => {
 
   const fetchOrders = () => {
     var myHeaders = new Headers();
-    let token = user.token;
+    let token = getToken(user);
     console.log("token-", token);
     myHeaders.append("x-auth-token", token);
 
@@ -100,6 +110,16 @@ const MyOrderScreen = ({ navigation, route }) => {
           <Ionicons name="cart-outline" size={30} color={colors.primary} />
         </TouchableOpacity>
       </View>
+      <View style={styles.screenNameContainer}>
+        <View>
+          <Text style={styles.screenNameText}>My Orders</Text>
+        </View>
+        <View>
+          <Text style={styles.screenNameParagraph}>
+            Your order and your order status
+          </Text>
+        </View>
+      </View>
       <CustomAlert message={error} type={alertType} />
       {orders.length == 0 ? (
         <View style={styles.ListContiainerEmpty}>
@@ -123,7 +143,7 @@ const MyOrderScreen = ({ navigation, route }) => {
               <OrderList
                 item={order}
                 key={index}
-                // onPress={() => handleOrderDetail(order)}
+                onPress={() => handleOrderDetail(order)}
               />
             );
           })}
@@ -156,6 +176,25 @@ const styles = StyleSheet.create({
   toBarText: {
     fontSize: 15,
     fontWeight: "600",
+  },
+  screenNameContainer: {
+    padding: 20,
+    paddingTop: 0,
+    paddingBottom: 0,
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
+  screenNameText: {
+    fontSize: 30,
+    fontWeight: "800",
+    color: colors.muted,
+  },
+  screenNameParagraph: {
+    marginTop: 5,
+    fontSize: 15,
   },
   bodyContainer: {
     width: "100%",
