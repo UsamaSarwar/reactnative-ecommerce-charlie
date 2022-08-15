@@ -13,11 +13,11 @@ const Splash = ({ navigation }) => {
         let user = JSON.parse(value);
         if (user.userType === "ADMIN") {
           setTimeout(() => {
-            navigation.replace("dashboard", { authUser: value });
+            navigation.replace("dashboard", { authUser: JSON.parse(value) });
           }, 2000);
         } else {
           setTimeout(() => {
-            navigation.replace("tab", { user: value });
+            navigation.replace("tab", { user: JSON.parse(value) });
           }, 2000);
         }
       } else {

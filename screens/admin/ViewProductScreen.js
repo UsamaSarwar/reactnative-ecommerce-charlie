@@ -76,34 +76,22 @@ const ViewProductScreen = ({ navigation, route }) => {
         if (result.success) {
           setProducts(result.data);
           setError("");
+          setIsloading(false);
         } else {
           setError(result.message);
+          setIsloading(false);
         }
       })
       .catch((error) => {
         setError(error.message);
         console.log("error", error);
+        setIsloading(false);
       });
   };
 
   useEffect(() => {
     setIsloading(true);
-    fetch(`${network.serverip}/products`, ProductListRequestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success) {
-          // console.log(result.data);
-          setProducts(result.data);
-        } else {
-          setError(result.message);
-        }
-        setIsloading(false);
-      })
-      .catch((error) => {
-        setIsloading(false);
-        setError(error.message);
-        console.log("error", error);
-      });
+    fetchProduct();
   }, []);
 
   return (
@@ -151,7 +139,7 @@ const ViewProductScreen = ({ navigation, route }) => {
             return (
               <ProductList
                 key={index}
-                image={require("../../assets/image/shirt1.png")}
+                image={`${network.serverip}/uploads/${product?.image}`}
                 title={product?.title}
                 category={"Garments"}
                 price={product?.price}

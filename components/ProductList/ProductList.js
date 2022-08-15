@@ -18,7 +18,7 @@ const ProductList = ({
       <View style={styles.innerContainer}>
         <View>
           {image != null ? (
-            <Image source={image} style={styles.productImage} />
+            <Image source={{ uri: image }} style={styles.productImage} />
           ) : (
             <View style={styles.ImageContainer}></View>
           )}
@@ -112,11 +112,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   productTitle: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "bold",
   },
   productInfoItemText: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: "500",
+    color: colors.muted,
   },
 });

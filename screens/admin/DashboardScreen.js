@@ -15,46 +15,105 @@ import CustomCard from "../../components/CustomCard/CustomCard";
 import OptionList from "../../components/OptionList/OptionList";
 import InternetConnectionAlert from "react-native-internet-connection-alert";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const data = [
-  {
-    id: 1,
-    title: "User",
-    value: "20",
-    iconName: "person",
-    type: "parimary",
-  },
-  {
-    id: 2,
-    title: "Orders",
-    value: "10",
-    iconName: "cart",
-    type: "secondary",
-  },
-  {
-    id: 3,
-    title: "Product",
-    value: "3",
-    iconName: "md-square",
-    type: "warning",
-  },
-  {
-    id: 4,
-    title: "Catagories",
-    value: "12",
-    iconName: "md-logo-dropbox",
-    type: "muted",
-  },
-];
+import ProgressDialog from "react-native-progress-dialog";
 
 const DashboardScreen = ({ navigation, route }) => {
   const { authUser } = route.params;
   const [user, setUser] = useState(authUser);
+  const [totalUser, setTotalUser] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [totalCategories, setTotalCategories] = useState(0);
+  const [stat, setStat] = useState([]);
+  const [label, setLabel] = useState("Loading...");
+  const [error, setError] = useState("");
+  const [isloading, setIsloading] = useState(false);
+
+  const logout = async () => {
+    await AsyncStorage.removeItem("authUser");
+    navigation.replace("login");
+  };
+
+  const data = [
+    {
+      id: 1,
+      title: "User",
+      value: totalUser,
+      iconName: "person",
+      type: "parimary",
+    },
+    {
+      id: 2,
+      title: "Orders",
+      value: totalOrders,
+      iconName: "cart",
+      type: "secondary",
+    },
+    {
+      id: 3,
+      title: "Product",
+      value: totalProducts,
+      iconName: "md-square",
+      type: "warning",
+    },
+    {
+      id: 4,
+      title: "Catagories",
+      value: totalCategories,
+      iconName: "md-logo-dropbox",
+      type: "muted",
+    },
+  ];
+  console.log(authUser.token);
+
+  var myHeaders = new Headers();
+  myHeaders.append("x-auth-token", authUser.token);
+
+  var requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  const fetchStats = () => {
+    fetch(`${network.serverip}/dashboard`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success == true) {
+          setStat(result.data);
+          console.log(result.data);
+          setError("");
+          setIsloading(false);
+        } else {
+          console.log(result.err);
+          if (result.err == "jwt expired") {
+            logout();
+          }
+          setError(result.message);
+          setIsloading(false);
+        }
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.log("error", error);
+        setIsloading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchStats();
+    console.log(stat);
+    setTotalUser(stat?.usersCount);
+    setTotalCategories(stat?.categoriesCount);
+    setTotalOrders(stat?.ordersCount);
+    setTotalProducts(stat?.productsCount);
+  }, []);
 
   return (
     <InternetConnectionAlert onChange={(connectionState) => {}}>
       <View style={styles.container}>
         <StatusBar></StatusBar>
+        <ProgressDialog visible={isloading} label={label} />
         <View style={styles.topBarContainer}>
           <TouchableOpacity
             onPress={async () => {

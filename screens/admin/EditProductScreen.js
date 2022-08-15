@@ -33,9 +33,7 @@ const EditProductScreen = ({ navigation, route }) => {
   const [alertType, setAlertType] = useState("error");
 
   useEffect(() => {
-    console.log(product.quantity);
-    // setPrice(product.price);
-    setImage(product.image);
+    setImage(`${network.serverip}/uploads/${product?.image}`);
     setTitle(product.title);
     setSku(product.sku);
     setQuantity(product.quantity.toString());
