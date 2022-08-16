@@ -115,6 +115,7 @@ const HomeScreen = ({ navigation, route }) => {
     fetch(`${network.serverip}/products`, headerOptions)
       .then((response) => response.json())
       .then((result) => {
+        console.log(result);
         if (result.success) {
           setProducts(result.data);
           setError("");

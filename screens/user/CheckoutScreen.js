@@ -38,6 +38,11 @@ const CheckoutScreen = ({ navigation, route }) => {
   const [streetAddress, setStreetAddress] = useState("");
   const [zipcode, setZipcode] = useState("");
 
+  const logout = async () => {
+    await AsyncStorage.removeItem("authUser");
+    navigation.replace("login");
+  };
+
   const confirmCheckout = async () => {
     setIsloading(true);
     var myHeaders = new Headers();
@@ -82,6 +87,11 @@ const CheckoutScreen = ({ navigation, route }) => {
     fetch(network.serverip + "/checkout", requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        console.log("Checkout=>", result);
+        if (result.err === "jwt expired") {
+          setIsloading(false);
+          logout();
+        }
         if (result.success == true) {
           setIsloading(false);
           emptyCart("empty");
@@ -102,7 +112,7 @@ const CheckoutScreen = ({ navigation, route }) => {
     }
     setTotalCost(
       cartproduct.reduce((accumulator, object) => {
-        return (accumulator + object.price) * object.quantity;
+        return accumulator + object.price * object.quantity;
       }, 0)
     );
   }, []);

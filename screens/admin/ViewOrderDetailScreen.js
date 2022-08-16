@@ -168,11 +168,21 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
         </View>
         <View style={styles.orderInfoContainer}>
           <Text style={styles.secondarytextMedian}>
-            Order # {orderDetail?._id}
+            Order # {orderDetail?.orderId}
           </Text>
           <Text style={styles.secondarytextSm}>
-            Order on {dateFormat(orderDetail?.updatedAt)}
+            Ordered on {dateFormat(orderDetail?.updatedAt)}
           </Text>
+          {orderDetail?.shippedOn && (
+            <Text style={styles.secondarytextSm}>
+              Shipped on {orderDetail?.shippedOn}
+            </Text>
+          )}
+          {orderDetail?.deliveredOn && (
+            <Text style={styles.secondarytextSm}>
+              Delivered on {orderDetail?.deliveredOn}
+            </Text>
+          )}
         </View>
         <View style={styles.containerNameContainer}>
           <View>

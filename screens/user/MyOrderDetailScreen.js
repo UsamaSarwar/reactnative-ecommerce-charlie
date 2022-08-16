@@ -106,6 +106,7 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
     } else {
       setTrackingState(3);
     }
+    console.log(orderDetail?.items);
   }, []);
   return (
     <View style={styles.container}>
@@ -153,11 +154,21 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
         </View>
         <View style={styles.orderInfoContainer}>
           <Text style={styles.secondarytextMedian}>
-            Order # {orderDetail?._id}
+            Order # {orderDetail?.orderId}
           </Text>
           <Text style={styles.secondarytextSm}>
-            Order on {dateFormat(orderDetail?.updatedAt)}
+            Ordered on {dateFormat(orderDetail?.updatedAt)}
           </Text>
+          {orderDetail?.shippedOn && (
+            <Text style={styles.secondarytextSm}>
+              Shipped on {orderDetail?.shippedOn}
+            </Text>
+          )}
+          {orderDetail?.deliveredOn && (
+            <Text style={styles.secondarytextSm}>
+              Delivered on {orderDetail?.deliveredOn}
+            </Text>
+          )}
           <View style={{ marginTop: 15, width: "100%" }}>
             <StepIndicator
               customStyles={customStyles}
@@ -190,7 +201,7 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
             {orderDetail?.items.map((product, index) => (
               <View key={index}>
                 <BasicProductList
-                  title={product?.productId}
+                  title={product?.productId?.title}
                   price={product?.price}
                   quantity={product?.quantity}
                 />

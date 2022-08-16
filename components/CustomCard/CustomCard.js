@@ -3,9 +3,9 @@ import React from "react";
 import { colors } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 
-const CustomCard = ({ title, value, iconName, type = "danger" }) => {
+const CustomCard = ({ title, value, iconName, onPress, type = "danger" }) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={[styles.iconContainer, styles[`${type}`]]}>
         <Ionicons name={iconName} size={40} color={colors.white} />
       </View>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   secondary: {
-    backgroundColor: colors.shadow,
+    backgroundColor: colors.tertiary,
   },
   warning: {
     backgroundColor: colors.warning,

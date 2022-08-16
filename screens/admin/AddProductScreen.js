@@ -17,6 +17,8 @@ import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import * as ImagePicker from "expo-image-picker";
 import ProgressDialog from "react-native-progress-dialog";
 import { AntDesign } from "@expo/vector-icons";
+import { useEffect } from "react";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const AddProductScreen = ({ navigation, route }) => {
   const { authUser } = route.params;
@@ -28,8 +30,66 @@ const AddProductScreen = ({ navigation, route }) => {
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("garments");
+  const [category, setCategory] = useState("");
   const [alertType, setAlertType] = useState("error");
+  const [user, setUser] = useState({});
+  const [categories, setCategories] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [statusDisable, setStatusDisable] = useState(false);
+  const [items, setItems] = useState([
+    { label: "Pending", value: "pending" },
+    { label: "Shipped", value: "shipped" },
+    { label: "Delivered", value: "delivered" },
+  ]);
+  var payload = [];
+
+  const getToken = (obj) => {
+    try {
+      setUser(JSON.parse(obj));
+    } catch (e) {
+      console.log("converttoJSON:", e);
+      setUser(obj);
+      return obj.token;
+    }
+    return JSON.parse(obj).token;
+  };
+
+  const fetchCategories = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("x-auth-token", getToken(authUser));
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    setIsloading(true);
+    fetch(`${network.serverip}/categories`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          setCategories(result.categories);
+          result.categories.forEach((cat) => {
+            let obj = {
+              label: cat.title,
+              value: cat._id,
+            };
+            payload.push(obj);
+          });
+          setItems(payload);
+          setError("");
+        } else {
+          setError(result.message);
+        }
+        setIsloading(false);
+      })
+      .catch((error) => {
+        setIsloading(false);
+        setError(error.message);
+        console.log("error", error);
+      });
+  };
 
   var myHeaders = new Headers();
   myHeaders.append("x-auth-token", authUser.token);
@@ -74,7 +134,6 @@ const AddProductScreen = ({ navigation, route }) => {
     body: raw,
     redirect: "follow",
   };
-
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -125,6 +184,11 @@ const AddProductScreen = ({ navigation, route }) => {
         });
     }
   };
+
+  useEffect(() => {
+    fetchCategories();
+    console.log(categories);
+  }, []);
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -209,6 +273,15 @@ const AddProductScreen = ({ navigation, route }) => {
             placeholder={"Description"}
             placeholderTextColor={colors.muted}
             radius={5}
+          />
+          <DropDownPicker
+            open={open}
+            value={category}
+            items={items}
+            setOpen={setOpen}
+            setValue={setCategory}
+            setItems={setItems}
+            labelStyle={{ color: colors.muted }}
           />
         </View>
       </ScrollView>

@@ -6,6 +6,7 @@ import {
   Text,
   ScrollView,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,50 +21,17 @@ import ProgressDialog from "react-native-progress-dialog";
 const DashboardScreen = ({ navigation, route }) => {
   const { authUser } = route.params;
   const [user, setUser] = useState(authUser);
-  const [totalUser, setTotalUser] = useState(0);
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [totalOrders, setTotalOrders] = useState(0);
-  const [totalCategories, setTotalCategories] = useState(0);
-  const [stat, setStat] = useState([]);
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [isloading, setIsloading] = useState(false);
+  const [data, setData] = useState([]);
+  const [refeshing, setRefreshing] = useState(false);
 
   const logout = async () => {
     await AsyncStorage.removeItem("authUser");
     navigation.replace("login");
   };
 
-  const data = [
-    {
-      id: 1,
-      title: "User",
-      value: totalUser,
-      iconName: "person",
-      type: "parimary",
-    },
-    {
-      id: 2,
-      title: "Orders",
-      value: totalOrders,
-      iconName: "cart",
-      type: "secondary",
-    },
-    {
-      id: 3,
-      title: "Product",
-      value: totalProducts,
-      iconName: "md-square",
-      type: "warning",
-    },
-    {
-      id: 4,
-      title: "Catagories",
-      value: totalCategories,
-      iconName: "md-logo-dropbox",
-      type: "muted",
-    },
-  ];
   console.log(authUser.token);
 
   var myHeaders = new Headers();
@@ -80,8 +48,36 @@ const DashboardScreen = ({ navigation, route }) => {
       .then((response) => response.json())
       .then((result) => {
         if (result.success == true) {
-          setStat(result.data);
-          console.log(result.data);
+          setData([
+            {
+              id: 1,
+              title: "Users",
+              value: result.data?.usersCount,
+              iconName: "person",
+              type: "parimary",
+            },
+            {
+              id: 2,
+              title: "Orders",
+              value: result.data?.ordersCount,
+              iconName: "cart",
+              type: "secondary",
+            },
+            {
+              id: 3,
+              title: "Products",
+              value: result.data?.productsCount,
+              iconName: "md-square",
+              type: "warning",
+            },
+            {
+              id: 4,
+              title: "Categories",
+              value: result.data?.categoriesCount,
+              iconName: "menu",
+              type: "muted",
+            },
+          ]);
           setError("");
           setIsloading(false);
         } else {
@@ -100,13 +96,14 @@ const DashboardScreen = ({ navigation, route }) => {
       });
   };
 
+  const handleOnRefresh = () => {
+    setRefreshing(true);
+    fetchStats();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     fetchStats();
-    console.log(stat);
-    setTotalUser(stat?.usersCount);
-    setTotalCategories(stat?.categoriesCount);
-    setTotalOrders(stat?.ordersCount);
-    setTotalProducts(stat?.productsCount);
   }, []);
 
   return (
@@ -139,17 +136,27 @@ const DashboardScreen = ({ navigation, route }) => {
           <Text style={styles.headingText}>Welcome, Bukhtyar</Text>
         </View>
         <View style={{ height: 370 }}>
-          <ScrollView contentContainerStyle={styles.cardContainer}>
-            {data.map((data) => (
-              <CustomCard
-                key={data.id}
-                iconName={data.iconName}
-                title={data.title}
-                value={data.value}
-                type={data.type}
-              />
-            ))}
-          </ScrollView>
+          {data && (
+            <ScrollView
+              refreshControl={
+                <RefreshControl
+                  refreshing={refeshing}
+                  onRefresh={handleOnRefresh}
+                />
+              }
+              contentContainerStyle={styles.cardContainer}
+            >
+              {data.map((data) => (
+                <CustomCard
+                  key={data.id}
+                  iconName={data.iconName}
+                  title={data.title}
+                  value={data.value}
+                  type={data.type}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
         <View style={styles.headingContainer}>
           <MaterialCommunityIcons name="menu-right" size={30} color="black" />
@@ -170,26 +177,27 @@ const DashboardScreen = ({ navigation, route }) => {
               type="morden"
             />
             <OptionList
-              text={"Orders"}
+              text={"Categories"}
               Icon={Ionicons}
-              iconName={"md-square"}
+              iconName={"menu"}
               onPress={() =>
-                navigation.navigate("vieworder", { authUser: user })
+                navigation.navigate("viewcategories", { authUser: user })
               }
-              onPressSecondary={
-                () => console.log("vieworder")
-                // navigation.navigate("vieworder", { authUser: authUser })
+              onPressSecondary={() =>
+                navigation.navigate("addcategories", { authUser: user })
               }
               type="morden"
             />
-            {/* <OptionList
-              text={"Categories"}
+            <OptionList
+              text={"Orders"}
               Icon={Ionicons}
-              iconName={"md-logo-dropbox"}
-              onPress={() => console.log("working....")}
-              onPressSecondary={() => console.log("working2....")}
+              iconName={"cart"}
+              onPress={() =>
+                navigation.navigate("vieworder", { authUser: user })
+              }
               type="morden"
-            /> */}
+            />
+
             <View style={{ height: 20 }}></View>
           </ScrollView>
         </View>

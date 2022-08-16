@@ -106,7 +106,7 @@ const MyOrderScreen = ({ navigation, route }) => {
           />
         </TouchableOpacity>
         <View></View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => handleOnRefresh()}>
           <Ionicons name="cart-outline" size={30} color={colors.primary} />
         </TouchableOpacity>
       </View>

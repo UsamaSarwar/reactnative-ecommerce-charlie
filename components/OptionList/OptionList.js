@@ -22,15 +22,19 @@ const OptionList = ({
             <Text style={styles.listText}>{text}</Text>
           </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.actionButton} onPress={onPress}>
-              <Icon name={"eye"} size={15} color={colors.white} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={onPressSecondary}
-            >
-              <Icon name={"add"} size={15} color={colors.white} />
-            </TouchableOpacity>
+            {onPressSecondary && (
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={onPressSecondary}
+              >
+                <Icon name={"add"} size={15} color={colors.white} />
+              </TouchableOpacity>
+            )}
+            {onPress && (
+              <TouchableOpacity style={styles.actionButton} onPress={onPress}>
+                <Icon name={"eye"} size={15} color={colors.white} />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       ) : (
