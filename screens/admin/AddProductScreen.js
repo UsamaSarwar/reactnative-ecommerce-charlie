@@ -274,17 +274,24 @@ const AddProductScreen = ({ navigation, route }) => {
             placeholderTextColor={colors.muted}
             radius={5}
           />
-          <DropDownPicker
-            open={open}
-            value={category}
-            items={items}
-            setOpen={setOpen}
-            setValue={setCategory}
-            setItems={setItems}
-            labelStyle={{ color: colors.muted }}
-          />
         </View>
       </ScrollView>
+      <DropDownPicker
+        placeholder={"Select Product Category"}
+        open={open}
+        value={category}
+        items={items}
+        setOpen={setOpen}
+        setValue={setCategory}
+        setItems={setItems}
+        disabled={statusDisable}
+        disabledStyle={{
+          backgroundColor: colors.light,
+          borderColor: colors.white,
+        }}
+        labelStyle={{ color: colors.muted }}
+        style={{ borderColor: "#fff", elevation: 5 }}
+      />
       <View style={styles.buttomContainer}>
         <CustomButton text={"Add Product"} onPress={addProductHandle} />
       </View>
@@ -321,6 +328,7 @@ const styles = StyleSheet.create({
   },
 
   buttomContainer: {
+    marginTop: 10,
     width: "100%",
   },
   bottomContainer: {

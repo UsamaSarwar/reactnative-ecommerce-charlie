@@ -81,6 +81,12 @@ const Tabs = ({ navigation, route }) => {
         name="home"
         component={HomeScreen}
         initialParams={{ user: user }}
+        tabBarOptions={{
+          keyboardHidesTabBar: true,
+          style: {
+            position: "absolute",
+          },
+        }}
       />
       {
         // Wishlist is ready yet!

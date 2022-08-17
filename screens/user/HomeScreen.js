@@ -21,6 +21,7 @@ import { network } from "../../constants";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
+import SearchableDropdown from "react-native-searchable-dropdown";
 
 const category = [
   {
@@ -45,41 +46,18 @@ const category = [
   },
 ];
 
-// const product = [
-//   {
-//     id: 1,
-//     title: "product1",
-//     price: 113,
-//     image: require("../../assets/image/shirt.png"),
-//   },
-//   {
-//     id: 2,
-//     title: "product2",
-//     price: 123,
-//     image: require("../../assets/image/shirt1.png"),
-//   },
-//   {
-//     id: 3,
-//     title: "product3",
-//     price: 233,
-//     image: require("../../assets/image/shirt2.png"),
-//   },
-//   {
-//     id: 4,
-//     title: "product4",
-//     price: 343,
-//     image: require("../../assets/image/shirt2.png"),
-//   },
-// ];
+const slides = [
+  {
+    id: "2",
+    image: require("../../assets/image/banners/banner3.jpg"),
+  },
+];
 
 const HomeScreen = ({ navigation, route }) => {
   const cartproduct = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
-  const { addCartItem, removeCartItem } = bindActionCreators(
-    actionCreaters,
-    dispatch
-  );
+  const { addCartItem } = bindActionCreators(actionCreaters, dispatch);
 
   const { user } = route.params;
   const [isLoading, setLoading] = useState(true);
@@ -88,6 +66,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [userInfo, setUserInfo] = useState({});
+  const [searchItems, setSearchItems] = useState([]);
 
   const convertToJSON = (obj) => {
     try {
@@ -119,6 +98,12 @@ const HomeScreen = ({ navigation, route }) => {
         if (result.success) {
           setProducts(result.data);
           setError("");
+          let payload = [];
+          result.data.forEach((cat, index) => {
+            let searchableItem = { ...cat, id: ++index, name: cat.title };
+            payload.push(searchableItem);
+          });
+          setSearchItems(payload);
         } else {
           setError(result.message);
         }
@@ -138,7 +123,6 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
     convertToJSON(user);
     fetchProduct();
-    // console.log("cart", cartproduct);
   }, []);
 
   return (
@@ -148,8 +132,10 @@ const HomeScreen = ({ navigation, route }) => {
         <TouchableOpacity disabled>
           <Ionicons name="menu" size={30} color={colors.muted} />
         </TouchableOpacity>
-        <View>
-          <Text style={styles.toBarText}>Home</Text>
+        <View style={styles.topbarlogoContainer}>
+          {/* <Text style={styles.toBarText}>Home</Text> */}
+          <Image source={easybuylogo} style={styles.logo} />
+          <Text>EasyBuy</Text>
         </View>
         <TouchableOpacity
           style={styles.cartIconContainer}
@@ -166,15 +152,65 @@ const HomeScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.bodyContainer}>
-        <View style={styles.logoContainer}>
+        <View style={styles.promotiomSliderContainer}>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            data={slides}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item, index }) => (
+              <Image
+                source={item.image}
+                style={{ height: 130, resizeMode: "cover" }}
+              />
+            )}
+          />
+        </View>
+        {/* <View style={styles.logoContainer}>
           <Image source={easybuylogo} style={styles.logo} />
           <View>
             <Text style={styles.secondaryText}>EasyBuy</Text>
           </View>
-        </View>
+        </View> */}
+
         <View style={styles.searchContainer}>
           <View style={styles.inputContainer}>
-            <CustomInput radius={5} placeholder={"Search...."} />
+            <SearchableDropdown
+              onTextChange={(text) => console.log(text)}
+              onItemSelect={(item) => handleProductPress(item)}
+              containerStyle={{
+                padding: 0,
+                width: "100%",
+                elevation: 5,
+                position: "absolute",
+                zIndex: 10,
+                top: -25,
+                backgroundColor: colors.light,
+              }}
+              textInputStyle={{
+                padding: 12,
+                borderWidth: 0,
+                backgroundColor: colors.white,
+              }}
+              itemStyle={{
+                padding: 10,
+                marginTop: 2,
+                backgroundColor: colors.white,
+                borderColor: colors.muted,
+              }}
+              itemTextStyle={{
+                color: colors.muted,
+              }}
+              itemsContainerStyle={{
+                maxHeight: 400,
+              }}
+              items={searchItems}
+              defaultIndex={2}
+              placeholder="Search..."
+              resetValue={false}
+              underlineColorAndroid="transparent"
+            />
+            {/* <CustomInput radius={5} placeholder={"Search...."} /> */}
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.scanButton}>
@@ -183,6 +219,7 @@ const HomeScreen = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </View>
+
         <View style={styles.primaryTextContainer}>
           <Text style={styles.primaryText}>Categories</Text>
         </View>
@@ -209,7 +246,7 @@ const HomeScreen = ({ navigation, route }) => {
           <View style={styles.emptyView}></View>
         </View>
         <View style={styles.primaryTextContainer}>
-          <Text style={styles.primaryText}>Most Viewed Products</Text>
+          <Text style={styles.primaryText}>New Arrivals</Text>
         </View>
         {products.length === 0 ? (
           <View style={styles.productCardContainerEmpty}>
@@ -276,6 +313,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
   },
+  topbarlogoContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   bodyContainer: {
     width: "100%",
     flexDirecion: "row",
@@ -292,8 +334,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   logo: {
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
     resizeMode: "contain",
   },
   secondaryText: {
@@ -353,6 +395,12 @@ const styles = StyleSheet.create({
     height: 50,
     marginTop: 10,
     marginLeft: 10,
+  },
+  promotiomSliderContainer: {
+    margin: 5,
+    height: 130,
+    width: "100%",
+    backgroundColor: colors.white,
   },
   categoryContainer: {
     display: "flex",
