@@ -32,8 +32,6 @@ const DashboardScreen = ({ navigation, route }) => {
     navigation.replace("login");
   };
 
-  console.log(authUser.token);
-
   var myHeaders = new Headers();
   myHeaders.append("x-auth-token", authUser.token);
 

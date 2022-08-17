@@ -11,9 +11,9 @@ import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import ProductList from "../../components/ProductList/ProductList";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
+import CategoryList from "../../components/CategoryList";
 
 const ViewCategoryScreen = ({ navigation, route }) => {
   const { authUser } = route.params;
@@ -40,7 +40,7 @@ const ViewCategoryScreen = ({ navigation, route }) => {
 
   const handleOnRefresh = () => {
     setRefreshing(true);
-    fetchOrders();
+    fetchCategories();
     setRefreshing(false);
   };
 
@@ -123,7 +123,11 @@ const ViewCategoryScreen = ({ navigation, route }) => {
         refreshControl={
           <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
         }
-      ></ScrollView>
+      >
+        {categories.map((item) => (
+          <CategoryList title={item.title} description={item.description} />
+        ))}
+      </ScrollView>
     </View>
   );
 };
@@ -172,6 +176,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    marginBottom: 10,
   },
   screenNameText: {
     fontSize: 30,
