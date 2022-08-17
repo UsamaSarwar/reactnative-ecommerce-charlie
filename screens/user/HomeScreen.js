@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   RefreshControl,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -22,6 +23,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
 import SearchableDropdown from "react-native-searchable-dropdown";
+import { SliderBox } from "react-native-image-slider-box";
 
 const category = [
   {
@@ -47,10 +49,8 @@ const category = [
 ];
 
 const slides = [
-  {
-    id: "2",
-    image: require("../../assets/image/banners/banner3.jpg"),
-  },
+  require("../../assets/image/banners/banner.jpeg"),
+  require("../../assets/image/banners/banner.jpeg"),
 ];
 
 const HomeScreen = ({ navigation, route }) => {
@@ -153,18 +153,21 @@ const HomeScreen = ({ navigation, route }) => {
       </View>
       <View style={styles.bodyContainer}>
         <View style={styles.promotiomSliderContainer}>
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-            data={slides}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item, index }) => (
-              <Image
-                source={item.image}
-                style={{ height: 130, resizeMode: "cover" }}
-              />
-            )}
+          <SliderBox
+            images={slides}
+            sliderBoxHeight={140}
+            onCurrentImagePressed={(index) =>
+              console.warn(`image ${index} pressed`)
+            }
+            dotColor={colors.primary}
+            inactiveDotColor={colors.muted}
+            paginationBoxVerticalPadding={10}
+            autoplayInterval={6000}
           />
+          {/* <Image
+            source={slides[0].image}
+            style={{ height: 130, resizeMode: "contain", margin: 0 }}
+          /> */}
         </View>
         {/* <View style={styles.logoContainer}>
           <Image source={easybuylogo} style={styles.logo} />
@@ -179,16 +182,18 @@ const HomeScreen = ({ navigation, route }) => {
               onTextChange={(text) => console.log(text)}
               onItemSelect={(item) => handleProductPress(item)}
               containerStyle={{
-                padding: 0,
+                borderRadius: 5,
                 width: "100%",
                 elevation: 5,
                 position: "absolute",
                 zIndex: 10,
-                top: -25,
+                top: -20,
                 backgroundColor: colors.light,
               }}
               textInputStyle={{
-                padding: 12,
+                borderRadius: 10,
+                padding: 6,
+                paddingLeft: 10,
                 borderWidth: 0,
                 backgroundColor: colors.white,
               }}
@@ -343,6 +348,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   searchContainer: {
+    marginTop: 10,
     padding: 10,
     width: "100%",
     display: "flex",
@@ -398,9 +404,9 @@ const styles = StyleSheet.create({
   },
   promotiomSliderContainer: {
     margin: 5,
-    height: 130,
-    width: "100%",
-    backgroundColor: colors.white,
+
+    height: 140,
+    backgroundColor: colors.light,
   },
   categoryContainer: {
     display: "flex",

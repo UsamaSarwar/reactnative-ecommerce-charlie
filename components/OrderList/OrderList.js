@@ -57,7 +57,7 @@ const OrderList = ({ item, onPress }) => {
     <View style={styles.container}>
       <View style={styles.innerRow}>
         <View>
-          <Text style={styles.primaryText}>Order # {item?._id}</Text>
+          <Text style={styles.primaryText}>Order # {item?.orderId}</Text>
         </View>
         <View style={styles.timeDateContainer}>
           <Text style={styles.secondaryTextSm}>
