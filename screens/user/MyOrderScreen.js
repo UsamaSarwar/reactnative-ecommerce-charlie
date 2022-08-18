@@ -10,10 +10,10 @@ import {
 import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
 import OrderList from "../../components/OrderList/OrderList";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MyOrderScreen = ({ navigation, route }) => {
   const { user } = route.params;
@@ -24,6 +24,11 @@ const MyOrderScreen = ({ navigation, route }) => {
   const [error, setError] = useState("");
   const [orders, setOrders] = useState([]);
   const [UserInfo, setUserInfo] = useState({});
+
+  const logout = async () => {
+    await AsyncStorage.removeItem("authUser");
+    navigation.replace("login");
+  };
 
   const convertToJSON = (obj) => {
     try {
@@ -59,7 +64,6 @@ const MyOrderScreen = ({ navigation, route }) => {
   const fetchOrders = () => {
     var myHeaders = new Headers();
     let token = getToken(user);
-    console.log("token-", token);
     myHeaders.append("x-auth-token", token);
 
     var requestOptions = {
@@ -71,6 +75,10 @@ const MyOrderScreen = ({ navigation, route }) => {
     fetch(`${network.serverip}/orders`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        console.log(result);
+        if (result?.err === "jwt expired") {
+          logout();
+        }
         if (result.success) {
           setOrders(result.data);
           setError("");

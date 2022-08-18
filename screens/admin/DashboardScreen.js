@@ -195,6 +195,15 @@ const DashboardScreen = ({ navigation, route }) => {
               }
               type="morden"
             />
+            <OptionList
+              text={"Users"}
+              Icon={Ionicons}
+              iconName={"person"}
+              onPress={() =>
+                navigation.navigate("viewusers", { authUser: user })
+              }
+              type="morden"
+            />
 
             <View style={{ height: 20 }}></View>
           </ScrollView>

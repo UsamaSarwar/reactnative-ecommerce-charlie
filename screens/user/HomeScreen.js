@@ -156,9 +156,7 @@ const HomeScreen = ({ navigation, route }) => {
           <SliderBox
             images={slides}
             sliderBoxHeight={140}
-            onCurrentImagePressed={(index) =>
-              console.warn(`image ${index} pressed`)
-            }
+            onCurrentImagePressed={(index) => console.log(index)}
             dotColor={colors.primary}
             inactiveDotColor={colors.muted}
             paginationBoxVerticalPadding={10}
@@ -417,9 +415,9 @@ const styles = StyleSheet.create({
     height: 60,
     marginLeft: 10,
   },
-  emptyView: { width: 20 },
+  emptyView: { width: 10 },
   productCardContainer: {
-    padding: 10,
+    paddingLeft: 10,
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-start",
