@@ -10,6 +10,7 @@ import HomeIcon from "../../assets/icons/bar_home_icon.png";
 import userIcon from "../../assets/icons/bar_profile_icon.png";
 import userIconActive from "../../assets/icons/bar_profile_icon_active.png";
 import MyOrderScreen from "../../screens/user/MyOrderScreen";
+import CategoriesScreen from "../../screens/user/CategoriesScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,6 +35,24 @@ const Tabs = ({ navigation, route }) => {
                   />
                 ) : (
                   <Image source={HomeIcon} style={StyleSheet.tabIconStyle} />
+                )}
+              </TouchableOpacity>
+            );
+          } else if (routename == "categories") {
+            return (
+              <TouchableOpacity disabled>
+                {focused == true ? (
+                  <Ionicons
+                    name="ios-apps-sharp"
+                    size={29}
+                    color={colors.primary}
+                  />
+                ) : (
+                  <Ionicons
+                    name="ios-apps-sharp"
+                    size={29}
+                    color={colors.muted}
+                  />
                 )}
               </TouchableOpacity>
             );
@@ -80,6 +99,17 @@ const Tabs = ({ navigation, route }) => {
       <Tab.Screen
         name="home"
         component={HomeScreen}
+        initialParams={{ user: user }}
+        tabBarOptions={{
+          keyboardHidesTabBar: true,
+          style: {
+            position: "absolute",
+          },
+        }}
+      />
+      <Tab.Screen
+        name="categories"
+        component={CategoriesScreen}
         initialParams={{ user: user }}
         tabBarOptions={{
           keyboardHidesTabBar: true,

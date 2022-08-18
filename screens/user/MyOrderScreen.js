@@ -75,7 +75,6 @@ const MyOrderScreen = ({ navigation, route }) => {
     fetch(`${network.serverip}/orders`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
         if (result?.err === "jwt expired") {
           logout();
         }

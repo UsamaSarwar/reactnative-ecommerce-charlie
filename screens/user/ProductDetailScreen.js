@@ -11,11 +11,9 @@ import { Ionicons } from "@expo/vector-icons";
 import cartIcon from "../../assets/icons/cart_beg.png";
 import { colors, network } from "../../constants";
 import CustomButton from "../../components/CustomButton";
-// import ProductImage from "../../assets/image/shirt1.png";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
-// import { _success, _info, _warning, _error } from "react-color-log";
 
 const ProductDetailScreen = ({ navigation, route }) => {
   const { product } = route.params;

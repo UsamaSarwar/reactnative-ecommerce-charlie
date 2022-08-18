@@ -14,7 +14,6 @@ import React, { useEffect, useState } from "react";
 import cartIcon from "../../assets/icons/cart_beg.png";
 import scanIcon from "../../assets/icons/scan_icons.png";
 import easybuylogo from "../../assets/logo/logo.png";
-import CustomInput from "../../components/CustomInput";
 import { colors } from "../../constants";
 import CustomIconButton from "../../components/CustomIconButton/CustomIconButton";
 import ProductCard from "../../components/ProductCard/ProductCard";
@@ -27,22 +26,22 @@ import { SliderBox } from "react-native-image-slider-box";
 
 const category = [
   {
-    id: "1",
+    _id: "62fe244f58f7aa8230817f89",
     title: "Garments",
     image: require("../../assets/icons/garments.png"),
   },
   {
-    id: "2",
+    _id: "62fe243858f7aa8230817f86",
     title: "Electornics",
     image: require("../../assets/icons/electronics.png"),
   },
   {
-    id: "3",
+    _id: "62fe241958f7aa8230817f83",
     title: "Cosmentics",
     image: require("../../assets/icons/cosmetics.png"),
   },
   {
-    id: "4",
+    _id: "62fe246858f7aa8230817f8c",
     title: "Groceries",
     image: require("../../assets/icons/grocery.png"),
   },
@@ -94,7 +93,6 @@ const HomeScreen = ({ navigation, route }) => {
     fetch(`${network.serverip}/products`, headerOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
         if (result.success) {
           setProducts(result.data);
           setError("");
@@ -156,7 +154,6 @@ const HomeScreen = ({ navigation, route }) => {
           <SliderBox
             images={slides}
             sliderBoxHeight={140}
-            onCurrentImagePressed={(index) => console.log(index)}
             dotColor={colors.primary}
             inactiveDotColor={colors.muted}
             paginationBoxVerticalPadding={10}
@@ -232,16 +229,16 @@ const HomeScreen = ({ navigation, route }) => {
             style={styles.flatListContainer}
             horizontal={true}
             data={category}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, index) => `${item}-${index}`}
             renderItem={({ item, index }) => (
-              <View
-                style={{ marginLeft: 5, marginBottom: 10, marginRight: 5 }}
-                key={index}
-              >
+              <View style={{ marginBottom: 10 }} key={index}>
                 <CustomIconButton
                   key={index}
                   text={item.title}
                   image={item.image}
+                  onPress={() =>
+                    navigation.jumpTo("categories", { categoryID: item })
+                  }
                 />
               </View>
             )}

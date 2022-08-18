@@ -10,9 +10,13 @@ const ProductCard = ({
   quantity,
   onPress,
   onPressSecondary,
+  cardSize,
 }) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.container, { width: cardSize === "large" ? "100%" : 150 }]}
+      onPress={onPress}
+    >
       <View style={styles.imageContainer}>
         <Image
           source={{ uri: `${network.serverip}/uploads/${image}` }}
