@@ -150,38 +150,18 @@ const HomeScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.bodyContainer}>
-        <View style={styles.promotiomSliderContainer}>
-          <SliderBox
-            images={slides}
-            sliderBoxHeight={140}
-            dotColor={colors.primary}
-            inactiveDotColor={colors.muted}
-            paginationBoxVerticalPadding={10}
-            autoplayInterval={6000}
-          />
-          {/* <Image
-            source={slides[0].image}
-            style={{ height: 130, resizeMode: "contain", margin: 0 }}
-          /> */}
-        </View>
-        {/* <View style={styles.logoContainer}>
-          <Image source={easybuylogo} style={styles.logo} />
-          <View>
-            <Text style={styles.secondaryText}>EasyBuy</Text>
-          </View>
-        </View> */}
-
         <View style={styles.searchContainer}>
           <View style={styles.inputContainer}>
             <SearchableDropdown
               onTextChange={(text) => console.log(text)}
               onItemSelect={(item) => handleProductPress(item)}
+              defaultIndex={0}
               containerStyle={{
                 borderRadius: 5,
                 width: "100%",
                 elevation: 5,
                 position: "absolute",
-                zIndex: 10,
+                zIndex: 20,
                 top: -20,
                 backgroundColor: colors.light,
               }}
@@ -202,10 +182,9 @@ const HomeScreen = ({ navigation, route }) => {
                 color: colors.muted,
               }}
               itemsContainerStyle={{
-                maxHeight: 400,
+                maxHeight: "80%",
               }}
               items={searchItems}
-              defaultIndex={2}
               placeholder="Search..."
               resetValue={false}
               underlineColorAndroid="transparent"
@@ -219,6 +198,23 @@ const HomeScreen = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </View>
+        <View style={styles.promotiomSliderContainer}>
+          <SliderBox
+            images={slides}
+            sliderBoxHeight={140}
+            dotColor={colors.primary}
+            inactiveDotColor={colors.muted}
+            paginationBoxVerticalPadding={10}
+            autoplayInterval={6000}
+          />
+        </View>
+        {/* Pervious person design */}
+        {/* <View style={styles.logoContainer}>
+          <Image source={easybuylogo} style={styles.logo} />
+          <View>
+            <Text style={styles.secondaryText}>EasyBuy</Text>
+          </View>
+        </View> */}
 
         <View style={styles.primaryTextContainer}>
           <Text style={styles.primaryText}>Categories</Text>

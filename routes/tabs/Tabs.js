@@ -19,6 +19,13 @@ const Tabs = ({ navigation, route }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarHideOnKeyboard: true,
+        tabBarStyle: [
+          {
+            display: "flex",
+          },
+          null,
+        ],
         headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.primary,
@@ -101,7 +108,6 @@ const Tabs = ({ navigation, route }) => {
         component={HomeScreen}
         initialParams={{ user: user }}
         tabBarOptions={{
-          keyboardHidesTabBar: true,
           style: {
             position: "absolute",
           },
@@ -112,7 +118,7 @@ const Tabs = ({ navigation, route }) => {
         component={CategoriesScreen}
         initialParams={{ user: user }}
         tabBarOptions={{
-          keyboardHidesTabBar: true,
+          tabBarHideOnKeyboard: true,
           style: {
             position: "absolute",
           },
