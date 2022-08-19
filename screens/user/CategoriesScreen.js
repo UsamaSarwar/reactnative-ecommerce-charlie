@@ -13,6 +13,7 @@ import React, { useState, useEffect } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 import cartIcon from "../../assets/icons/cart_beg.png";
+import emptyBox from "../../assets/image/emptybox.png";
 import { colors, network } from "../../constants";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -22,6 +23,7 @@ import ProductCard from "../../components/ProductCard/ProductCard";
 
 const CategoriesScreen = ({ navigation, route }) => {
   const { categoryID } = route.params;
+  const [filterItemlenght, setFilterItemlenght] = useState(0);
   const [isLoading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
@@ -89,6 +91,11 @@ const CategoriesScreen = ({ navigation, route }) => {
       .then((result) => {
         if (result.success) {
           setProducts(result.data);
+          setFilterItemlenght(
+            result.data.filter(
+              (product) => product?.category?._id === selectedTab?._id
+            ).length
+          );
           setError("");
         } else {
           setError(result.message);
@@ -105,9 +112,18 @@ const CategoriesScreen = ({ navigation, route }) => {
       setSelectedTab(categoryID);
     }
   });
+
   useEffect(() => {
+    console.log("E1");
     fetchProduct();
-  });
+  }, []);
+
+  useEffect(() => {
+    setFilterItemlenght(
+      products.filter((product) => product?.category?._id === selectedTab?._id)
+        .length
+    );
+  }, [selectedTab]);
 
   return (
     <View style={styles.container}>
@@ -161,38 +177,62 @@ const CategoriesScreen = ({ navigation, route }) => {
           )}
         />
 
-        <FlatList
-          data={products.filter(
-            (product) => product?.category?._id === selectedTab?._id
-          )}
-          refreshControl={
-            <RefreshControl
-              refreshing={refeshing}
-              onRefresh={handleOnRefresh}
-            />
-          }
-          keyExtractor={(index, item) => `${index}-${item}`}
-          contentContainerStyle={{ margin: 10 }}
-          numColumns={2}
-          renderItem={({ item: product }) => (
+        {filterItemlenght === 0 ? (
+          <View style={styles.noItemContainer}>
             <View
-              style={[
-                styles.productCartContainer,
-                { width: (windowWidth - windowWidth * 0.1) / 2 },
-              ]}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: colors.white,
+                height: 150,
+                width: 150,
+                borderRadius: 10,
+              }}
             >
-              <ProductCard
-                cardSize={"large"}
-                name={product.title}
-                image={product.image}
-                price={product.price}
-                quantity={product.quantity}
-                onPress={() => handleProductPress(product)}
-                onPressSecondary={() => handleAddToCat(product)}
+              <Image
+                source={emptyBox}
+                style={{ height: 80, width: 80, resizeMode: "contain" }}
               />
+              <Text style={styles.emptyBoxText}>
+                There no product in this category
+              </Text>
             </View>
-          )}
-        />
+          </View>
+        ) : (
+          <FlatList
+            data={products.filter(
+              (product) => product?.category?._id === selectedTab?._id
+            )}
+            refreshControl={
+              <RefreshControl
+                refreshing={refeshing}
+                onRefresh={handleOnRefresh}
+              />
+            }
+            keyExtractor={(index, item) => `${index}-${item}`}
+            contentContainerStyle={{ margin: 10 }}
+            numColumns={2}
+            renderItem={({ item: product }) => (
+              <View
+                style={[
+                  styles.productCartContainer,
+                  { width: (windowWidth - windowWidth * 0.1) / 2 },
+                ]}
+              >
+                <ProductCard
+                  cardSize={"large"}
+                  name={product.title}
+                  image={product.image}
+                  price={product.price}
+                  quantity={product.quantity}
+                  onPress={() => handleProductPress(product)}
+                  onPressSecondary={() => handleAddToCat(product)}
+                />
+              </View>
+            )}
+          />
+        )}
       </View>
     </View>
   );
@@ -222,6 +262,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   bodyContainer: {
+    flex: 1,
     width: "100%",
     flexDirecion: "row",
     backgroundColor: colors.light,
@@ -260,5 +301,18 @@ const styles = StyleSheet.create({
     margin: 5,
 
     padding: 5,
+  },
+  noItemContainer: {
+    width: "100%",
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  },
+  emptyBoxText: {
+    fontSize: 11,
+    color: colors.muted,
+    textAlign: "center",
   },
 });
