@@ -3,11 +3,22 @@ import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { colors } from "../../constants";
 
-const CategoryList = ({ title, description, onPressEdit, onPressDelete }) => {
+const CategoryList = ({
+  icon,
+  title,
+  description,
+  onPressEdit,
+  onPressDelete,
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.detailContainer}>
-        <View style={styles.imageContainer}></View>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: icon }}
+            style={{ height: 30, width: "auto", resizeMode: "contain" }}
+          />
+        </View>
         <View style={styles.categoryInfo}>
           <Text style={styles.categoryTitle}>{title}</Text>
           <Text style={styles.categoryDescription}>{`${description.substring(
@@ -63,6 +74,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     elevation: 5,
+    display: "flex",
+    justifyContent: "center",
+
     backgroundColor: colors.light,
   },
   categoryTitle: {

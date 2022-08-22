@@ -34,7 +34,6 @@ const AddCategoryScreen = ({ navigation, route }) => {
     try {
       setUser(JSON.parse(obj));
     } catch (e) {
-      console.log("converttoJSON:", e);
       setUser(obj);
       return obj.token;
     }

@@ -53,12 +53,12 @@ const UserProfileScreen = ({ navigation, route }) => {
           onPress={() => navigation.navigate("myaccount", { user: userInfo })}
         />
         <OptionList
-          text={"Notifications"}
+          text={"Wishlist"}
           Icon={Ionicons}
-          iconName={"notifications"}
+          iconName={"heart"}
           onPress={() => console.log("working....")}
         />
-        <OptionList
+        {/* <OptionList
           text={"Settings"}
           Icon={Ionicons}
           iconName={"settings-sharp"}
@@ -69,7 +69,7 @@ const UserProfileScreen = ({ navigation, route }) => {
           Icon={Ionicons}
           iconName={"help-circle"}
           onPress={() => console.log("working....")}
-        />
+        /> */}
         <OptionList
           text={"Logout"}
           Icon={Ionicons}

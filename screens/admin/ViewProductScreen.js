@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
@@ -13,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import ProductList from "../../components/ProductList/ProductList";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
+import CustomInput from "../../components/CustomInput/";
 import ProgressDialog from "react-native-progress-dialog";
 
 const ViewProductScreen = ({ navigation, route }) => {
@@ -24,6 +26,8 @@ const ViewProductScreen = ({ navigation, route }) => {
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [products, setProducts] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
+  const [filterItem, setFilterItem] = useState("");
 
   var myHeaders = new Headers();
   myHeaders.append("x-auth-token", authUser.token);
@@ -69,12 +73,30 @@ const ViewProductScreen = ({ navigation, route }) => {
       });
   };
 
+  const showConfirmDialog = (id) => {
+    return Alert.alert(
+      "Are your sure?",
+      "Are you sure you want to delete the category?",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            handleDelete(id);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]
+    );
+  };
   const fetchProduct = () => {
     fetch(`${network.serverip}/products`, ProductListRequestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.success) {
           setProducts(result.data);
+          setFoundItems(result.data);
           setError("");
           setIsloading(false);
         } else {
@@ -88,6 +110,23 @@ const ViewProductScreen = ({ navigation, route }) => {
         setIsloading(false);
       });
   };
+
+  const filter = () => {
+    const keyword = filterItem;
+    if (keyword !== "") {
+      const results = products?.filter((product) => {
+        return product?.title.toLowerCase().includes(keyword.toLowerCase());
+      });
+      console.log(results);
+      setFoundItems(results);
+    } else {
+      setFoundItems(products);
+    }
+  };
+
+  useEffect(() => {
+    filter();
+  }, [filterItem]);
 
   useEffect(() => {
     setIsloading(true);
@@ -127,6 +166,12 @@ const ViewProductScreen = ({ navigation, route }) => {
         </View>
       </View>
       <CustomAlert message={error} type={alertType} />
+      <CustomInput
+        radius={5}
+        placeholder={"Search..."}
+        value={filterItem}
+        setValue={setFilterItem}
+      />
       <ScrollView
         style={{ flex: 1, width: "100%" }}
         showsVerticalScrollIndicator={false}
@@ -134,14 +179,14 @@ const ViewProductScreen = ({ navigation, route }) => {
           <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
         }
       >
-        {products &&
-          products.map((product, index) => {
+        {foundItems &&
+          foundItems.map((product, index) => {
             return (
               <ProductList
                 key={index}
                 image={`${network.serverip}/uploads/${product?.image}`}
                 title={product?.title}
-                category={"Garments"}
+                category={product?.category?.title}
                 price={product?.price}
                 qantity={product?.sku}
                 onPressView={() => {
@@ -154,7 +199,7 @@ const ViewProductScreen = ({ navigation, route }) => {
                   });
                 }}
                 onPressDelete={() => {
-                  handleDelete(product._id);
+                  showConfirmDialog(product._id);
                 }}
               />
             );

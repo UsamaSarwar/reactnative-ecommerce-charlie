@@ -6,12 +6,14 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
+import CustomInput from "../../components/CustomInput/";
 import ProgressDialog from "react-native-progress-dialog";
 import CategoryList from "../../components/CategoryList";
 
@@ -23,7 +25,6 @@ const ViewCategoryScreen = ({ navigation, route }) => {
     try {
       setUser(JSON.parse(obj));
     } catch (e) {
-      console.log("converttoJSON:", e);
       setUser(obj);
       return obj.token;
     }
@@ -37,6 +38,8 @@ const ViewCategoryScreen = ({ navigation, route }) => {
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [categories, setCategories] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
+  const [filterItem, setFilterItem] = useState("");
 
   const handleOnRefresh = () => {
     setRefreshing(true);
@@ -44,12 +47,60 @@ const ViewCategoryScreen = ({ navigation, route }) => {
     setRefreshing(false);
   };
 
-  // const handleOrderDetail = (item) => {
-  //   navigation.navigate("vieworderdetails", {
-  //     orderDetail: item,
-  //     Token: getToken(authUser),
-  //   });
-  // };
+  const handleEdit = (item) => {
+    navigation.navigate("editcategories", {
+      category: item,
+      authUser: authUser,
+    });
+  };
+
+  const handleDelete = (id) => {
+    var myHeaders = new Headers();
+    myHeaders.append("x-auth-token", getToken(authUser));
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    setIsloading(true);
+    fetch(`${network.serverip}/delete-category?id=${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          fetchCategories();
+          setError(result.message);
+          setAlertType("success");
+        } else {
+          setError(result.message);
+          setAlertType("error");
+        }
+        setIsloading(false);
+      })
+      .catch((error) => {
+        setIsloading(false);
+        setError(error.message);
+        console.log("error", error);
+      });
+  };
+
+  const showConfirmDialog = (id) => {
+    return Alert.alert(
+      "Are your sure?",
+      "Are you sure you want to delete the category?",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            handleDelete(id);
+          },
+        },
+        {
+          text: "No",
+        },
+      ]
+    );
+  };
 
   const fetchCategories = () => {
     var myHeaders = new Headers();
@@ -66,6 +117,7 @@ const ViewCategoryScreen = ({ navigation, route }) => {
       .then((result) => {
         if (result.success) {
           setCategories(result.categories);
+          setFoundItems(result.categories);
           setError("");
         } else {
           setError(result.message);
@@ -79,9 +131,24 @@ const ViewCategoryScreen = ({ navigation, route }) => {
       });
   };
 
+  const filter = () => {
+    const keyword = filterItem;
+    if (keyword !== "") {
+      const results = categories?.filter((item) => {
+        return item?.title.toLowerCase().includes(keyword.toLowerCase());
+      });
+      setFoundItems(results);
+    } else {
+      setFoundItems(categories);
+    }
+  };
+
+  useEffect(() => {
+    filter();
+  }, [filterItem]);
+
   useEffect(() => {
     fetchCategories();
-    console.log(categories);
   }, []);
 
   return (
@@ -117,6 +184,12 @@ const ViewCategoryScreen = ({ navigation, route }) => {
         </View>
       </View>
       <CustomAlert message={error} type={alertType} />
+      <CustomInput
+        radius={5}
+        placeholder={"Search..."}
+        value={filterItem}
+        setValue={setFilterItem}
+      />
       <ScrollView
         style={{ flex: 1, width: "100%" }}
         showsVerticalScrollIndicator={false}
@@ -124,9 +197,21 @@ const ViewCategoryScreen = ({ navigation, route }) => {
           <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
         }
       >
-        {categories.map((item) => (
-          <CategoryList title={item.title} description={item.description} />
-        ))}
+        {foundItems &&
+          foundItems.map((item, index) => (
+            <CategoryList
+              icon={`${network.serverip}/uploads/${item?.icon}`}
+              key={index}
+              title={item?.title}
+              description={item?.description}
+              onPressEdit={() => {
+                handleEdit(item);
+              }}
+              onPressDelete={() => {
+                showConfirmDialog(item?._id);
+              }}
+            />
+          ))}
       </ScrollView>
     </View>
   );

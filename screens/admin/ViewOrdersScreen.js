@@ -23,7 +23,6 @@ const ViewOrdersScreen = ({ navigation, route }) => {
     try {
       setUser(JSON.parse(obj));
     } catch (e) {
-      console.log("converttoJSON:", e);
       setUser(obj);
       return obj.token;
     }
@@ -81,7 +80,6 @@ const ViewOrdersScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     fetchOrders();
-    console.log(orders);
   }, []);
 
   return (
