@@ -57,7 +57,6 @@ const ViewProductScreen = ({ navigation, route }) => {
       .then((result) => {
         if (result.success) {
           fetchProduct();
-          console.log(result);
           setError(result.message);
           setAlertType("success");
         } else {
@@ -117,7 +116,6 @@ const ViewProductScreen = ({ navigation, route }) => {
       const results = products?.filter((product) => {
         return product?.title.toLowerCase().includes(keyword.toLowerCase());
       });
-      console.log(results);
       setFoundItems(results);
     } else {
       setFoundItems(products);
@@ -179,7 +177,9 @@ const ViewProductScreen = ({ navigation, route }) => {
           <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
         }
       >
-        {foundItems &&
+        {foundItems && foundItems.length == 0 ? (
+          <Text>{`No product found with the name of ${filterItem}!`}</Text>
+        ) : (
           foundItems.map((product, index) => {
             return (
               <ProductList
@@ -203,7 +203,8 @@ const ViewProductScreen = ({ navigation, route }) => {
                 }}
               />
             );
-          })}
+          })
+        )}
       </ScrollView>
     </View>
   );

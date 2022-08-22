@@ -197,7 +197,9 @@ const ViewCategoryScreen = ({ navigation, route }) => {
           <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
         }
       >
-        {foundItems &&
+        {foundItems && foundItems.length == 0 ? (
+          <Text>{`No category found with the title of ${filterItem}!`}</Text>
+        ) : (
           foundItems.map((item, index) => (
             <CategoryList
               icon={`${network.serverip}/uploads/${item?.icon}`}
@@ -211,7 +213,8 @@ const ViewCategoryScreen = ({ navigation, route }) => {
                 showConfirmDialog(item?._id);
               }}
             />
-          ))}
+          ))
+        )}
       </ScrollView>
     </View>
   );

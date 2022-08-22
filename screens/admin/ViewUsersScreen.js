@@ -25,7 +25,6 @@ const ViewUsersScreen = ({ navigation, route }) => {
     try {
       setUser(JSON.parse(obj));
     } catch (e) {
-      console.log("converttoJSON:", e);
       setUser(obj);
       return obj.token;
     }
@@ -77,18 +76,13 @@ const ViewUsersScreen = ({ navigation, route }) => {
     setRefreshing(false);
   };
 
-  useEffect(() => {
-    fetchUsers();
-    console.log(foundItems);
-  }, []);
-
   const filter = () => {
     const keyword = filterItem;
     if (keyword !== "") {
       const results = users.filter((user) => {
         return user.name.toLowerCase().includes(keyword.toLowerCase());
       });
-      console.log(results);
+
       setFoundItems(results);
     } else {
       setFoundItems(users);
@@ -99,6 +93,10 @@ const ViewUsersScreen = ({ navigation, route }) => {
   useEffect(() => {
     filter();
   }, [filterItem]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -142,7 +140,9 @@ const ViewUsersScreen = ({ navigation, route }) => {
           <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
         }
       >
-        {foundItems &&
+        {foundItems && foundItems.length == 0 ? (
+          <Text>{`No user found with the name of ${filterItem}!`}</Text>
+        ) : (
           foundItems.map((item, index) => (
             <UserList
               key={index}
@@ -150,7 +150,8 @@ const ViewUsersScreen = ({ navigation, route }) => {
               email={item?.email}
               usertype={item?.userType}
             />
-          ))}
+          ))
+        )}
       </ScrollView>
     </View>
   );

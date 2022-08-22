@@ -12,6 +12,7 @@ import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
+import CustomInput from "../../components/CustomInput";
 import ProgressDialog from "react-native-progress-dialog";
 import OrderList from "../../components/OrderList/OrderList";
 
@@ -36,6 +37,8 @@ const ViewOrdersScreen = ({ navigation, route }) => {
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [orders, setOrders] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
+  const [filterItem, setFilterItem] = useState("");
 
   const handleOnRefresh = () => {
     setRefreshing(true);
@@ -65,6 +68,7 @@ const ViewOrdersScreen = ({ navigation, route }) => {
       .then((result) => {
         if (result.success) {
           setOrders(result.data);
+          setFoundItems(result.data);
           setError("");
         } else {
           setError(result.message);
@@ -77,6 +81,22 @@ const ViewOrdersScreen = ({ navigation, route }) => {
         console.log("error", error);
       });
   };
+
+  const filter = () => {
+    const keyword = filterItem;
+    if (keyword !== "") {
+      const results = orders?.filter((item) => {
+        return item?.orderId.toLowerCase().includes(keyword.toLowerCase());
+      });
+      setFoundItems(results);
+    } else {
+      setFoundItems(orders);
+    }
+  };
+
+  useEffect(() => {
+    filter();
+  }, [filterItem]);
 
   useEffect(() => {
     fetchOrders();
@@ -108,6 +128,12 @@ const ViewOrdersScreen = ({ navigation, route }) => {
         </View>
       </View>
       <CustomAlert message={error} type={alertType} />
+      <CustomInput
+        radius={5}
+        placeholder={"Search..."}
+        value={filterItem}
+        setValue={setFilterItem}
+      />
       <ScrollView
         style={{ flex: 1, width: "100%", padding: 2 }}
         showsVerticalScrollIndicator={false}
@@ -115,8 +141,10 @@ const ViewOrdersScreen = ({ navigation, route }) => {
           <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
         }
       >
-        {orders &&
-          orders.map((order, index) => {
+        {foundItems && foundItems.length == 0 ? (
+          <Text>{`No order found with the order # ${filterItem}!`}</Text>
+        ) : (
+          foundItems.map((order, index) => {
             return (
               <OrderList
                 item={order}
@@ -124,7 +152,8 @@ const ViewOrdersScreen = ({ navigation, route }) => {
                 onPress={() => handleOrderDetail(order)}
               />
             );
-          })}
+          })
+        )}
       </ScrollView>
     </View>
   );
