@@ -135,7 +135,7 @@ const DashboardScreen = ({ navigation, route }) => {
         </View>
         <View style={styles.headingContainer}>
           <MaterialCommunityIcons name="menu-right" size={30} color="black" />
-          <Text style={styles.headingText}>Welcome, Bukhtyar</Text>
+          <Text style={styles.headingText}>Welcome, Admin</Text>
         </View>
         <View style={{ height: 370 }}>
           {data && (
