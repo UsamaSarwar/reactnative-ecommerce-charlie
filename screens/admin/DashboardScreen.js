@@ -53,6 +53,7 @@ const DashboardScreen = ({ navigation, route }) => {
               value: result.data?.usersCount,
               iconName: "person",
               type: "parimary",
+              screenName: "viewusers",
             },
             {
               id: 2,
@@ -60,6 +61,7 @@ const DashboardScreen = ({ navigation, route }) => {
               value: result.data?.ordersCount,
               iconName: "cart",
               type: "secondary",
+              screenName: "vieworder",
             },
             {
               id: 3,
@@ -67,6 +69,7 @@ const DashboardScreen = ({ navigation, route }) => {
               value: result.data?.productsCount,
               iconName: "md-square",
               type: "warning",
+              screenName: "viewproduct",
             },
             {
               id: 4,
@@ -74,6 +77,7 @@ const DashboardScreen = ({ navigation, route }) => {
               value: result.data?.categoriesCount,
               iconName: "menu",
               type: "muted",
+              screenName: "viewcategories",
             },
           ]);
           setError("");
@@ -151,6 +155,9 @@ const DashboardScreen = ({ navigation, route }) => {
                   title={data.title}
                   value={data.value}
                   type={data.type}
+                  onPress={() => {
+                    navigation.navigate(data.screenName, { authUser: user });
+                  }}
                 />
               ))}
             </ScrollView>

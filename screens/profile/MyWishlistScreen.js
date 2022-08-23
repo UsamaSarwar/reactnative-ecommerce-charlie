@@ -15,37 +15,23 @@ import ProgressDialog from "react-native-progress-dialog";
 import OrderList from "../../components/OrderList/OrderList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const MyOrderScreen = ({ navigation, route }) => {
+const MyWishlistScreen = ({ navigation, route }) => {
   const { user } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Please wait...");
   const [refeshing, setRefreshing] = useState(false);
   const [alertType, setAlertType] = useState("error");
   const [error, setError] = useState("");
-  const [orders, setOrders] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
   const [UserInfo, setUserInfo] = useState({});
+
+  const handleView = () => {
+    console.log("view");
+  };
 
   const logout = async () => {
     await AsyncStorage.removeItem("authUser");
     navigation.replace("login");
-  };
-
-  const convertToJSON = (obj) => {
-    try {
-      setUserInfo(JSON.parse(obj));
-    } catch (e) {
-      setUserInfo(obj);
-    }
-  };
-
-  const getToken = (obj) => {
-    try {
-      setUserInfo(JSON.parse(obj));
-    } catch (e) {
-      setUserInfo(obj);
-      return user.token;
-    }
-    return UserInfo.token;
   };
 
   const handleOnRefresh = () => {
@@ -54,17 +40,9 @@ const MyOrderScreen = ({ navigation, route }) => {
     setRefreshing(false);
   };
 
-  const handleOrderDetail = (item) => {
-    navigation.navigate("myorderdetail", {
-      orderDetail: item,
-      Token: UserInfo.token,
-    });
-  };
-
-  const fetchOrders = () => {
+  const fetchWishlist = () => {
     var myHeaders = new Headers();
-    let token = getToken(user);
-    myHeaders.append("x-auth-token", token);
+    myHeaders.append("x-auth-token", user.token);
 
     var requestOptions = {
       method: "GET",
@@ -72,14 +50,14 @@ const MyOrderScreen = ({ navigation, route }) => {
       redirect: "follow",
     };
     setIsloading(true);
-    fetch(`${network.serverip}/orders`, requestOptions)
+    fetch(`${network.serverip}/wishlist`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result?.err === "jwt expired") {
           logout();
         }
         if (result.success) {
-          setOrders(result.data);
+          setWishlist(result.data[0].wishlist);
           setError("");
         }
         setIsloading(false);
@@ -92,8 +70,7 @@ const MyOrderScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    convertToJSON(user);
-    fetchOrders();
+    fetchWishlist();
   }, []);
 
   return (
@@ -114,24 +91,24 @@ const MyOrderScreen = ({ navigation, route }) => {
         </TouchableOpacity>
         <View></View>
         <TouchableOpacity onPress={() => handleOnRefresh()}>
-          <Ionicons name="cart-outline" size={30} color={colors.primary} />
+          <Ionicons name="heart-outline" size={30} color={colors.primary} />
         </TouchableOpacity>
       </View>
       <View style={styles.screenNameContainer}>
         <View>
-          <Text style={styles.screenNameText}>My Orders</Text>
+          <Text style={styles.screenNameText}>My Wishlist</Text>
         </View>
         <View>
           <Text style={styles.screenNameParagraph}>
-            Your order and your order status
+            View , add or remove products from wishlist for later purchase
           </Text>
         </View>
       </View>
       <CustomAlert message={error} type={alertType} />
-      {orders.length == 0 ? (
+      {wishlist.length == 0 ? (
         <View style={styles.ListContiainerEmpty}>
           <Text style={styles.secondaryTextSmItalic}>
-            "There are no orders placed yet."
+            "There are no product in wishlist yet."
           </Text>
         </View>
       ) : (
@@ -145,14 +122,8 @@ const MyOrderScreen = ({ navigation, route }) => {
             />
           }
         >
-          {orders.map((order, index) => {
-            return (
-              <OrderList
-                item={order}
-                key={index}
-                onPress={() => handleOrderDetail(order)}
-              />
-            );
+          {wishlist.map((list, index) => {
+            return <></>;
           })}
           <View style={styles.emptyView}></View>
         </ScrollView>
@@ -161,7 +132,7 @@ const MyOrderScreen = ({ navigation, route }) => {
   );
 };
 
-export default MyOrderScreen;
+export default MyWishlistScreen;
 
 const styles = StyleSheet.create({
   container: {

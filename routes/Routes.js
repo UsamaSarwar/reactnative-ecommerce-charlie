@@ -22,6 +22,9 @@ import MyOrderDetailScreen from "../screens/user/MyOrderDetailScreen";
 import ViewCategoryScreen from "../screens/admin/ViewCategoryScreen";
 import AddCategoryScreen from "../screens/admin/AddCategoryScreen";
 import ViewUsersScreen from "../screens/admin/ViewUsersScreen";
+import CategoriesScreen from "../screens/user/CategoriesScreen";
+import EditCategoryScreen from "../screens/admin/EditCategoryScreen";
+import MyWishlistScreen from "../screens/profile/MyWishlistScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +41,7 @@ const Routes = () => {
         <Stack.Screen name="forgetpassword" component={ForgetPasswordScreen} />
         <Stack.Screen name="updatepassword" component={UpdatePasswordScreen} />
         <Stack.Screen name="myaccount" component={MyAccountScreen} />
+        <Stack.Screen name="mywishlist" component={MyWishlistScreen} />
         <Stack.Screen name="dashboard" component={DashboardScreen} />
         <Stack.Screen name="addproduct" component={AddProductScreen} />
         <Stack.Screen name="viewproduct" component={ViewProductScreen} />
@@ -56,7 +60,9 @@ const Routes = () => {
         <Stack.Screen name="myorderdetail" component={MyOrderDetailScreen} />
         <Stack.Screen name="viewcategories" component={ViewCategoryScreen} />
         <Stack.Screen name="addcategories" component={AddCategoryScreen} />
+        <Stack.Screen name="editcategories" component={EditCategoryScreen} />
         <Stack.Screen name="viewusers" component={ViewUsersScreen} />
+        <Stack.Screen name="categories" component={CategoriesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

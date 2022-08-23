@@ -3,11 +3,24 @@ import React from "react";
 import { colors } from "../../constants";
 import garmentsIcon from "../../assets/icons/garments.png";
 
-const CustomIconButton = ({ text, image, onPress }) => {
+const CustomIconButton = ({ text, image, onPress, active }) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity
+      style={[
+        styles.container,
+        { backgroundColor: active ? colors.primary_light : colors.white },
+      ]}
+      onPress={onPress}
+    >
       <Image source={image} style={styles.buttonIcon} />
-      <Text style={styles.buttonText}>{text}</Text>
+      <Text
+        style={[
+          styles.buttonText,
+          { color: active ? colors.dark : colors.muted },
+        ]}
+      >
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -25,6 +38,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: 110,
     elevation: 3,
+    margin: 5,
   },
   buttonText: {
     fontSize: 12,

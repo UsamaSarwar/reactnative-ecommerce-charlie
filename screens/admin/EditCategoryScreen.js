@@ -18,8 +18,8 @@ import * as ImagePicker from "expo-image-picker";
 import ProgressDialog from "react-native-progress-dialog";
 import { AntDesign } from "@expo/vector-icons";
 
-const AddCategoryScreen = ({ navigation, route }) => {
-  const { authUser } = route.params;
+const EditCategoryScreen = ({ navigation, route }) => {
+  const { category, authUser } = route.params;
   const [isloading, setIsloading] = useState(false);
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("easybuycat.png");
@@ -28,19 +28,7 @@ const AddCategoryScreen = ({ navigation, route }) => {
   const [alertType, setAlertType] = useState("error");
   const [user, setUser] = useState({});
 
-  var payload = [];
-
-  const getToken = (obj) => {
-    try {
-      setUser(JSON.parse(obj));
-    } catch (e) {
-      setUser(obj);
-      return obj.token;
-    }
-    return JSON.parse(obj).token;
-  };
-
-  const addCategoryHandle = () => {
+  const editCategoryHandle = (id) => {
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", authUser.token);
     myHeaders.append("Content-Type", "application/json");
@@ -69,7 +57,7 @@ const AddCategoryScreen = ({ navigation, route }) => {
       setError("Please upload the Catergory image");
       setIsloading(false);
     } else {
-      fetch(network.serverip + "/category", requestOptions)
+      fetch(`${network.serverip}/update-category?id=${id}`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
           console.log(result);
@@ -77,8 +65,8 @@ const AddCategoryScreen = ({ navigation, route }) => {
             setIsloading(false);
             setAlertType("success");
             setError(result.message);
-            setTitle("");
-            setDescription("");
+            setTitle(result.data.title);
+            setDescription(result.data.description);
           }
         })
         .catch((error) => {
@@ -89,6 +77,11 @@ const AddCategoryScreen = ({ navigation, route }) => {
         });
     }
   };
+
+  useEffect(() => {
+    setTitle(category?.title);
+    setDescription(category?.description);
+  }, []);
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -110,10 +103,10 @@ const AddCategoryScreen = ({ navigation, route }) => {
       </View>
       <View style={styles.screenNameContainer}>
         <View>
-          <Text style={styles.screenNameText}>Add Category</Text>
+          <Text style={styles.screenNameText}>Edit Category</Text>
         </View>
         <View>
-          <Text style={styles.screenNameParagraph}>Add category details</Text>
+          <Text style={styles.screenNameParagraph}>Add Edit details</Text>
         </View>
       </View>
       <CustomAlert message={error} type={alertType} />
@@ -141,13 +134,18 @@ const AddCategoryScreen = ({ navigation, route }) => {
       </ScrollView>
 
       <View style={styles.buttomContainer}>
-        <CustomButton text={"Add Category"} onPress={addCategoryHandle} />
+        <CustomButton
+          text={"Edit Category"}
+          onPress={() => {
+            editCategoryHandle(category?._id);
+          }}
+        />
       </View>
     </KeyboardAvoidingView>
   );
 };
 
-export default AddCategoryScreen;
+export default EditCategoryScreen;
 
 const styles = StyleSheet.create({
   container: {

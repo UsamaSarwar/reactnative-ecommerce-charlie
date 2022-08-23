@@ -70,9 +70,7 @@ const EditProductScreen = ({ navigation, route }) => {
       aspect: [1, 1],
       quality: 0.5,
     });
-
     console.log(result);
-
     if (!result.cancelled) {
       setImage(result.uri);
     }
@@ -100,7 +98,6 @@ const EditProductScreen = ({ navigation, route }) => {
       )
         .then((response) => response.json())
         .then((result) => {
-          //   console.log(result);
           if (result.success == true) {
             setIsloading(false);
             setError(result.message);

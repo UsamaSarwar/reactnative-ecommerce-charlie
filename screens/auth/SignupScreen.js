@@ -31,6 +31,7 @@ const SignupScreen = ({ navigation }) => {
     email: email,
     password: password,
     name: name,
+    userType: "USER",
   });
 
   var requestOptions = {

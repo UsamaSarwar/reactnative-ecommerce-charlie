@@ -12,10 +12,12 @@ import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
+import CustomInput from "../../components/CustomInput/";
 import ProgressDialog from "react-native-progress-dialog";
 import UserList from "../../components/UserList/UserList";
 
 const ViewUsersScreen = ({ navigation, route }) => {
+  const [name, setName] = useState("");
   const { authUser } = route.params;
   const [user, setUser] = useState({});
 
@@ -23,7 +25,6 @@ const ViewUsersScreen = ({ navigation, route }) => {
     try {
       setUser(JSON.parse(obj));
     } catch (e) {
-      console.log("converttoJSON:", e);
       setUser(obj);
       return obj.token;
     }
@@ -37,12 +38,8 @@ const ViewUsersScreen = ({ navigation, route }) => {
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
   const [users, setUsers] = useState([]);
-
-  const handleOnRefresh = () => {
-    setRefreshing(true);
-    fetchUsers();
-    setRefreshing(false);
-  };
+  const [foundItems, setFoundItems] = useState([]);
+  const [filterItem, setFilterItem] = useState("");
 
   const fetchUsers = () => {
     var myHeaders = new Headers();
@@ -59,6 +56,7 @@ const ViewUsersScreen = ({ navigation, route }) => {
       .then((result) => {
         if (result.success) {
           setUsers(result.data);
+          setFoundItems(result.data);
           setError("");
         } else {
           setError(result.message);
@@ -72,9 +70,32 @@ const ViewUsersScreen = ({ navigation, route }) => {
       });
   };
 
+  const handleOnRefresh = () => {
+    setRefreshing(true);
+    fetchUsers();
+    setRefreshing(false);
+  };
+
+  const filter = () => {
+    const keyword = filterItem;
+    if (keyword !== "") {
+      const results = users.filter((user) => {
+        return user.name.toLowerCase().includes(keyword.toLowerCase());
+      });
+
+      setFoundItems(results);
+    } else {
+      setFoundItems(users);
+    }
+    setName(keyword);
+  };
+
+  useEffect(() => {
+    filter();
+  }, [filterItem]);
+
   useEffect(() => {
     fetchUsers();
-    console.log(users);
   }, []);
 
   return (
@@ -106,6 +127,12 @@ const ViewUsersScreen = ({ navigation, route }) => {
         </View>
       </View>
       <CustomAlert message={error} type={alertType} />
+      <CustomInput
+        radius={5}
+        placeholder={"Search..."}
+        value={filterItem}
+        setValue={setFilterItem}
+      />
       <ScrollView
         style={{ flex: 1, width: "100%" }}
         showsVerticalScrollIndicator={false}
@@ -113,9 +140,18 @@ const ViewUsersScreen = ({ navigation, route }) => {
           <RefreshControl refreshing={refeshing} onRefresh={handleOnRefresh} />
         }
       >
-        {users.map((item) => (
-          <UserList username={item?.name} email={item?.email} />
-        ))}
+        {foundItems && foundItems.length == 0 ? (
+          <Text>{`No user found with the name of ${filterItem}!`}</Text>
+        ) : (
+          foundItems.map((item, index) => (
+            <UserList
+              key={index}
+              username={item?.name}
+              email={item?.email}
+              usertype={item?.userType}
+            />
+          ))
+        )}
       </ScrollView>
     </View>
   );

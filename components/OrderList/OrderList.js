@@ -41,7 +41,7 @@ const OrderList = ({ item, onPress }) => {
 
   useEffect(() => {
     let packageItems = 0;
-    item.items.forEach(() => {
+    item?.items.forEach(() => {
       ++packageItems;
     });
     setQuantity(packageItems);
@@ -52,7 +52,6 @@ const OrderList = ({ item, onPress }) => {
     );
   }, []);
 
-  console.log(item);
   return (
     <View style={styles.container}>
       <View style={styles.innerRow}>
