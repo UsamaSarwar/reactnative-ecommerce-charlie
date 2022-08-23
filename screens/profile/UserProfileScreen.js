@@ -56,7 +56,7 @@ const UserProfileScreen = ({ navigation, route }) => {
           text={"Wishlist"}
           Icon={Ionicons}
           iconName={"heart"}
-          onPress={() => console.log("working....")}
+          onPress={() => navigation.navigate("mywishlist", { user: userInfo })}
         />
         {/* <OptionList
           text={"Settings"}

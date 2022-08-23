@@ -24,6 +24,7 @@ import AddCategoryScreen from "../screens/admin/AddCategoryScreen";
 import ViewUsersScreen from "../screens/admin/ViewUsersScreen";
 import CategoriesScreen from "../screens/user/CategoriesScreen";
 import EditCategoryScreen from "../screens/admin/EditCategoryScreen";
+import MyWishlistScreen from "../screens/profile/MyWishlistScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ const Routes = () => {
         <Stack.Screen name="forgetpassword" component={ForgetPasswordScreen} />
         <Stack.Screen name="updatepassword" component={UpdatePasswordScreen} />
         <Stack.Screen name="myaccount" component={MyAccountScreen} />
+        <Stack.Screen name="mywishlist" component={MyWishlistScreen} />
         <Stack.Screen name="dashboard" component={DashboardScreen} />
         <Stack.Screen name="addproduct" component={AddProductScreen} />
         <Stack.Screen name="viewproduct" component={ViewProductScreen} />

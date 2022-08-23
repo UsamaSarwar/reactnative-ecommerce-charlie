@@ -259,8 +259,9 @@ const HomeScreen = ({ navigation, route }) => {
                 />
               }
               showsHorizontalScrollIndicator={false}
+              initialNumToRender={5}
               horizontal={true}
-              data={products}
+              data={products.reverse().slice(0, 4)}
               keyExtractor={(item) => item._id}
               renderItem={({ item, index }) => (
                 <View

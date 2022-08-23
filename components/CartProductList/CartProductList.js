@@ -15,7 +15,6 @@ const CartProductList = ({
   onPressDecrement,
   onPressIncrement,
 }) => {
-  console.log(`${network.serverip}/uploads/${image}`);
   const rightSwipe = () => {
     return (
       <View style={styles.deleteButtonContainer}>

@@ -259,6 +259,7 @@ const CategoriesScreen = ({ navigation, route }) => {
                   onPress={() => handleProductPress(product)}
                   onPressSecondary={() => handleAddToCat(product)}
                 />
+                <View style={styles.emptyView}></View>
               </View>
             )}
           />
@@ -344,5 +345,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: colors.muted,
     textAlign: "center",
+  },
+  emptyView: {
+    height: 20,
   },
 });
