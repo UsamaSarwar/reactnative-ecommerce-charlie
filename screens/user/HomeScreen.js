@@ -163,6 +163,7 @@ const HomeScreen = ({ navigation, route }) => {
                 position: "absolute",
                 zIndex: 20,
                 top: -20,
+                maxHeight: 300,
                 backgroundColor: colors.light,
               }}
               textInputStyle={{
@@ -182,7 +183,7 @@ const HomeScreen = ({ navigation, route }) => {
                 color: colors.muted,
               }}
               itemsContainerStyle={{
-                maxHeight: "80%",
+                maxHeight: "100%",
               }}
               items={searchItems}
               placeholder="Search..."

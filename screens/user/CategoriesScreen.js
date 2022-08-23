@@ -20,6 +20,7 @@ import { bindActionCreators } from "redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
 import CustomIconButton from "../../components/CustomIconButton/CustomIconButton";
 import ProductCard from "../../components/ProductCard/ProductCard";
+import CustomInput from "../../components/CustomInput";
 
 const CategoriesScreen = ({ navigation, route }) => {
   const { categoryID } = route.params;
@@ -29,6 +30,8 @@ const CategoriesScreen = ({ navigation, route }) => {
   const [refeshing, setRefreshing] = useState(false);
   const [label, setLabel] = useState("Loading...");
   const [error, setError] = useState("");
+  const [foundItems, setFoundItems] = useState([]);
+  const [filterItem, setFilterItem] = useState("");
 
   const [windowWidth, setWindowWidth] = useState(
     Dimensions.get("window").width
@@ -91,6 +94,7 @@ const CategoriesScreen = ({ navigation, route }) => {
       .then((result) => {
         if (result.success) {
           setProducts(result.data);
+          setFoundItems(result.data);
           setFilterItemlenght(
             result.data.filter(
               (product) => product?.category?._id === selectedTab?._id
@@ -113,6 +117,23 @@ const CategoriesScreen = ({ navigation, route }) => {
     }
   });
 
+  const filter = () => {
+    const keyword = filterItem;
+    if (keyword !== "") {
+      const results = products.filter((product) => {
+        return product?.title.toLowerCase().includes(keyword.toLowerCase());
+      });
+
+      setFoundItems(results);
+    } else {
+      setFoundItems(products);
+    }
+  };
+
+  useEffect(() => {
+    filter();
+  }, [filterItem]);
+
   useEffect(() => {
     console.log("E1");
     fetchProduct();
@@ -120,8 +141,9 @@ const CategoriesScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     setFilterItemlenght(
-      products.filter((product) => product?.category?._id === selectedTab?._id)
-        .length
+      foundItems.filter(
+        (product) => product?.category?._id === selectedTab?._id
+      ).length
     );
   }, [selectedTab]);
 
@@ -146,7 +168,7 @@ const CategoriesScreen = ({ navigation, route }) => {
           style={styles.cartIconContainer}
           onPress={() => navigation.navigate("cart")}
         >
-          {cartproduct.length > 0 ? (
+          {cartproduct?.length > 0 ? (
             <View style={styles.cartItemCountContainer}>
               <Text style={styles.cartItemCountText}>{cartproduct.length}</Text>
             </View>
@@ -157,6 +179,14 @@ const CategoriesScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.bodyContainer}>
+        <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+          <CustomInput
+            radius={5}
+            placeholder={"Search..."}
+            value={filterItem}
+            setValue={setFilterItem}
+          />
+        </View>
         <FlatList
           data={category}
           keyExtractor={(index, item) => `${index}-${item}`}
@@ -201,7 +231,7 @@ const CategoriesScreen = ({ navigation, route }) => {
           </View>
         ) : (
           <FlatList
-            data={products.filter(
+            data={foundItems.filter(
               (product) => product?.category?._id === selectedTab?._id
             )}
             refreshControl={
