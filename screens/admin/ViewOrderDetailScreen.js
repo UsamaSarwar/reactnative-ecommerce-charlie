@@ -196,7 +196,7 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
           </View>
           <View style={styles.orderItemContainer}>
             <Text style={styles.orderItemText}>
-              Order on : {orderDetail?.updatedAt}
+              Order on : {dateFormat(orderDetail?.updatedAt)}
             </Text>
           </View>
           <ScrollView
