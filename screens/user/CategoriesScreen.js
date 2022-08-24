@@ -179,7 +179,7 @@ const CategoriesScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.bodyContainer}>
-        <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+        <View style={{ padding: 0, paddingLeft: 20, paddingRight: 20 }}>
           <CustomInput
             radius={5}
             placeholder={"Search..."}
@@ -330,8 +330,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     margin: 5,
-
     padding: 5,
+    paddingBottom: 0,
+    paddingTop: 0,
+    marginBottom: 0,
   },
   noItemContainer: {
     width: "100%",
