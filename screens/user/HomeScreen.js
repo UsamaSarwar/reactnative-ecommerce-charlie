@@ -206,14 +206,6 @@ const HomeScreen = ({ navigation, route }) => {
               autoplayInterval={6000}
             />
           </View>
-          {/* Pervious person design */}
-          {/* <View style={styles.logoContainer}>
-          <Image source={easybuylogo} style={styles.logo} />
-          <View>
-            <Text style={styles.secondaryText}>EasyBuy</Text>
-          </View>
-        </View> */}
-
           <View style={styles.primaryTextContainer}>
             <Text style={styles.primaryText}>Categories</Text>
           </View>
@@ -397,7 +389,6 @@ const styles = StyleSheet.create({
   },
   promotiomSliderContainer: {
     margin: 5,
-
     height: 140,
     backgroundColor: colors.light,
   },
