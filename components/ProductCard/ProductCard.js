@@ -18,10 +18,7 @@ const ProductCard = ({
       onPress={onPress}
     >
       <View style={styles.imageContainer}>
-        <Image
-          source={{ uri: `${network.serverip}/uploads/${image}` }}
-          style={styles.productImage}
-        />
+        <Image source={{ uri: image }} style={styles.productImage} />
       </View>
       <View style={styles.infoContainer}>
         <View>

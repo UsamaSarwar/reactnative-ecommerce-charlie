@@ -12,7 +12,6 @@ import { Ionicons } from "@expo/vector-icons";
 import cartIcon from "../../assets/icons/cart_beg_active.png";
 import { colors, network } from "../../constants";
 import CartProductList from "../../components/CartProductList/CartProductList";
-import CartEmpty from "../../assets/image/empty_cart.png";
 import CustomButton from "../../components/CustomButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -95,7 +94,7 @@ const CartScreen = ({ navigation }) => {
             <CartProductList
               key={index}
               index={index}
-              image={item.image}
+              image={`${network.serverip}/uploads/${item.image}`}
               title={item.title}
               price={item.price}
               quantity={item.quantity}

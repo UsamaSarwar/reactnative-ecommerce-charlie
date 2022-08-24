@@ -34,10 +34,7 @@ const CartProductList = ({
         <Swipeable renderRightActions={rightSwipe}>
           <View style={styles.container}>
             <View style={styles.imageContainer}>
-              <Image
-                source={{ uri: `${network.serverip}/uploads/${image}` }}
-                style={styles.productImage}
-              />
+              <Image source={{ uri: image }} style={styles.productImage} />
             </View>
             <View style={styles.productInfoContainer}>
               <Text style={styles.productTitle}>{title}</Text>
