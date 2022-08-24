@@ -95,7 +95,7 @@ const CheckoutScreen = ({ navigation, route }) => {
         if (result.success == true) {
           setIsloading(false);
           emptyCart("empty");
-          navigation.navigate("orderconfirm");
+          navigation.replace("orderconfirm");
         }
       })
       .catch((error) => {
