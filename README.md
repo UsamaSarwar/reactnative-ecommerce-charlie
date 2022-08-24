@@ -1,4 +1,5 @@
 # React-Native Ecommerce App :bomb:
+# Hi, We are Team Charlie! 👋
 
 [![Up to Date](https://github.com/ikatyang/emoji-cheat-sheet/workflows/Up%20to%20Date/badge.svg)](https://github.com/UsamaSarwar/reactnative-ecommerce-charlie)
 
@@ -6,7 +7,9 @@
 
 ### `Backend on NodeJs` ➡️ [https://github.com/abidrazaa/backend-node](https://github.com/abidrazaa/backend-node)
 
-Open-Source React Native Ecommerce Cross Platform Mobile App
+Open-Source React Native Ecommerce Cross Platform Mobile App :iphone:
+
+## Features :memo: 
 
 - [x] Stack Naviagtion
 - [x] Splash Screen
@@ -24,7 +27,7 @@ Open-Source React Native Ecommerce Cross Platform Mobile App
 - [x] Cart Screen
 - [x] Checkout Screen
 
-## How to Run App
+## How to Run App :white_check_mark:
 
 ### `Clone the repo`
 
