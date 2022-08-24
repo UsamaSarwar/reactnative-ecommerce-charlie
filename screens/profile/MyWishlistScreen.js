@@ -12,8 +12,8 @@ import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
-import OrderList from "../../components/OrderList/OrderList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import WishList from "../../components/WishList/WishList";
 
 const MyWishlistScreen = ({ navigation, route }) => {
   const { user } = route.params;
@@ -36,7 +36,7 @@ const MyWishlistScreen = ({ navigation, route }) => {
 
   const handleOnRefresh = () => {
     setRefreshing(true);
-    fetchOrders();
+    fetchWishlist();
     setRefreshing(false);
   };
 
@@ -71,6 +71,7 @@ const MyWishlistScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     fetchWishlist();
+    console.log(wishlist);
   }, []);
 
   return (
@@ -123,7 +124,14 @@ const MyWishlistScreen = ({ navigation, route }) => {
           }
         >
           {wishlist.map((list, index) => {
-            return <></>;
+            return (
+              <WishList
+                image={`${network.serverip}/uploads/${list?.productId?.image}`}
+                title={list?.productId?.title}
+                description={list?.productId?.description}
+                key={index}
+              />
+            );
           })}
           <View style={styles.emptyView}></View>
         </ScrollView>

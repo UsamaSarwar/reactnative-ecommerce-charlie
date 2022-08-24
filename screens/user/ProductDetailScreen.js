@@ -29,10 +29,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
   const [onWishlist, setOnWishlist] = useState(false);
   const [avaiableQuantity, setAvaiableQuantity] = useState(0);
   const [quantity, setQuantity] = useState(0);
-  const [productName, setProductName] = useState("");
-  const [productPrice, setProductPrice] = useState(10);
-  const [productDescription, setProductDescirption] = useState("");
-  const [productImage, SetProductImage] = useState("");
+  const [productImage, SetProductImage] = useState(" ");
 
   const handleIncreaseButton = (quantity) => {
     if (avaiableQuantity > quantity) {
@@ -46,12 +43,9 @@ const ProductDetailScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    setProductName(product.title);
-    setProductDescirption(product.description);
-    setProductPrice(product.price);
     setQuantity(0);
     setAvaiableQuantity(product.quantity);
-    SetProductImage(product.image);
+    SetProductImage(`${network.serverip}/uploads/${product?.image}`);
   }, []);
   return (
     <View style={styles.container}>
@@ -86,15 +80,12 @@ const ProductDetailScreen = ({ navigation, route }) => {
       </View>
       <View style={styles.bodyContainer}>
         <View style={styles.productImageContainer}>
-          <Image
-            source={{ uri: `${network.serverip}/uploads/${productImage}` }}
-            style={styles.productImage}
-          />
+          <Image source={{ uri: productImage }} style={styles.productImage} />
         </View>
         <View style={styles.productInfoContainer}>
           <View style={styles.productInfoTopContainer}>
             <View style={styles.productNameContaier}>
-              <Text style={styles.productNameText}>{productName}</Text>
+              <Text style={styles.productNameText}>{product?.title}</Text>
             </View>
             <View style={styles.infoButtonContainer}>
               <View style={styles.wishlistButtonContainer}>
@@ -116,12 +107,12 @@ const ProductDetailScreen = ({ navigation, route }) => {
               </View>
               <View style={styles.productPriceContainer}>
                 <Text style={styles.secondaryTextSm}>Price:</Text>
-                <Text style={styles.primaryTextSm}>{productPrice}$</Text>
+                <Text style={styles.primaryTextSm}>{product?.price}$</Text>
               </View>
             </View>
             <View style={styles.productDescriptionContainer}>
               <Text style={styles.secondaryTextSm}>Description:</Text>
-              <Text>{productDescription}</Text>
+              <Text>{product?.description}</Text>
             </View>
           </View>
           <View style={styles.productInfoBottomContainer}>
