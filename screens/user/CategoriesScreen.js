@@ -24,7 +24,7 @@ import CustomInput from "../../components/CustomInput";
 
 const CategoriesScreen = ({ navigation, route }) => {
   const { categoryID } = route.params;
-  const [filterItemlenght, setFilterItemlenght] = useState(0);
+
   const [isLoading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
@@ -139,14 +139,6 @@ const CategoriesScreen = ({ navigation, route }) => {
     fetchProduct();
   }, []);
 
-  useEffect(() => {
-    setFilterItemlenght(
-      foundItems.filter(
-        (product) => product?.category?._id === selectedTab?._id
-      ).length
-    );
-  }, [selectedTab]);
-
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -207,7 +199,9 @@ const CategoriesScreen = ({ navigation, route }) => {
           )}
         />
 
-        {filterItemlenght === 0 ? (
+        {foundItems.filter(
+          (product) => product?.category?._id === selectedTab?._id
+        ).length === 0 ? (
           <View style={styles.noItemContainer}>
             <View
               style={{
