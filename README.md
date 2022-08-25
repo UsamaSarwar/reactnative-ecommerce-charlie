@@ -71,6 +71,9 @@ The complete documentation of the project i.e. Software Requirement Specificatio
 
 The mockup designs of the application can be seen from [here](https://docs.google.com/presentation/d/1Imw0qHmIPhe_0FL_rpanTAoip-ps9dP-YuZRfTybnIM/edit#slide=id.gc6fa3c898_0_0)
 
+# Presentation
+
+The presentation of the Mockups can be seen from [here](https://www.youtube.com/watch?v=-eguq9cgY_s)
 
 ## Thanks to all the contributors ❤️
 
