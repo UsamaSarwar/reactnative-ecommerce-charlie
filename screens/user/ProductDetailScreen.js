@@ -14,6 +14,7 @@ import CustomButton from "../../components/CustomButton";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProductDetailScreen = ({ navigation, route }) => {
   const { product } = route.params;
@@ -26,10 +27,56 @@ const ProductDetailScreen = ({ navigation, route }) => {
     addCartItem(item);
   };
 
+  const logout = async () => {
+    await AsyncStorage.removeItem("authUser");
+    navigation.replace("login");
+  };
+
   const [onWishlist, setOnWishlist] = useState(false);
   const [avaiableQuantity, setAvaiableQuantity] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [productImage, SetProductImage] = useState(" ");
+  const [wishlistItems, setWishlistItems] = useState([]);
+  const [error, setError] = useState("");
+  const [isDisable, setIsDisbale] = useState(true);
+  // const token =
+  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzA0OWQ3ZTI2YTY0MWZhZGYzNzUzMDUiLCJlbWFpbCI6ImJ1a2h0eWFyLmhhaWRlcjFAZ21haWwuY29tIiwiaWF0IjoxNjYxMzQ4NzI1LCJleHAiOjE2NjEzODQ3MjV9.eZpDyf9x_b-FCSW0gPiBk-TrW0IAQigW9BZ6nZS5CKk";
+
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzA0OWQ3ZTI2YTY0MWZhZGYzNzUzMDUiLCJlbWFpbCI6ImJ1a2h0eWFyLmhhaWRlcjFAZ21haWwuY29tIiwiaWF0IjoxNjYxNDA3MDI3LCJleHAiOjE2NjE0NDMwMjd9.t0fjr8K6QYdorRqTqkQCdbUuH5WQ14nrw-FLyV7RcnA";
+
+  const fetchWishlist = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("x-auth-token", token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    fetch(`${network.serverip}/wishlist`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result?.err === "jwt expired") {
+          logout();
+        }
+        if (result.success) {
+          setWishlistItems(result.data[0].wishlist);
+          setIsDisbale(false);
+          result.data[0].wishlist.map((item) => {
+            if (item?.productId?._id === product?._id) {
+              setOnWishlist(true);
+            }
+          });
+
+          setError("");
+        }
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.log("error", error);
+      });
+  };
 
   const handleIncreaseButton = (quantity) => {
     if (avaiableQuantity > quantity) {
@@ -46,7 +93,11 @@ const ProductDetailScreen = ({ navigation, route }) => {
     setQuantity(0);
     setAvaiableQuantity(product.quantity);
     SetProductImage(`${network.serverip}/uploads/${product?.image}`);
+    fetchWishlist();
   }, []);
+
+  useEffect(() => {}, [wishlistItems]);
+
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -90,6 +141,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
             <View style={styles.infoButtonContainer}>
               <View style={styles.wishlistButtonContainer}>
                 <TouchableOpacity
+                  disabled={isDisable}
                   style={styles.iconContainer}
                   onPress={() => setOnWishlist(!onWishlist)}
                 >
