@@ -7,11 +7,15 @@ const WishList = ({
   image = "",
   title = " ",
   description = "",
-  onPressEdit,
+  onPressRemove,
+  onPressView,
 }) => {
   const [onWishlist, setOnWishlist] = useState(true);
+  const handleChangeState = () => {
+    onPressRemove();
+  };
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPressView}>
       <View style={styles.detailContainer}>
         <View style={styles.imageContainer}>
           <Image
@@ -32,7 +36,7 @@ const WishList = ({
           <View style={styles.wishlistButtonContainer}>
             <TouchableOpacity
               style={styles.iconContainer}
-              onPress={() => setOnWishlist(!onWishlist)}
+              onPress={() => handleChangeState()}
             >
               {onWishlist == false ? (
                 <Ionicons name="heart" size={25} color={colors.muted} />
@@ -43,7 +47,7 @@ const WishList = ({
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

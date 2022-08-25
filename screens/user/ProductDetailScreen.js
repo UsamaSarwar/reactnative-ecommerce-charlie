@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomAlert from "../../components/CustomAlert/CustomAlert";
 
 const ProductDetailScreen = ({ navigation, route }) => {
   const { product } = route.params;
@@ -39,15 +40,13 @@ const ProductDetailScreen = ({ navigation, route }) => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [error, setError] = useState("");
   const [isDisable, setIsDisbale] = useState(true);
-  // const token =
-  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzA0OWQ3ZTI2YTY0MWZhZGYzNzUzMDUiLCJlbWFpbCI6ImJ1a2h0eWFyLmhhaWRlcjFAZ21haWwuY29tIiwiaWF0IjoxNjYxMzQ4NzI1LCJleHAiOjE2NjEzODQ3MjV9.eZpDyf9x_b-FCSW0gPiBk-TrW0IAQigW9BZ6nZS5CKk";
+  const [alertType, setAlertType] = useState("error");
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzA0OWQ3ZTI2YTY0MWZhZGYzNzUzMDUiLCJlbWFpbCI6ImJ1a2h0eWFyLmhhaWRlcjFAZ21haWwuY29tIiwiaWF0IjoxNjYxNDA3MDI3LCJleHAiOjE2NjE0NDMwMjd9.t0fjr8K6QYdorRqTqkQCdbUuH5WQ14nrw-FLyV7RcnA";
-
-  const fetchWishlist = () => {
+  const fetchWishlist = async () => {
+    const value = await AsyncStorage.getItem("authUser");
+    let user = JSON.parse(value);
     var myHeaders = new Headers();
-    myHeaders.append("x-auth-token", token);
+    myHeaders.append("x-auth-token", user.token);
 
     var requestOptions = {
       method: "GET",
@@ -86,6 +85,85 @@ const ProductDetailScreen = ({ navigation, route }) => {
   const handleDecreaseButton = (quantity) => {
     if (quantity > 0) {
       setQuantity(quantity - 1);
+    }
+  };
+
+  const handleWishlistBtn = async () => {
+    setIsDisbale(true);
+    const value = await AsyncStorage.getItem("authUser");
+    let user = JSON.parse(value);
+
+    if (onWishlist) {
+      var myHeaders = new Headers();
+      myHeaders.append("x-auth-token", user.token);
+
+      var requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+
+      fetch(
+        `${network.serverip}/remove-from-wishlist?id=${product?._id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.success) {
+            setError(result.message);
+            setAlertType("success");
+            setOnWishlist(false);
+          } else {
+            setError(result.message);
+            setAlertType("error");
+          }
+          setOnWishlist(!onWishlist);
+        })
+        .catch((error) => {
+          setError(result.message);
+          setAlertType("error");
+          console.log("error", error);
+        });
+      setIsDisbale(false);
+    } else {
+      var myHeaders2 = new Headers();
+      myHeaders2.append("x-auth-token", user.token);
+      myHeaders2.append("Content-Type", "application/json");
+
+      var raw2 = JSON.stringify({
+        productId: product?._id,
+        quantity: 1,
+      });
+
+      var addrequestOptions = {
+        method: "POST",
+        headers: myHeaders2,
+        body: raw2,
+        redirect: "follow",
+      };
+
+      console.log(addrequestOptions);
+
+      fetch(`${network.serverip}/add-to-wishlist`, addrequestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          if (result.success) {
+            setError(result.message);
+            setAlertType("success");
+            setOnWishlist(true);
+          } else {
+            setError(result.message);
+            setAlertType("error");
+          }
+          setOnWishlist(!onWishlist);
+        })
+        .catch((error) => {
+          setError(result.message);
+          setAlertType("error");
+          console.log("error", error);
+        });
+      setIsDisbale(false);
     }
   };
 
@@ -133,6 +211,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
         <View style={styles.productImageContainer}>
           <Image source={{ uri: productImage }} style={styles.productImage} />
         </View>
+        <CustomAlert message={error} type={alertType} />
         <View style={styles.productInfoContainer}>
           <View style={styles.productInfoTopContainer}>
             <View style={styles.productNameContaier}>
@@ -143,7 +222,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
                 <TouchableOpacity
                   disabled={isDisable}
                   style={styles.iconContainer}
-                  onPress={() => setOnWishlist(!onWishlist)}
+                  onPress={() => handleWishlistBtn()}
                 >
                   {onWishlist == false ? (
                     <Ionicons name="heart" size={25} color={colors.muted} />

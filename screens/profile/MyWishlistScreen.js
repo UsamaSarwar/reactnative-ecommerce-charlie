@@ -23,10 +23,10 @@ const MyWishlistScreen = ({ navigation, route }) => {
   const [alertType, setAlertType] = useState("error");
   const [error, setError] = useState("");
   const [wishlist, setWishlist] = useState([]);
-  const [UserInfo, setUserInfo] = useState({});
+  const [onWishlist, setOnWishlist] = useState(true);
 
-  const handleView = () => {
-    console.log("view");
+  const handleView = (product) => {
+    navigation.navigate("productdetail", { product: product });
   };
 
   const logout = async () => {
@@ -69,10 +69,43 @@ const MyWishlistScreen = ({ navigation, route }) => {
       });
   };
 
+  const handleRemoveFromWishlist = (id) => {
+    var myHeaders = new Headers();
+    myHeaders.append("x-auth-token", user.token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(`${network.serverip}/remove-from-wishlist?id=${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.success) {
+          setError(result.message);
+          setAlertType("success");
+        } else {
+          setError(result.message);
+          setAlertType("error");
+        }
+        setOnWishlist(!onWishlist);
+      })
+      .catch((error) => {
+        setError(result.message);
+        setAlertType("error");
+        console.log("error", error);
+      });
+  };
+
+  useEffect(() => {
+    setError("");
+    fetchWishlist();
+  }, []);
+
   useEffect(() => {
     fetchWishlist();
-    console.log(wishlist);
-  }, []);
+  }, [onWishlist]);
 
   return (
     <View style={styles.container}>
@@ -130,6 +163,10 @@ const MyWishlistScreen = ({ navigation, route }) => {
                 title={list?.productId?.title}
                 description={list?.productId?.description}
                 key={index}
+                onPressView={() => handleView(list?.productId)}
+                onPressRemove={() =>
+                  handleRemoveFromWishlist(list?.productId?._id)
+                }
               />
             );
           })}

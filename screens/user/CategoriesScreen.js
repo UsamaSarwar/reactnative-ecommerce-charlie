@@ -95,11 +95,6 @@ const CategoriesScreen = ({ navigation, route }) => {
         if (result.success) {
           setProducts(result.data);
           setFoundItems(result.data);
-          setFilterItemlenght(
-            result.data.filter(
-              (product) => product?.category?._id === selectedTab?._id
-            ).length
-          );
           setError("");
         } else {
           setError(result.message);
@@ -135,7 +130,6 @@ const CategoriesScreen = ({ navigation, route }) => {
   }, [filterItem]);
 
   useEffect(() => {
-    console.log("E1");
     fetchProduct();
   }, []);
 
