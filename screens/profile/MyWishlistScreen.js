@@ -25,21 +25,25 @@ const MyWishlistScreen = ({ navigation, route }) => {
   const [wishlist, setWishlist] = useState([]);
   const [onWishlist, setOnWishlist] = useState(true);
 
+  //method to navigate to the product detail screen of the specific product
   const handleView = (product) => {
     navigation.navigate("productdetail", { product: product });
   };
 
+  //method the remove the authUser from Aysnc Storage and navigate back to login screen
   const logout = async () => {
     await AsyncStorage.removeItem("authUser");
     navigation.replace("login");
   };
 
+  //method call on pull refresh
   const handleOnRefresh = () => {
     setRefreshing(true);
     fetchWishlist();
     setRefreshing(false);
   };
 
+  //method to fetch the wishlist from server using API call
   const fetchWishlist = () => {
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", user.token);
@@ -50,9 +54,10 @@ const MyWishlistScreen = ({ navigation, route }) => {
       redirect: "follow",
     };
     setIsloading(true);
-    fetch(`${network.serverip}/wishlist`, requestOptions)
+    fetch(`${network.serverip}/wishlist`, requestOptions) // API call
       .then((response) => response.json())
       .then((result) => {
+        //check if the token is expired
         if (result?.err === "jwt expired") {
           logout();
         }
@@ -69,6 +74,7 @@ const MyWishlistScreen = ({ navigation, route }) => {
       });
   };
 
+  //method to remove the item from wishlist using API call
   const handleRemoveFromWishlist = (id) => {
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", user.token);
@@ -98,11 +104,13 @@ const MyWishlistScreen = ({ navigation, route }) => {
       });
   };
 
+  //fetch the wishlist on initial render
   useEffect(() => {
     setError("");
     fetchWishlist();
   }, []);
 
+  //fetch the wishlist data from server whenever the value of onWishList change
   useEffect(() => {
     fetchWishlist();
   }, [onWishlist]);

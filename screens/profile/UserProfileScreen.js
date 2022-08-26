@@ -24,6 +24,7 @@ const UserProfileScreen = ({ navigation, route }) => {
     }
   };
 
+  // covert  the user to Json object on initial render
   useEffect(() => {
     convertToJSON(user);
   }, []);
@@ -58,6 +59,7 @@ const UserProfileScreen = ({ navigation, route }) => {
           iconName={"heart"}
           onPress={() => navigation.navigate("mywishlist", { user: userInfo })}
         />
+        {/* !For future use --- */}
         {/* <OptionList
           text={"Settings"}
           Icon={Ionicons}
@@ -70,6 +72,7 @@ const UserProfileScreen = ({ navigation, route }) => {
           iconName={"help-circle"}
           onPress={() => console.log("working....")}
         /> */}
+        {/* !For future use ---- End */}
         <OptionList
           text={"Logout"}
           Icon={Ionicons}

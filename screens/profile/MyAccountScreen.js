@@ -19,6 +19,7 @@ const MyAccountScreen = ({ navigation, route }) => {
   const { user } = route.params;
   const userID = user["_id"];
 
+  //method for alert
   const showConfirmDialog = (id) => {
     return Alert.alert(
       "Are your sure?",
@@ -43,6 +44,7 @@ const MyAccountScreen = ({ navigation, route }) => {
     redirect: "follow",
   };
 
+  //method to delete the account using API call
   const DeleteAccontHandle = (userID) => {
     let fetchURL = network.serverip + "/delete-user?id=" + String(userID);
     console.log(fetchURL);
@@ -89,10 +91,11 @@ const MyAccountScreen = ({ navigation, route }) => {
           text={"Change Password"}
           Icon={Ionicons}
           iconName={"key-sharp"}
-          onPress={() =>
-            navigation.navigate("updatepassword", {
-              userID: userID,
-            })
+          onPress={
+            () =>
+              navigation.navigate("updatepassword", {
+                userID: userID,
+              }) // navigate to updatepassword
           }
         />
         <OptionList

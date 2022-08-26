@@ -29,7 +29,7 @@ const UpdatePasswordScreen = ({ navigation, route }) => {
     redirect: "follow",
   };
 
-  //method to update the password by the check the current password
+  // method to update the password by the check the current password
   const updatePasswordHandle = () => {
     if (currnetPassword == newPassword) {
       setError("You are not allowed to set the previous used password");
@@ -40,7 +40,7 @@ const UpdatePasswordScreen = ({ navigation, route }) => {
       fetch(
         network.serverip + "/reset-password?id=" + String(userID),
         requestOptions
-      ) //API call
+      ) // API call
         .then((response) => response.json())
         .then((result) => {
           setAlertType("success");
