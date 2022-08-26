@@ -2,7 +2,7 @@
 
 # Hi, We are Team Charlie! 👋
 
-<img align="left" alt="EasyBuy" src="image/easybuy.png" width="700"/>
+<img align="left" alt="EasyBuy" src="image/easybuy.png" width="900"/>
 
 [![Up to Date](https://github.com/ikatyang/emoji-cheat-sheet/workflows/Up%20to%20Date/badge.svg)](https://github.com/UsamaSarwar/reactnative-ecommerce-charlie)
 
