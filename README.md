@@ -12,7 +12,7 @@ Open-Source React Native Ecommerce Cross Platform Mobile App :iphone:
 
 ## Mockups
 
-<img align="left" alt="EasyBuy" src="image/easybuy.png" width="700"/>
+<img align="left" alt="EasyBuy" src="image/easybuy.png" width="900"/>
 
 ## Features :memo:
 
