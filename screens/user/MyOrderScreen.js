@@ -25,11 +25,13 @@ const MyOrderScreen = ({ navigation, route }) => {
   const [orders, setOrders] = useState([]);
   const [UserInfo, setUserInfo] = useState({});
 
+  //method to remove the authUser from aysnc storage and navigate to login
   const logout = async () => {
     await AsyncStorage.removeItem("authUser");
     navigation.replace("login");
   };
 
+  //method to convert the authUser to json object
   const convertToJSON = (obj) => {
     try {
       setUserInfo(JSON.parse(obj));
@@ -38,6 +40,7 @@ const MyOrderScreen = ({ navigation, route }) => {
     }
   };
 
+  //method to convert the authUser to json object and return token
   const getToken = (obj) => {
     try {
       setUserInfo(JSON.parse(obj));
@@ -48,12 +51,14 @@ const MyOrderScreen = ({ navigation, route }) => {
     return UserInfo.token;
   };
 
+  //method call on pull refresh
   const handleOnRefresh = () => {
     setRefreshing(true);
     fetchOrders();
     setRefreshing(false);
   };
 
+  //method to navigate to order detail screen of a specific order
   const handleOrderDetail = (item) => {
     navigation.navigate("myorderdetail", {
       orderDetail: item,
@@ -61,6 +66,7 @@ const MyOrderScreen = ({ navigation, route }) => {
     });
   };
 
+  //fetch order from server using API call
   const fetchOrders = () => {
     var myHeaders = new Headers();
     let token = getToken(user);
@@ -91,6 +97,7 @@ const MyOrderScreen = ({ navigation, route }) => {
       });
   };
 
+  //convert authUser to Json object and fetch orders on initial render
   useEffect(() => {
     convertToJSON(user);
     fetchOrders();

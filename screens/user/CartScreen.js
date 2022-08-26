@@ -20,17 +20,19 @@ import { bindActionCreators } from "redux";
 
 const CartScreen = ({ navigation }) => {
   const cartproduct = useSelector((state) => state.product);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
 
   const { removeCartItem, increaseCartItemQuantity, decreaseCartItemQuantity } =
     bindActionCreators(actionCreaters, dispatch);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [refresh, setRefresh] = useState(false);
 
+  //method to remove the item from (cart) redux
   const deleteItem = (id) => {
     removeCartItem(id);
   };
 
+  //method to increase the quantity of the item in(cart) redux
   const increaseQuantity = (id, quantity, avaiableQuantity) => {
     if (avaiableQuantity > quantity) {
       increaseCartItemQuantity({ id: id, type: "increase" });
@@ -38,6 +40,7 @@ const CartScreen = ({ navigation }) => {
     }
   };
 
+  //method to decrease the quantity of the item in(cart) redux
   const decreaseQuantity = (id, quantity) => {
     if (quantity > 1) {
       decreaseCartItemQuantity({ id: id, type: "decrease" });
@@ -45,6 +48,7 @@ const CartScreen = ({ navigation }) => {
     }
   };
 
+  //calcute and the set the total price whenever the value of carproduct change
   useEffect(() => {
     setTotalPrice(
       cartproduct.reduce((accumulator, object) => {

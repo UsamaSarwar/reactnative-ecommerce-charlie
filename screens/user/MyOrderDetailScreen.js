@@ -16,14 +16,12 @@ import StepIndicator from "react-native-step-indicator";
 
 const MyOrderDetailScreen = ({ navigation, route }) => {
   const { orderDetail } = route.params;
-  console.log(orderDetail);
   const [isloading, setIsloading] = useState(false);
   const [label, setLabel] = useState("Loading..");
   const [error, setError] = useState("");
   const [alertType, setAlertType] = useState("error");
   const [totalCost, setTotalCost] = useState(0);
   const [address, setAddress] = useState("");
-  const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [statusDisable, setStatusDisable] = useState(false);
   const labels = ["Processing", "Shipping", "Delivery"];
@@ -52,6 +50,7 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
     currentStepLabelColor: "#fe7013",
   };
 
+  //method to convert time to AM PM format
   function tConvert(time) {
     time = time
       .toString()
@@ -64,6 +63,7 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
     return time.join("");
   }
 
+  //method to convert data to dd-mm-yyyy  format
   const dateFormat = (datex) => {
     let t = new Date(datex);
     const date = ("0" + t.getDate()).slice(-2);
@@ -78,6 +78,7 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
     return newDate;
   };
 
+  // set total cost, order detail, order status on initial render
   useEffect(() => {
     setError("");
     setAlertType("error");
@@ -106,8 +107,8 @@ const MyOrderDetailScreen = ({ navigation, route }) => {
     } else {
       setTrackingState(3);
     }
-    console.log(orderDetail?.items);
   }, []);
+
   return (
     <View style={styles.container}>
       <ProgressDialog visible={isloading} label={label} />

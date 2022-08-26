@@ -7,18 +7,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const OrderConfirmScreen = ({ navigation }) => {
   const [user, setUser] = useState({});
 
+  //method to get authUser from async storage
   const getUserData = async () => {
     const value = await AsyncStorage.getItem("authUser");
     setUser(JSON.parse(value));
   };
 
+  //fetch user data on initial render
   useEffect(() => {
     getUserData();
   }, []);
-
-  //   setTimeout(() => {
-  //     navigation.replace("tab");
-  //   }, 4000);
 
   return (
     <View style={styles.container}>

@@ -65,6 +65,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState({});
   const [searchItems, setSearchItems] = useState([]);
 
+  //method to convert the authUser to json object
   const convertToJSON = (obj) => {
     try {
       setUserInfo(JSON.parse(obj));
@@ -73,10 +74,12 @@ const HomeScreen = ({ navigation, route }) => {
     }
   };
 
+  //method to navigate to product detail screen of a specific product
   const handleProductPress = (product) => {
     navigation.navigate("productdetail", { product: product });
   };
 
+  //method to add to cart (redux)
   const handleAddToCat = (product) => {
     addCartItem(product);
   };
@@ -87,7 +90,7 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   const fetchProduct = () => {
-    fetch(`${network.serverip}/products`, headerOptions)
+    fetch(`${network.serverip}/products`, headerOptions) //API call
       .then((response) => response.json())
       .then((result) => {
         if (result.success) {
@@ -109,12 +112,14 @@ const HomeScreen = ({ navigation, route }) => {
       });
   };
 
+  //method call on pull refresh
   const handleOnRefresh = () => {
     setRefreshing(true);
     fetchProduct();
     setRefreshing(false);
   };
 
+  //convert user to json and fetch products in initial render
   useEffect(() => {
     convertToJSON(user);
     fetchProduct();

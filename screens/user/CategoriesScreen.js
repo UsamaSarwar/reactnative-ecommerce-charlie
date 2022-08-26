@@ -33,23 +33,29 @@ const CategoriesScreen = ({ navigation, route }) => {
   const [foundItems, setFoundItems] = useState([]);
   const [filterItem, setFilterItem] = useState("");
 
+  //get the dimenssions of active window
   const [windowWidth, setWindowWidth] = useState(
     Dimensions.get("window").width
   );
   const windowHeight = Dimensions.get("window").height;
 
+  //initialize the cartproduct with redux data
   const cartproduct = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
   const { addCartItem } = bindActionCreators(actionCreaters, dispatch);
+
+  //method to navigate to product detail screen of specific product
   const handleProductPress = (product) => {
     navigation.navigate("productdetail", { product: product });
   };
 
+  //method to add the product to cart (redux)
   const handleAddToCat = (product) => {
     addCartItem(product);
   };
 
+  //method call on pull refresh
   const handleOnRefresh = () => {
     setRefreshing(true);
     fetchProduct();
@@ -84,6 +90,7 @@ const CategoriesScreen = ({ navigation, route }) => {
   ];
   const [selectedTab, setSelectedTab] = useState(category[0]);
 
+  //method to fetch the product from server using API call
   const fetchProduct = () => {
     var headerOptions = {
       method: "GET",
@@ -106,12 +113,14 @@ const CategoriesScreen = ({ navigation, route }) => {
       });
   };
 
+  //listener call on tab focus and initlize categoryID
   navigation.addListener("focus", () => {
     if (categoryID) {
       setSelectedTab(categoryID);
     }
   });
 
+  //method to filter the product according to user search in selected category
   const filter = () => {
     const keyword = filterItem;
     if (keyword !== "") {
@@ -125,10 +134,12 @@ const CategoriesScreen = ({ navigation, route }) => {
     }
   };
 
+  //render whenever the value of filterItem change
   useEffect(() => {
     filter();
   }, [filterItem]);
 
+  //fetch the product on initial render
   useEffect(() => {
     fetchProduct();
   }, []);

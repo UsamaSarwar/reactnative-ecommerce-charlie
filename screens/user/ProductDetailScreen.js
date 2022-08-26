@@ -24,10 +24,12 @@ const ProductDetailScreen = ({ navigation, route }) => {
 
   const { addCartItem } = bindActionCreators(actionCreaters, dispatch);
 
+  //method to add item to cart(redux)
   const handleAddToCat = (item) => {
     addCartItem(item);
   };
 
+  //remove the authUser from async storage and navigate to login
   const logout = async () => {
     await AsyncStorage.removeItem("authUser");
     navigation.replace("login");
@@ -42,8 +44,9 @@ const ProductDetailScreen = ({ navigation, route }) => {
   const [isDisable, setIsDisbale] = useState(true);
   const [alertType, setAlertType] = useState("error");
 
+  //method to fetch wishlist from server using API call
   const fetchWishlist = async () => {
-    const value = await AsyncStorage.getItem("authUser");
+    const value = await AsyncStorage.getItem("authUser"); // get authUser from async storage
     let user = JSON.parse(value);
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", user.token);
@@ -62,6 +65,8 @@ const ProductDetailScreen = ({ navigation, route }) => {
         if (result.success) {
           setWishlistItems(result.data[0].wishlist);
           setIsDisbale(false);
+
+          //check if the current active product is already in wishlish or not
           result.data[0].wishlist.map((item) => {
             if (item?.productId?._id === product?._id) {
               setOnWishlist(true);
@@ -77,17 +82,21 @@ const ProductDetailScreen = ({ navigation, route }) => {
       });
   };
 
+  //method to increase the product quantity
   const handleIncreaseButton = (quantity) => {
     if (avaiableQuantity > quantity) {
       setQuantity(quantity + 1);
     }
   };
+
+  //method to decrease the product quantity
   const handleDecreaseButton = (quantity) => {
     if (quantity > 0) {
       setQuantity(quantity - 1);
     }
   };
 
+  //method to add or remove item from wishlist
   const handleWishlistBtn = async () => {
     setIsDisbale(true);
     const value = await AsyncStorage.getItem("authUser");
@@ -103,6 +112,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
         redirect: "follow",
       };
 
+      //API call to remove a item in wishlish
       fetch(
         `${network.serverip}/remove-from-wishlist?id=${product?._id}`,
         requestOptions
@@ -144,6 +154,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
 
       console.log(addrequestOptions);
 
+      //API call to add a item in wishlish
       fetch(`${network.serverip}/add-to-wishlist`, addrequestOptions)
         .then((response) => response.json())
         .then((result) => {
@@ -167,6 +178,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
     }
   };
 
+  //set quantity, avaiableQuantity, product image and fetch wishlist on initial render
   useEffect(() => {
     setQuantity(0);
     setAvaiableQuantity(product.quantity);
@@ -174,6 +186,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
     fetchWishlist();
   }, []);
 
+  //render whenever the value of wishlistItems change
   useEffect(() => {}, [wishlistItems]);
 
   return (

@@ -26,10 +26,6 @@ const CheckoutScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { emptyCart } = bindActionCreators(actionCreaters, dispatch);
 
-  const handleCheckout = () => {
-    confirmCheckout();
-  };
-
   const [deliveryCost, setDeliveryCost] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
   const [address, setAddress] = useState("");
@@ -38,12 +34,14 @@ const CheckoutScreen = ({ navigation, route }) => {
   const [streetAddress, setStreetAddress] = useState("");
   const [zipcode, setZipcode] = useState("");
 
+  //method to remove the authUser from aysnc storage and navigate to login
   const logout = async () => {
     await AsyncStorage.removeItem("authUser");
     navigation.replace("login");
   };
 
-  const confirmCheckout = async () => {
+  //method to handle checkout
+  const handleCheckout = async () => {
     setIsloading(true);
     var myHeaders = new Headers();
     const value = await AsyncStorage.getItem("authUser");
@@ -55,6 +53,8 @@ const CheckoutScreen = ({ navigation, route }) => {
 
     var payload = [];
     var totalamount = 0;
+
+    // fetch the cart items from redux and set the total cost
     cartproduct.forEach((product) => {
       let obj = {
         productId: product._id,
@@ -84,7 +84,7 @@ const CheckoutScreen = ({ navigation, route }) => {
       redirect: "follow",
     };
 
-    fetch(network.serverip + "/checkout", requestOptions)
+    fetch(network.serverip + "/checkout", requestOptions) //API call
       .then((response) => response.json())
       .then((result) => {
         console.log("Checkout=>", result);
@@ -104,6 +104,7 @@ const CheckoutScreen = ({ navigation, route }) => {
       });
   };
 
+  // set the address and total cost on initital render
   useEffect(() => {
     if (streetAddress && city && country != "") {
       setAddress(`${streetAddress}, ${city},${country}`);
@@ -220,7 +221,9 @@ const CheckoutScreen = ({ navigation, route }) => {
           <CustomButton
             text={"Submit Order"}
             // onPress={() => navigation.replace("orderconfirm")}
-            onPress={handleCheckout}
+            onPress={() => {
+              handleCheckout();
+            }}
           />
         ) : (
           <CustomButton text={"Submit Order"} disabled />
