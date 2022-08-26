@@ -2,8 +2,6 @@
 
 # Hi, We are Team Charlie! 👋
 
-<img align="left" alt="EasyBuy" src="image/easybuy.png" width="900"/>
-
 [![Up to Date](https://github.com/ikatyang/emoji-cheat-sheet/workflows/Up%20to%20Date/badge.svg)](https://github.com/UsamaSarwar/reactnative-ecommerce-charlie)
 
 ## `Development Stack` ➡️ `MERN Stack`
@@ -11,6 +9,13 @@
 ### `Backend on NodeJs` ➡️ [https://github.com/abidrazaa/backend-node](https://github.com/abidrazaa/backend-node)
 
 Open-Source React Native Ecommerce Cross Platform Mobile App :iphone:
+
+## Mockups
+
+<img align="left" alt="EasyBuy" src="image/easybuy.png" width="1000"/>
+
+.
+
 
 ## Features :memo:
 
@@ -76,7 +81,7 @@ The mockup designs of the application can be seen from [here](https://docs.googl
 
 # Presentation
 
-The presentation of the Mockups can be seen from [here](https://www.youtube.com/watch?v=-eguq9cgY_s)
+The presentation of the Mockups can be seen from [here](https://www.youtube.com/watch?v=vgdUdXEXILA)
 
 ## Thanks to all the contributors ❤️
 
