@@ -41,6 +41,7 @@ const SignupScreen = ({ navigation }) => {
     redirect: "follow",
   };
 
+  //method to post the user data to server for user signup using API call
   const signUpHandle = () => {
     if (email == "") {
       return setError("Please enter your email");
@@ -63,7 +64,7 @@ const SignupScreen = ({ navigation }) => {
     if (password != confirmPassword) {
       return setError("password does not match");
     }
-    fetch(network.serverip + "/register", requestOptions)
+    fetch(network.serverip + "/register", requestOptions) // API call
       .then((response) => response.json())
       .then((result) => {
         console.log(result);

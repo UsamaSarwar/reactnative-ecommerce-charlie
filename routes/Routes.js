@@ -4,7 +4,7 @@ import SignupScreen from "../screens/auth/SignupScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Splash from "../screens/auth/Splash";
 import ForgetPasswordScreen from "../screens/auth/ForgetPasswordScreen";
-import UpdatePasswordScreen from "../screens/auth/UpdatePasswordScreen";
+import UpdatePasswordScreen from "../screens/profile/UpdatePasswordScreen";
 import MyAccountScreen from "../screens/profile/MyAccountScreen";
 import AddProductScreen from "../screens/admin/AddProductScreen";
 import DashboardScreen from "../screens/admin/DashboardScreen";

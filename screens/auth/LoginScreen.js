@@ -24,6 +24,7 @@ const LoginScreen = ({ navigation }) => {
   const [error, setError] = useState("");
   const [isloading, setIsloading] = useState(false);
 
+  //method to store the authUser to aync storage
   _storeData = async (user) => {
     try {
       AsyncStorage.setItem("authUser", JSON.stringify(user));
@@ -48,9 +49,10 @@ const LoginScreen = ({ navigation }) => {
     redirect: "follow",
   };
 
+  //method to validate the user credentials and navigate to Home Screen / Dashboard
   const loginHandle = () => {
     setIsloading(true);
-    setError("");
+    //[check validation] -- Start
     // if email does not contain @ sign
     if (email == "") {
       setIsloading(false);
@@ -74,8 +76,9 @@ const LoginScreen = ({ navigation }) => {
       setIsloading(false);
       return setError("Password must be 6 characters long");
     }
+    //[check validation] -- End
 
-    fetch(network.serverip + "/login", requestOptions)
+    fetch(network.serverip + "/login", requestOptions) // API call
       .then((response) => response.json())
       .then((result) => {
         if (
@@ -83,13 +86,14 @@ const LoginScreen = ({ navigation }) => {
           (result.status == 1 && result.success != false)
         ) {
           if (result?.data?.userType == "ADMIN") {
+            //check the user type if the type is ADMIN then navigate to Dashboard else navigate to User Home
             _storeData(result.data);
             setIsloading(false);
-            navigation.replace("dashboard", { authUser: result.data });
+            navigation.replace("dashboard", { authUser: result.data }); // naviagte to Admin Dashboard
           } else {
             _storeData(result.data);
             setIsloading(false);
-            navigation.replace("tab", { user: result.data });
+            navigation.replace("tab", { user: result.data }); // naviagte to User Dashboard
           }
         } else {
           setIsloading(false);
@@ -103,11 +107,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <InternetConnectionAlert
-      onChange={(connectionState) => {
-        // console.log("Connection State: ", connectionState);
-      }}
-    >
+    <InternetConnectionAlert onChange={(connectionState) => {}}>
       <KeyboardAvoidingView
         // behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}

@@ -6,7 +6,7 @@ import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 
 const sendInstructionsHandle = () => {
-  alert("send insta");
+  //TODO: handle user verfication and mail password reset link
 };
 
 const ForgetPasswordScreen = ({ navigation }) => {
