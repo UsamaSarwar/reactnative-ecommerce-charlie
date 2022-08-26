@@ -41,19 +41,20 @@ const ViewCategoryScreen = ({ navigation, route }) => {
   const [foundItems, setFoundItems] = useState([]);
   const [filterItem, setFilterItem] = useState("");
 
+  //method call on Pull refresh
   const handleOnRefresh = () => {
     setRefreshing(true);
     fetchCategories();
     setRefreshing(false);
   };
-
+  //method to navigate to edit screen for specific catgeory
   const handleEdit = (item) => {
     navigation.navigate("editcategories", {
       category: item,
       authUser: authUser,
     });
   };
-
+  //method to delete the specific catgeory
   const handleDelete = (id) => {
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", getToken(authUser));
@@ -64,7 +65,7 @@ const ViewCategoryScreen = ({ navigation, route }) => {
       redirect: "follow",
     };
     setIsloading(true);
-    fetch(`${network.serverip}/delete-category?id=${id}`, requestOptions)
+    fetch(`${network.serverip}/delete-category?id=${id}`, requestOptions) // API call
       .then((response) => response.json())
       .then((result) => {
         if (result.success) {
@@ -84,6 +85,7 @@ const ViewCategoryScreen = ({ navigation, route }) => {
       });
   };
 
+  // method for alert
   const showConfirmDialog = (id) => {
     return Alert.alert(
       "Are your sure?",
@@ -102,6 +104,7 @@ const ViewCategoryScreen = ({ navigation, route }) => {
     );
   };
 
+  //method the fetch the catgeories from server using API call
   const fetchCategories = () => {
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", getToken(authUser));
@@ -131,6 +134,7 @@ const ViewCategoryScreen = ({ navigation, route }) => {
       });
   };
 
+  //method to filer the product for by title [search bar]
   const filter = () => {
     const keyword = filterItem;
     if (keyword !== "") {
@@ -143,10 +147,12 @@ const ViewCategoryScreen = ({ navigation, route }) => {
     }
   };
 
+  //filter the data whenever filteritem value change
   useEffect(() => {
     filter();
   }, [filterItem]);
 
+  //fetch the categories on initial render
   useEffect(() => {
     fetchCategories();
   }, []);

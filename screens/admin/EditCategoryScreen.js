@@ -28,6 +28,7 @@ const EditCategoryScreen = ({ navigation, route }) => {
   const [alertType, setAlertType] = useState("error");
   const [user, setUser] = useState({});
 
+  //Method to post the data to server to edit the category using API call
   const editCategoryHandle = (id) => {
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", authUser.token);
@@ -47,6 +48,7 @@ const EditCategoryScreen = ({ navigation, route }) => {
     };
 
     setIsloading(true);
+    //[check validations] -- Start
     if (title == "") {
       setError("Please enter the product title");
       setIsloading(false);
@@ -57,6 +59,7 @@ const EditCategoryScreen = ({ navigation, route }) => {
       setError("Please upload the Catergory image");
       setIsloading(false);
     } else {
+      //[check validations] -- End
       fetch(`${network.serverip}/update-category?id=${id}`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
@@ -78,6 +81,7 @@ const EditCategoryScreen = ({ navigation, route }) => {
     }
   };
 
+  //inilize the title and description input fields on initial render
   useEffect(() => {
     setTitle(category?.title);
     setDescription(category?.description);

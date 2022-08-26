@@ -10,7 +10,6 @@ import {
 import React, { useState, useEffect } from "react";
 import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import CustomInput from "../../components/CustomInput";
 import ProgressDialog from "react-native-progress-dialog";
@@ -19,7 +18,16 @@ import OrderList from "../../components/OrderList/OrderList";
 const ViewOrdersScreen = ({ navigation, route }) => {
   const { authUser } = route.params;
   const [user, setUser] = useState({});
+  const [isloading, setIsloading] = useState(false);
+  const [refeshing, setRefreshing] = useState(false);
+  const [alertType, setAlertType] = useState("error");
+  const [label, setLabel] = useState("Loading...");
+  const [error, setError] = useState("");
+  const [orders, setOrders] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
+  const [filterItem, setFilterItem] = useState("");
 
+  //method to convert the authUser to json object
   const getToken = (obj) => {
     try {
       setUser(JSON.parse(obj));
@@ -30,22 +38,14 @@ const ViewOrdersScreen = ({ navigation, route }) => {
     return JSON.parse(obj).token;
   };
 
-  const [isloading, setIsloading] = useState(false);
-  const [refeshing, setRefreshing] = useState(false);
-  const [alertType, setAlertType] = useState("error");
-
-  const [label, setLabel] = useState("Loading...");
-  const [error, setError] = useState("");
-  const [orders, setOrders] = useState([]);
-  const [foundItems, setFoundItems] = useState([]);
-  const [filterItem, setFilterItem] = useState("");
-
+  //method call on pull refresh
   const handleOnRefresh = () => {
     setRefreshing(true);
     fetchOrders();
     setRefreshing(false);
   };
 
+  //method to navigate to order detail screen of specific order
   const handleOrderDetail = (item) => {
     navigation.navigate("vieworderdetails", {
       orderDetail: item,
@@ -53,6 +53,7 @@ const ViewOrdersScreen = ({ navigation, route }) => {
     });
   };
 
+  //method the fetch the order data from server using API call
   const fetchOrders = () => {
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", getToken(authUser));
@@ -82,6 +83,7 @@ const ViewOrdersScreen = ({ navigation, route }) => {
       });
   };
 
+  //method to filer the orders for by title [search bar]
   const filter = () => {
     const keyword = filterItem;
     if (keyword !== "") {
@@ -93,11 +95,12 @@ const ViewOrdersScreen = ({ navigation, route }) => {
       setFoundItems(orders);
     }
   };
-
+  //filter the data whenever filteritem value change
   useEffect(() => {
     filter();
   }, [filterItem]);
 
+  //fetch the orders on initial render
   useEffect(() => {
     fetchOrders();
   }, []);

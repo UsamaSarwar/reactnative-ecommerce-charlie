@@ -8,7 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { colors, network } from "../../constants";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
@@ -19,7 +19,7 @@ import ProgressDialog from "react-native-progress-dialog";
 import { AntDesign } from "@expo/vector-icons";
 
 const AddCategoryScreen = ({ navigation, route }) => {
-  const { authUser } = route.params;
+  const { authUser } = route.params; //authUser data
   const [isloading, setIsloading] = useState(false);
   const [title, setTitle] = useState("");
   const [image, setImage] = useState("easybuycat.png");
@@ -28,8 +28,7 @@ const AddCategoryScreen = ({ navigation, route }) => {
   const [alertType, setAlertType] = useState("error");
   const [user, setUser] = useState({});
 
-  var payload = [];
-
+  //method to convert the authUser to json object.
   const getToken = (obj) => {
     try {
       setUser(JSON.parse(obj));
@@ -40,6 +39,7 @@ const AddCategoryScreen = ({ navigation, route }) => {
     return JSON.parse(obj).token;
   };
 
+  //Method for imput validation post data to server to insert category using API call
   const addCategoryHandle = () => {
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", authUser.token);
@@ -59,6 +59,7 @@ const AddCategoryScreen = ({ navigation, route }) => {
     };
 
     setIsloading(true);
+    //[check validation] -- Start
     if (title == "") {
       setError("Please enter the product title");
       setIsloading(false);
@@ -69,7 +70,8 @@ const AddCategoryScreen = ({ navigation, route }) => {
       setError("Please upload the Catergory image");
       setIsloading(false);
     } else {
-      fetch(network.serverip + "/category", requestOptions)
+      //[check validation] -- End
+      fetch(network.serverip + "/category", requestOptions) //API call
         .then((response) => response.json())
         .then((result) => {
           console.log(result);

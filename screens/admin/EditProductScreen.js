@@ -32,15 +32,6 @@ const EditProductScreen = ({ navigation, route }) => {
   const [category, setCategory] = useState("garments");
   const [alertType, setAlertType] = useState("error");
 
-  useEffect(() => {
-    setImage(`${network.serverip}/uploads/${product?.image}`);
-    setTitle(product.title);
-    setSku(product.sku);
-    setQuantity(product.quantity.toString());
-    setPrice(product.price.toString());
-    setDescription(product.description);
-  }, []);
-
   var myHeaders = new Headers();
   myHeaders.append("x-auth-token", authUser.token);
   myHeaders.append("Content-Type", "application/json");
@@ -62,6 +53,7 @@ const EditProductScreen = ({ navigation, route }) => {
     redirect: "follow",
   };
 
+  //Method for selecting the image from device gallery
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -76,6 +68,7 @@ const EditProductScreen = ({ navigation, route }) => {
     }
   };
 
+  //Method for imput validation and post data to server to edit product using API call
   const editProductHandle = () => {
     setIsloading(true);
     if (title == "") {
@@ -114,6 +107,16 @@ const EditProductScreen = ({ navigation, route }) => {
         });
     }
   };
+
+  // set all the input fields and image on initial render
+  useEffect(() => {
+    setImage(`${network.serverip}/uploads/${product?.image}`);
+    setTitle(product.title);
+    setSku(product.sku);
+    setQuantity(product.quantity.toString());
+    setPrice(product.price.toString());
+    setDescription(product.description);
+  }, []);
 
   return (
     <KeyboardAvoidingView style={styles.container}>

@@ -27,6 +27,7 @@ const DashboardScreen = ({ navigation, route }) => {
   const [data, setData] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
 
+  //method to remove the auth user from async storage and navigate the login if token expires
   const logout = async () => {
     await AsyncStorage.removeItem("authUser");
     navigation.replace("login");
@@ -41,11 +42,13 @@ const DashboardScreen = ({ navigation, route }) => {
     redirect: "follow",
   };
 
+  //method the fetch the statistics from server using API call
   const fetchStats = () => {
     fetch(`${network.serverip}/dashboard`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.success == true) {
+          //set the fetched data to Data state
           setData([
             {
               id: 1,
@@ -98,12 +101,14 @@ const DashboardScreen = ({ navigation, route }) => {
       });
   };
 
+  //method call on Pull refresh
   const handleOnRefresh = () => {
     setRefreshing(true);
     fetchStats();
     setRefreshing(false);
   };
 
+  //call the fetch function initial render
   useEffect(() => {
     fetchStats();
   }, []);

@@ -43,12 +43,14 @@ const ViewProductScreen = ({ navigation, route }) => {
     redirect: "follow",
   };
 
+  //method call on pull refresh
   const handleOnRefresh = () => {
     setRefreshing(true);
     fetchProduct();
     setRefreshing(false);
   };
 
+  //method to delete the specific order
   const handleDelete = (id) => {
     setIsloading(true);
     console.log(`${network.serverip}/delete-product?id=${id}`);
@@ -72,6 +74,7 @@ const ViewProductScreen = ({ navigation, route }) => {
       });
   };
 
+  //method for alert
   const showConfirmDialog = (id) => {
     return Alert.alert(
       "Are your sure?",
@@ -89,7 +92,10 @@ const ViewProductScreen = ({ navigation, route }) => {
       ]
     );
   };
+
+  //method the fetch the product data from server using API call
   const fetchProduct = () => {
+    setIsloading(true);
     fetch(`${network.serverip}/products`, ProductListRequestOptions)
       .then((response) => response.json())
       .then((result) => {
@@ -110,6 +116,7 @@ const ViewProductScreen = ({ navigation, route }) => {
       });
   };
 
+  //method to filer the orders for by title [search bar]
   const filter = () => {
     const keyword = filterItem;
     if (keyword !== "") {
@@ -122,12 +129,13 @@ const ViewProductScreen = ({ navigation, route }) => {
     }
   };
 
+  //filter the data whenever filteritem value change
   useEffect(() => {
     filter();
   }, [filterItem]);
 
+  //fetch the categories on initial render
   useEffect(() => {
-    setIsloading(true);
     fetchProduct();
   }, []);
 

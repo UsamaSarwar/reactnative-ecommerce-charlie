@@ -44,6 +44,7 @@ const AddProductScreen = ({ navigation, route }) => {
   ]);
   var payload = [];
 
+  //method to convert the authUser to json object.
   const getToken = (obj) => {
     try {
       setUser(JSON.parse(obj));
@@ -54,6 +55,7 @@ const AddProductScreen = ({ navigation, route }) => {
     return JSON.parse(obj).token;
   };
 
+  //Method : Fetch category data from using API call and store for later you in code
   const fetchCategories = () => {
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", getToken(authUser));
@@ -134,6 +136,7 @@ const AddProductScreen = ({ navigation, route }) => {
     redirect: "follow",
   };
 
+  //Method for selecting the image from device gallery
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -150,8 +153,11 @@ const AddProductScreen = ({ navigation, route }) => {
     }
   };
 
+  //Method for imput validation and post data to server to insert product using API call
   const addProductHandle = () => {
     setIsloading(true);
+
+    //[check validation] -- Start
     if (title == "") {
       setError("Please enter the product title");
       setIsloading(false);
@@ -165,6 +171,7 @@ const AddProductScreen = ({ navigation, route }) => {
       setError("Please upload the product image");
       setIsloading(false);
     } else {
+      //[check validation] -- End
       fetch(network.serverip + "/product", requestOptions)
         .then((response) => response.json())
         .then((result) => {
@@ -184,6 +191,7 @@ const AddProductScreen = ({ navigation, route }) => {
     }
   };
 
+  //call the fetch functions initial render
   useEffect(() => {
     fetchCategories();
     console.log(categories);

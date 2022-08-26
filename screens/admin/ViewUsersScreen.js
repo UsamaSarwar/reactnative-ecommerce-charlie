@@ -20,7 +20,16 @@ const ViewUsersScreen = ({ navigation, route }) => {
   const [name, setName] = useState("");
   const { authUser } = route.params;
   const [user, setUser] = useState({});
+  const [isloading, setIsloading] = useState(false);
+  const [refeshing, setRefreshing] = useState(false);
+  const [alertType, setAlertType] = useState("error");
+  const [label, setLabel] = useState("Loading...");
+  const [error, setError] = useState("");
+  const [users, setUsers] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
+  const [filterItem, setFilterItem] = useState("");
 
+  //method to convert the authUser to json object
   const getToken = (obj) => {
     try {
       setUser(JSON.parse(obj));
@@ -31,16 +40,7 @@ const ViewUsersScreen = ({ navigation, route }) => {
     return JSON.parse(obj).token;
   };
 
-  const [isloading, setIsloading] = useState(false);
-  const [refeshing, setRefreshing] = useState(false);
-  const [alertType, setAlertType] = useState("error");
-
-  const [label, setLabel] = useState("Loading...");
-  const [error, setError] = useState("");
-  const [users, setUsers] = useState([]);
-  const [foundItems, setFoundItems] = useState([]);
-  const [filterItem, setFilterItem] = useState("");
-
+  //method the fetch the users from server using API call
   const fetchUsers = () => {
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", getToken(authUser));
@@ -70,12 +70,14 @@ const ViewUsersScreen = ({ navigation, route }) => {
       });
   };
 
+  //method call on pull refresh
   const handleOnRefresh = () => {
     setRefreshing(true);
     fetchUsers();
     setRefreshing(false);
   };
 
+  //method to filer the orders for by title [search bar]
   const filter = () => {
     const keyword = filterItem;
     if (keyword !== "") {
@@ -90,10 +92,12 @@ const ViewUsersScreen = ({ navigation, route }) => {
     setName(keyword);
   };
 
+  //filter the data whenever filteritem value change
   useEffect(() => {
     filter();
   }, [filterItem]);
 
+  //fetch the orders on initial render
   useEffect(() => {
     fetchUsers();
   }, []);

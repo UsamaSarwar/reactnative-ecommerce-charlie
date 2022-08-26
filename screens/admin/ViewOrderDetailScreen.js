@@ -32,6 +32,7 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
     { label: "Delivered", value: "delivered" },
   ]);
 
+  //method to convert the time into AM PM format
   function tConvert(time) {
     time = time
       .toString()
@@ -44,6 +45,7 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
     return time.join("");
   }
 
+  //method to convert the Data into dd-mm-yyyy format
   const dateFormat = (datex) => {
     let t = new Date(datex);
     const date = ("0" + t.getDate()).slice(-2);
@@ -58,6 +60,7 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
     return newDate;
   };
 
+  //method to update the status using API call
   const handleUpdateStatus = (id) => {
     setIsloading(true);
     setError("");
@@ -77,7 +80,7 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
     fetch(
       `${network.serverip}/admin/order-status?orderId=${id}&status=${value}`,
       requestOptions
-    )
+    ) //API call
       .then((response) => response.json())
       .then((result) => {
         if (result.success == true) {
@@ -94,6 +97,7 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
       });
   };
 
+  // calculate the total cost and set the all requried variables on initial render
   useEffect(() => {
     setError("");
     setAlertType("error");
@@ -113,7 +117,7 @@ const ViewOrderDetailScreen = ({ navigation, route }) => {
     setTotalCost(
       orderDetail?.items.reduce((accumulator, object) => {
         return (accumulator + object.price) * object.quantity;
-      }, 0)
+      }, 0) // calculate the total cost
     );
   }, []);
   return (
