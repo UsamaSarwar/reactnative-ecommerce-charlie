@@ -15,9 +15,9 @@ import { network } from "../../constants";
 
 const MyAccountScreen = ({ navigation, route }) => {
   const [showBox, setShowBox] = useState(true);
+  const [error, setError] = useState("");
   const { user } = route.params;
   const userID = user["_id"];
-  console.log(userID);
 
   const showConfirmDialog = (id) => {
     return Alert.alert(
@@ -38,7 +38,6 @@ const MyAccountScreen = ({ navigation, route }) => {
     );
   };
 
-  const [error, setError] = useState("");
   var requestOptions = {
     method: "GET",
     redirect: "follow",
@@ -52,7 +51,7 @@ const MyAccountScreen = ({ navigation, route }) => {
       .then((result) => {
         if (result.success == true) {
           console.log(result.data);
-          navigation.goBack();
+          navigation.navigate("login");
         } else {
           setError(result.message);
         }
@@ -101,7 +100,6 @@ const MyAccountScreen = ({ navigation, route }) => {
           Icon={MaterialIcons}
           iconName={"delete"}
           type={"danger"}
-          // onPress={() => DeleteAccontHandle(userID)}
           onPress={() => showConfirmDialog(userID)}
         />
       </View>
