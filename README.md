@@ -1,5 +1,8 @@
 # React-Native Ecommerce App :bomb:
+
 # Hi, We are Team Charlie! 👋
+
+<img align="right" alt="Developer Usama Sarwar" src="image/easybuy.png" width="300"/>
 
 [![Up to Date](https://github.com/ikatyang/emoji-cheat-sheet/workflows/Up%20to%20Date/badge.svg)](https://github.com/UsamaSarwar/reactnative-ecommerce-charlie)
 
@@ -9,7 +12,7 @@
 
 Open-Source React Native Ecommerce Cross Platform Mobile App :iphone:
 
-## Features :memo: 
+## Features :memo:
 
 - [x] Stack Naviagtion
 - [x] Splash Screen
