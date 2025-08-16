@@ -2,14 +2,14 @@ import { StyleSheet, Image, Text, View, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import SuccessImage from "../../assets/image/success.png";
 import CustomButton from "../../components/CustomButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 const OrderConfirmScreen = ({ navigation }) => {
   const [user, setUser] = useState({});
 
   //method to get authUser from async storage
   const getUserData = async () => {
-    const value = await AsyncStorage.getItem("authUser");
+    const value = await SecureStore.getItemAsync("authUser");
     setUser(JSON.parse(value));
   };
 

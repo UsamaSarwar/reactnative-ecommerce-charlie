@@ -16,7 +16,7 @@ import CustomButton from "../../components/CustomButton";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
 import InternetConnectionAlert from "react-native-internet-connection-alert";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -24,10 +24,10 @@ const LoginScreen = ({ navigation }) => {
   const [error, setError] = useState("");
   const [isloading, setIsloading] = useState(false);
 
-  //method to store the authUser to aync storage
+  //method to store the authUser to secure storage
   _storeData = async (user) => {
     try {
-      AsyncStorage.setItem("authUser", JSON.stringify(user));
+      await SecureStore.setItemAsync("authUser", JSON.stringify(user));
     } catch (error) {
       console.log(error);
       setError(error);

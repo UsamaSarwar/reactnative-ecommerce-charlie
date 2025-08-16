@@ -15,7 +15,7 @@ import { colors } from "../../constants";
 import CustomCard from "../../components/CustomCard/CustomCard";
 import OptionList from "../../components/OptionList/OptionList";
 import InternetConnectionAlert from "react-native-internet-connection-alert";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 import ProgressDialog from "react-native-progress-dialog";
 
 const DashboardScreen = ({ navigation, route }) => {
@@ -27,9 +27,9 @@ const DashboardScreen = ({ navigation, route }) => {
   const [data, setData] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
 
-  //method to remove the auth user from async storage and navigate the login if token expires
+  //method to remove the auth user from secure storage and navigate the login if token expires
   const logout = async () => {
-    await AsyncStorage.removeItem("authUser");
+    await SecureStore.deleteItemAsync("authUser");
     navigation.replace("login");
   };
 
@@ -120,10 +120,7 @@ const DashboardScreen = ({ navigation, route }) => {
         <ProgressDialog visible={isloading} label={label} />
         <View style={styles.topBarContainer}>
           <TouchableOpacity
-            onPress={async () => {
-              await AsyncStorage.removeItem("authUser");
-              navigation.replace("login");
-            }}
+            onPress={logout}
           >
             <Ionicons name="log-out" size={30} color={colors.muted} />
           </TouchableOpacity>
