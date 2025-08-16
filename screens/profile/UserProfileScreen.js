@@ -10,7 +10,7 @@ import UserProfileCard from "../../components/UserProfileCard/UserProfileCard";
 import { Ionicons } from "@expo/vector-icons";
 import OptionList from "../../components/OptionList/OptionList";
 import { colors } from "../../constants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 const UserProfileScreen = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState({});
@@ -78,7 +78,7 @@ const UserProfileScreen = ({ navigation, route }) => {
           Icon={Ionicons}
           iconName={"log-out"}
           onPress={async () => {
-            await AsyncStorage.removeItem("authUser");
+            await SecureStore.deleteItemAsync("authUser");
             navigation.replace("login");
           }}
         />

@@ -14,7 +14,7 @@ import CustomButton from "../../components/CustomButton";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 
 const ProductDetailScreen = ({ navigation, route }) => {
@@ -31,7 +31,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
 
   //remove the authUser from async storage and navigate to login
   const logout = async () => {
-    await AsyncStorage.removeItem("authUser");
+    await SecureStore.deleteItemAsync("authUser");
     navigation.replace("login");
   };
 
@@ -46,7 +46,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
 
   //method to fetch wishlist from server using API call
   const fetchWishlist = async () => {
-    const value = await AsyncStorage.getItem("authUser"); // get authUser from async storage
+    const value = await SecureStore.getItemAsync("authUser"); // get authUser from async storage
     let user = JSON.parse(value);
     var myHeaders = new Headers();
     myHeaders.append("x-auth-token", user.token);
@@ -99,7 +99,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
   //method to add or remove item from wishlist
   const handleWishlistBtn = async () => {
     setIsDisbale(true);
-    const value = await AsyncStorage.getItem("authUser");
+    const value = await SecureStore.getItemAsync("authUser");
     let user = JSON.parse(value);
 
     if (onWishlist) {

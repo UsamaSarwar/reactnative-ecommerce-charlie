@@ -12,7 +12,7 @@ import { colors, network } from "../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 import WishList from "../../components/WishList/WishList";
 
 const MyWishlistScreen = ({ navigation, route }) => {
@@ -32,7 +32,7 @@ const MyWishlistScreen = ({ navigation, route }) => {
 
   //method the remove the authUser from Aysnc Storage and navigate back to login screen
   const logout = async () => {
-    await AsyncStorage.removeItem("authUser");
+    await SecureStore.deleteItemAsync("authUser");
     navigation.replace("login");
   };
 

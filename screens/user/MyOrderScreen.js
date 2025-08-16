@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 import ProgressDialog from "react-native-progress-dialog";
 import OrderList from "../../components/OrderList/OrderList";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 const MyOrderScreen = ({ navigation, route }) => {
   const { user } = route.params;
@@ -27,7 +27,7 @@ const MyOrderScreen = ({ navigation, route }) => {
 
   //method to remove the authUser from aysnc storage and navigate to login
   const logout = async () => {
-    await AsyncStorage.removeItem("authUser");
+    await SecureStore.deleteItemAsync("authUser");
     navigation.replace("login");
   };
 

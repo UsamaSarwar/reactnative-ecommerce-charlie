@@ -15,7 +15,7 @@ import CustomButton from "../../components/CustomButton";
 import { useSelector, useDispatch } from "react-redux";
 import * as actionCreaters from "../../states/actionCreaters/actionCreaters";
 import { bindActionCreators } from "redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 import CustomInput from "../../components/CustomInput";
 import ProgressDialog from "react-native-progress-dialog";
 
@@ -36,7 +36,7 @@ const CheckoutScreen = ({ navigation, route }) => {
 
   //method to remove the authUser from aysnc storage and navigate to login
   const logout = async () => {
-    await AsyncStorage.removeItem("authUser");
+    await SecureStore.deleteItemAsync("authUser");
     navigation.replace("login");
   };
 
@@ -44,7 +44,7 @@ const CheckoutScreen = ({ navigation, route }) => {
   const handleCheckout = async () => {
     setIsloading(true);
     var myHeaders = new Headers();
-    const value = await AsyncStorage.getItem("authUser");
+    const value = await SecureStore.getItemAsync("authUser");
     let user = JSON.parse(value);
     console.log("Checkout:", user.token);
 

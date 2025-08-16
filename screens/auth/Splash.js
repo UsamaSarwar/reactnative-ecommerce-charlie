@@ -3,13 +3,13 @@ import React, { useEffect } from "react";
 import { colors } from "../../constants";
 import logo from "../../assets/logo/logo_white.png";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 const Splash = ({ navigation }) => {
-  //method to fetch the authUser data from aync storage if there is any and login the Dashboard or Home Screen according to the user type
+  //method to fetch the authUser data from secure storage if there is any and login the Dashboard or Home Screen according to the user type
   _retrieveData = async () => {
     try {
-      const value = await AsyncStorage.getItem("authUser");
+      const value = await SecureStore.getItemAsync("authUser");
       if (value !== null) {
         let user = JSON.parse(value); // covert the authUser value to json
         if (user.userType === "ADMIN") {
@@ -23,7 +23,7 @@ const Splash = ({ navigation }) => {
         }
       } else {
         setTimeout(() => {
-          navigation.replace("login"); // // navigate to login screen if there is no authUser store in aysnc storage
+          navigation.replace("login"); // // navigate to login screen if there is no authUser store in secure storage
         }, 2000);
       }
     } catch (error) {
